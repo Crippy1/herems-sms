@@ -1,0 +1,9 @@
+/api/agoosms/*        https://api.agoosms.com/:splat        200!
+/api/mnotify/*        https://api.mnotify.com/:splat        200!
+/api/arkesel/*        https://sms.arkesel.com/:splat        200!
+/api/hubtel/*         https://smsc.hubtel.com/:splat        200!
+/api/termii/*         https://api.ng.termii.com/:splat      200!
+/api/smsto/*          https://api.sms.to/:splat             200!
+/api/twilio/*         https://api.twilio.com/:splat         200!
+/api/africastalking/* https://api.africastalking.com/:splat 200!
+/*                    /index.html                           200
