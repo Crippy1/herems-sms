@@ -3399,7 +3399,7 @@ if (typeof document !== 'undefined') {
    ================================================================= */
 const APP_VER = '2.1.5';   /* Round-R181 (owner): the displayed version label is now "HEREMS_PLUS-SMS v1.81.0 R181" — do NOT let any footer say anything older */   /* Round-219 (owner): the number shown in 🔄 Updates now always matches the shipped release */
 const LS_KEY  = 'hpsms_data';
-const IDLE_LIMIT_MS = 30 * 60 * 1000;      // 30-minute inactivity timeout (prevents premature logouts)
+const IDLE_LIMIT_MS = 15 * 60 * 1000;      // 15-minute inactivity timeout
 const GRACE_DAYS    = 30;                  // 30 WORKING days of registration grace (Round-345 item 3: weekends are not counted)
 /* subscription plans offered to schools (prices GHS, set by the Super Admin) */
 const SUB_PLANS = [
@@ -3416,10 +3416,124 @@ const APP_BUILD='R182';   /* Round-219 (owner): the BUILD STAMP — one look tel
 /* ---------- storage shim (survives sandboxed iframes) ---------- */
 const _mem = {};
 const store = {
-  get(k){ try{ return localStorage.getItem(k); }catch(e){ return (k in _mem)? _mem[k] : null; } },
-  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){ _mem[k]=v; } },
-  del(k){ try{ localStorage.removeItem(k);}catch(e){ delete _mem[k]; } }
+  get(k){
+    try{
+      const val = localStorage.getItem(k);
+      if(val !== null && val !== undefined) return val;
+      return (k in _mem)? _mem[k] : null;
+    }catch(e){
+      return (k in _mem)? _mem[k] : null;
+    }
+  },
+  set(k,v){
+    _mem[k]=v;
+    try{
+      localStorage.setItem(k,v);
+    }catch(e){
+      console.warn('Storage quota limit reached for key: ' + k);
+      try{
+        if(k === LS_KEY && typeof DB !== 'undefined' && DB){
+          if(Array.isArray(DB.activity) && DB.activity.length > 25) DB.activity = DB.activity.slice(-15);
+          if(Array.isArray(DB.audits) && DB.audits.length > 25) DB.audits = DB.audits.slice(-15);
+          localStorage.setItem(k, JSON.stringify(DB));
+        }
+      }catch(e2){}
+    }
+  },
+  del(k){
+    delete _mem[k];
+    try{ localStorage.removeItem(k); }catch(e){}
+  }
 };
+
+/* Dedicated persistent session backup (immune to data size & quota errors) */
+function saveSessionBackup(s){
+  try{
+    if(s && s.userId){
+      const data = {
+        userId: s.userId,
+        page: s.page || 'dashboard',
+        param: s.param || null,
+        cashUnlocked: !!s.cashUnlocked,
+        lastActivity: Number(s.lastActivity || Date.now())
+      };
+      const raw = JSON.stringify(data);
+      localStorage.setItem('hpsms_sess', raw);
+      sessionStorage.setItem('hpsms_sess', raw);
+    } else {
+      localStorage.removeItem('hpsms_sess');
+      sessionStorage.removeItem('hpsms_sess');
+    }
+  }catch(e){}
+}
+function saveRegState(){
+  try{
+    if(typeof REG !== 'undefined' && REG && REG.step){
+      const sn = document.getElementById('js-sn');
+      const fn = document.getElementById('js-fn');
+      const on = document.getElementById('js-on');
+      const gn = document.getElementById('js-gender');
+      const emSel = document.getElementById('js-em-sel');
+      const em = document.getElementById('js-email');
+      if(sn && sn.value !== undefined) REG.data.sn = sn.value;
+      if(fn && fn.value !== undefined) REG.data.fn = fn.value;
+      if(on && on.value !== undefined) REG.data.on = on.value;
+      if(gn && gn.value !== undefined) REG.data.gender = gn.value;
+      if(emSel && emSel.value !== undefined) REG.data.email = emSel.value;
+      else if(em && em.value !== undefined) REG.data.email = em.value;
+      const ct = document.querySelector('input[name="js-canteen"]:checked');
+      if(ct) REG.data.canteen = ct.value;
+      const raw = JSON.stringify(REG);
+      sessionStorage.setItem('hpsms_reg', raw);
+      localStorage.setItem('hpsms_reg', raw);
+    }
+    if(typeof HEAD_SIG_TMP !== 'undefined' && HEAD_SIG_TMP){
+      sessionStorage.setItem('hpsms_head_sig', HEAD_SIG_TMP);
+      localStorage.setItem('hpsms_head_sig', HEAD_SIG_TMP);
+    }
+  }catch(e){}
+}
+window.saveRegState = saveRegState;
+
+function loadRegState(){
+  try{
+    const raw = sessionStorage.getItem('hpsms_reg') || localStorage.getItem('hpsms_reg');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && parsed.step) return parsed;
+    }
+  }catch(e){}
+  return null;
+}
+window.loadRegState = loadRegState;
+
+function loadSavedHeadSig(){
+  try{
+    return sessionStorage.getItem('hpsms_head_sig') || localStorage.getItem('hpsms_head_sig') || null;
+  }catch(e){ return null; }
+}
+window.loadSavedHeadSig = loadSavedHeadSig;
+
+function clearRegState(){
+  try{
+    sessionStorage.removeItem('hpsms_reg');
+    localStorage.removeItem('hpsms_reg');
+    sessionStorage.removeItem('hpsms_head_sig');
+    localStorage.removeItem('hpsms_head_sig');
+  }catch(e){}
+}
+window.clearRegState = clearRegState;
+
+function loadSessionBackup(){
+  try{
+    const raw = sessionStorage.getItem('hpsms_sess') || localStorage.getItem('hpsms_sess');
+    if(raw){
+      const s = JSON.parse(raw);
+      if(s && s.userId) return s;
+    }
+  }catch(e){}
+  return null;
+}
 
 /* ---------- Caesar cipher (shift 5) for password encryption ---------- */
 const enc = s => String(s).split('').map(c=>String.fromCharCode(c.charCodeAt(0)+5)).join('');
@@ -5578,13 +5692,13 @@ async function syncPull(quiet, force){ const c=syncCfg(); if(!c.bin||!c.mk) retu
    wireLiveSync keeps ONLY the adopt-repaint hook (called on every login path, it wires nothing else). */
 function scheduledSyncTick(){try{const u=me&&me();if(!u||!syncCfg().bin||!syncCfg().mk||navigator.onLine===false)return;
   /* Round-290 (owner): the automatic background sync now follows the Round-288 schedule — EVERY DAY inside
-     the 08:00–18:00 window (once a day, at 09:00), and TWICE on Tuesdays & Fridays (09:00 + 15:00). Each
+     the 08:00–22:00 window (once a day, at 09:00), and TWICE on Tuesdays & Fridays (09:00 + 15:00). Each
      fired slot is stamped in the local store and a late wake SUPERSEDES the earlier slot (one send carries
      everything newer anyway), so a tick can never double-fire or burn the day's allowance catching up —
      no duplicate sync events, ever. The run is the same A.syncNow path, so every gate (roles, ladder,
      daily allowance) still applies untouched, and the same lossless gzip compression rides every send. */
   const now=new Date(),h=now.getHours()+now.getMinutes()/60;
-  if(h<8||h>=18)return;   /* outside the day's 08:00–18:00 window nothing runs by itself */
+  if(h<8||h>=22)return;   /* outside the day's 08:00–22:00 window nothing runs by itself */
   const day=now.getDay(),date=now.toISOString().slice(0,10),slots=(day===2||day===5)?[9,15]:[9];
   const due=slots.filter(slot=>h>=slot&&!store.get('herems_scheduled_sync_'+date+'_'+slot));
   if(due.length){ slots.forEach(slot=>{ if(h>=slot) store.set('herems_scheduled_sync_'+date+'_'+slot,String(Date.now())); });
@@ -5601,7 +5715,7 @@ function wireLiveSync(){
    · BACK ONLINE — the keeper wakes BY ITSELF (the network event, the app coming back into focus, or its
      10-minute tick) and runs ONE guarded recovery pass: a quiet central pull (pulling is never limited, and
      the union merge + tombstone rules resolve every conflict in favour of the newest record — no duplicates),
-     the scheduled lossless sync when its 08:00–18:00 slot is due, and a gentle nudge about any queued SMS.
+     the scheduled lossless sync when its 08:00–22:00 slot is due, and a gentle nudge about any queued SMS.
    · TRANSACTIONAL ACCURACY — one pass at a time (busy flag), never more than one per 5 minutes, and every
      scheduled slot is stamped once per day. A reconnect storm cannot double-send anything. The upload ladder,
      the roles and the daily windows are NEVER bypassed. */
@@ -6110,22 +6224,22 @@ function schupStatusLine(u){ const rows=(DB.syncReq||[]).filter(r=>r&&r.type==='
     ? '✔️ <b>Super Administrator acknowledged</b> ('+esc(r.ackBy||'Super Admin')+', '+new Date(r.ackAt||r.ts).toLocaleDateString()+')'
     : '⏳️ awaiting the Super Administrator — he ✔️ Acknowledges from his 📬 inbox; your next ☁️ pull shows it'); }
 /* ============ Round-228 (owner's items 4 & 5): 🗓 THE SCHOOL SYNCHRONISATION WINDOWS ==================
-   A School Administrator's data goes UP to the Super Administrator EVERY DAY inside the 08:00–18:00 window —
+   A School Administrator's data goes UP to the Super Administrator EVERY DAY inside the 08:00–22:00 window —
    at least ONCE a day is the allowance (TWICE on Tuesdays and Fridays) and any send past it is DENIED. When a term ENDS (vacation) the
    app runs that sync BY ITSELF, once for the term, whatever the day. Nothing here limits a Super
    Administrator (they sync freely) or a teacher (their packages may climb to the school any time).
    Every run and every refusal lands in DB.syncLog, so the panel can say "1 of 2 used today" honestly.
    The ladder is unchanged: teachers 📤 → School Administrator 📥 → School Administrator 📤 → Super Admin. */
-const SCH_SYNC_CAP=1;             /* Round-288 (owner item 2): the DAILY allowance — at least once every day, inside the 08:00–18:00 window */
+const SCH_SYNC_CAP=1;             /* Round-288 (owner item 2): the DAILY allowance — at least once every day, inside the 08:00–22:00 window */
 const SCH_SYNC_CAP_TTF=2;         /* Round-288: Tuesdays & Fridays carry a DOUBLE daily allowance — twice on those days */
-const SCH_SYNC_DAYS=[0,1,2,3,4,5,6];   /* Round-288: EVERY day is a sync day now (Date.getDay(): 0 = Sunday) — the 08:00–18:00 clock is the window */
-const SCH_SYNC_OPEN=8*60, SCH_SYNC_CLOSE=18*60;   /* Round-288: the day's window opens 08:00 and closes 18:00 — same lossless gzip compression on every send */
+const SCH_SYNC_DAYS=[0,1,2,3,4,5,6];   /* Round-288: EVERY day is a sync day now (Date.getDay(): 0 = Sunday) — the 08:00–22:00 clock is the window */
+const SCH_SYNC_OPEN=8*60, SCH_SYNC_CLOSE=22*60;   /* Round-288: the day's window opens 08:00 and closes 22:00 — same lossless gzip compression on every send */
 const SCH_DAY_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 function schSyncCapFor(ts){ const d=new Date(ts===undefined?Date.now():ts); return (d.getDay()===2||d.getDay()===5)? SCH_SYNC_CAP_TTF : SCH_SYNC_CAP; }   /* Round-288: twice on Tuesdays & Fridays */
 function schDayKey(ts){ const d=new Date(ts===undefined?Date.now():ts); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }   /* Round-288: the allowance is counted per DAY now */
 function schDayName(ts){ return SCH_DAY_NAMES[new Date(ts===undefined?Date.now():ts).getDay()]; }
 function schDayAllowed(ts){ const d=new Date(ts===undefined?Date.now():ts); const mod=d.getHours()*60+d.getMinutes();
-  return SCH_SYNC_DAYS.indexOf(d.getDay())>=0 && mod>=SCH_SYNC_OPEN && mod<=SCH_SYNC_CLOSE; }   /* Round-288: every day, but only inside the 08:00–18:00 window */
+  return SCH_SYNC_DAYS.indexOf(d.getDay())>=0 && mod>=SCH_SYNC_OPEN && mod<=SCH_SYNC_CLOSE; }   /* Round-288: every day, but only inside the 08:00–22:00 window */
 function schWeekKey(ts){ const d=new Date(ts===undefined?Date.now():ts); const back=(d.getDay()+6)%7;   /* Monday-anchored week */
   const m=new Date(d.getFullYear(), d.getMonth(), d.getDate()-back);
   return m.getFullYear()+'-'+String(m.getMonth()+1).padStart(2,'0')+'-'+String(m.getDate()).padStart(2,'0'); }
@@ -6161,7 +6275,7 @@ function schSyncGate(){ const u=me(); const now0=Date.now(); const base={ cap:sc
   if(used>=schSyncCapFor(now)) return Object.assign(base,{ ok:false, reason:'cap', used:used, next:schNextWindow(now), school:s, termEnd:te });   /* Round-288: today's daily allowance */
   return Object.assign(base,{ ok:true, reason:'', used:used, next:schNextWindow(now), school:s, termEnd:te }); }
 function schSyncReasonText(g){ if(!g) return '';
-  if(g.reason==='day') return 'the daily sync window is <b>08:00 – 18:00</b> and it is closed right now — syncing is open <b>every day</b>, <b>twice on Tuesdays and Fridays</b>'+(g.next?(', next window <b>'+esc(g.next.label)+'</b>'):'');
+  if(g.reason==='day') return 'the daily sync window is <b>08:00 – 22:00</b> and it is closed right now — syncing is open <b>every day</b>, <b>twice on Tuesdays and Fridays</b>'+(g.next?(', next window <b>'+esc(g.next.label)+'</b>'):'');
   if(g.reason==='cap') return 'today\'s allowance is already used (<b>'+g.used+' of '+g.cap+'</b>) — <b>at least once a day, twice on Tuesdays and Fridays</b>'+(g.next?(', next window <b>'+esc(g.next.label)+'</b> — a fresh daily allowance'):'');
   if(g.reason==='term-end') return 'the term has ended — this is the automatic end-of-term sync';
   if(g.reason==='noschool') return 'no school is linked to this device';
@@ -6180,9 +6294,9 @@ function schSyncWindowsHTML(){ const u=me(); if(!u||u.role!=='schooladmin') retu
       : te.ended? '<b>The term has ended</b> — the automatic end-of-term sync is due now.'
       : 'Term <b>'+esc(String(te.term))+'</b> ends <b>'+new Date(te.end).toLocaleDateString()+'</b> — the app syncs your school up <b>by itself</b> on that day (vacation).') : '';
   return '<div class="card mb2"><h3>🗓 School sync windows</h3>   <!-- Round-228 (owner items 4 & 5) -->'
-  + '<div class="small mut">Your school\'s data goes <b>up to the Super Administrator every day</b> inside the <b>08:00 – 18:00</b> window — <b>at least once a day</b>, and <b>twice on Tuesdays and Fridays</b> — every send riding the same <b>lossless compression</b> (nothing is ever lost or degraded on the way up). Plus <b>once automatically when a term ends</b> (vacation). Teachers keep handing their packages up to you any day, and ☁️ pulling the central data is never limited.</div>'
+  + '<div class="small mut">Your school\'s data goes <b>up to the Super Administrator every day</b> inside the <b>08:00 – 22:00</b> window — <b>at least once a day</b>, and <b>twice on Tuesdays and Fridays</b> — every send riding the same <b>lossless compression</b> (nothing is ever lost or degraded on the way up). Plus <b>once automatically when a term ends</b> (vacation). Teachers keep handing their packages up to you any day, and ☁️ pulling the central data is never limited.</div>'
   + '<div class="mt1" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'
-  + chip(g.ok?('✅ The 08:00 – 18:00 window is open — '+schDayName()):('🚫 The daily window (08:00 – 18:00) is closed — '+schDayName()), g.ok?'ok':'bad')
+  + chip(g.ok?('✅ The 08:00 – 22:00 window is open — '+schDayName()):('🚫 The daily window (08:00 – 22:00) is closed — '+schDayName()), g.ok?'ok':'bad')
   + chip('<b>'+g.used+' of '+g.cap+'</b> used today')
   + (g.next?chip('next window: '+esc(g.next.label)):'')
   + (g.reason==='term-end'?chip('🗓 end-of-term window open'):'')
@@ -6192,13 +6306,13 @@ function schSyncWindowsHTML(){ const u=me(); if(!u||u.role!=='schooladmin') retu
   + ((te&&te.ended&&!te.doneAt)?'<div class="mt1"><button class="btn gold" onclick="A.schTermEndNow()">📤 Run the end-of-term sync now</button></div>':'')
   + (te&&te.doneAt?'<div class="mt1"><button class="btn sm" onclick="A.schTermEndHandover()">📤 Hand over the end-of-term package</button></div>':'')
   + '<div class="mt1" style="display:flex;gap:8px;flex-wrap:wrap">'
-  + '<button class="btn" data-tip="Send your whole school up to the Super Administrator (every day 08:00–18:00; twice on Tuesdays & Fridays)" onclick="A.syncToSuper()">📤 Sync to the Super Administrator</button>'
+  + '<button class="btn" data-tip="Send your whole school up to the Super Administrator (every day 08:00–22:00; twice on Tuesdays & Fridays)" onclick="A.syncToSuper()">📤 Sync to the Super Administrator</button>'
   + '<button class="btn sm ghost" data-tip="The rules in one screen" onclick="A.schWindowsExplain()">? The rules</button>'
   + '</div></div>'; }
 A.schWindowsExplain=function(){ openModal(`${mHead('🗓 How school syncing works')}<div class="m-body">
   <p class="small">Everything on this page follows the same rules — the school ladder:</p>
   <ul class="small" style="padding-left:1.1rem">
-    <li><b>Every day, 08:00 – 18:00</b> — the daily window your school's data can go up in.</li>
+    <li><b>Every day, 08:00 – 22:00</b> — the daily window your school's data can go up in.</li>
     <li><b>At least once a day</b> — and <b>twice on Tuesdays and Fridays</b>; any send past the day's allowance is refused and waits for the next 08:00 window.</li>
     <li><b>Lossless compression</b> — every send rides the same lossless gzip compression, so nothing is ever lost or degraded on the way up.</li>
     <li><b>End of term</b> — the app sends your school up <b>by itself</b> when the term ends (vacation), even outside the window. It is never blocked by the daily allowance.</li>
@@ -6208,7 +6322,7 @@ A.schWindowsExplain=function(){ openModal(`${mHead('🗓 How school syncing work
   <div class="mt2"><button class="btn" onclick="A.closeModal()">Got it</button></div></div>`); };
 A.schSyncDenied=function(g){ g=g||schSyncGate();
   openModal(`${mHead('🚫 Not a sync window right now')}<div class="m-body">
-  <p class="small">Your school's data goes up to the Super Administrator <b>every day inside the 08:00 – 18:00 window</b> — <b>at least once a day, twice on Tuesdays and Fridays</b>. Right now ${schSyncReasonText(g)}.</p>
+  <p class="small">Your school's data goes up to the Super Administrator <b>every day inside the 08:00 – 22:00 window</b> — <b>at least once a day, twice on Tuesdays and Fridays</b>. Right now ${schSyncReasonText(g)}.</p>
   <div class="notice info mini mt2"><span>The <b>end-of-term sync happens by itself</b> — when the term ends the app sends your school up automatically, so nothing is lost in the vacation.</span></div>
   <div class="small mut mt1">Teachers are unaffected: their packages keep climbing to you any day, and ☁️ reading the central data stays open.</div>
   <div class="mt2" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="A.closeModal()">OK</button>${g.next?`<button class="btn sm ghost" onclick="A.closeModal()">Next window: ${esc(g.next.label)}</button>`:''}</div></div>`); };
@@ -6274,7 +6388,7 @@ A.syncToSuperMode=function(force){ const u=me(); if(!u||u.role!=='schooladmin') 
   return 'choose-mode'; };
 A.syncToSuperGo=function(force, mode){ const u=me(); if(!u||u.role!=='schooladmin') return 'role';
   const s=mySchool(); if(!s) return 'noschool';
-  /* Round-288 (owner item 2): daily 08:00–18:00 windows — at least once a day, twice on Tuesdays & Fridays — or the automatic end-of-term run */
+  /* Round-288 (owner item 2): daily 08:00–22:00 windows — at least once a day, twice on Tuesdays & Fridays — or the automatic end-of-term run */
   const _g=schSyncGate();
   if(!_g.ok){ schSyncLogRow({ schoolId:s.id, kind:'schup', ok:false, reason:_g.reason, by:u.name, mode:mode }); A.schSyncDenied(_g); return 'denied-'+_g.reason; }
   _schMode=(mode==='push')?'push':'file';
@@ -6420,8 +6534,16 @@ A.folderUnlink=async function(){ const u=me(); if(!u||u.role!=='schooladmin') re
   saveDB(); if(me()) render(); toast('📁 Folder unlinked — data stays safe inside the app; link a folder again any time','gold'); return 'off'; };
 
 /* ---------- session & auth helpers ---------- */
-function sess(){ return DB.session; }
-function me(){ const s=sess(); return s? DB.users.find(u=>u.id===s.userId) : null; }
+function sess(){
+  if(DB && DB.session && DB.session.userId) return DB.session;
+  const backup = loadSessionBackup();
+  if(backup && backup.userId){
+    if(DB) DB.session = backup;
+    return backup;
+  }
+  return (DB && DB.session) ? DB.session : null;
+}
+function me(){ const s=sess(); return s? (DB.users||[]).find(u=>u.id===s.userId)||null : null; }
 /* Round-205: RECENT ACTIVITY LOG — records login/logout (and other key actions) per user & school,
    so the School Administrator sees "when · who · action" on their dashboard. Union-synced across devices.
    Capped per school so it can never grow unbounded. */
@@ -6441,15 +6563,18 @@ function logActivity(user, action, detail){
 }
 function startSession(user, page){
   DB.session = { userId:user.id, page:page||'dashboard', param:null, cashUnlocked:false, lastActivity:Date.now() };
+  saveSessionBackup(DB.session);
   try{ const s0=DB.schools.find(x=>x.id===user.schoolId); if(s0 && user.role!=='superadmin') autoAlumniSweep(s0); }catch(e){}   /* Round-60: auto-move final class to Old Students the moment it is due */
   saveDB();
   try{ logActivity(user, 'login'); }catch(e){}   /* Round-205: record the sign-in on the recent-activity log */
   try{ sessionStorage.removeItem('hp_no_install'); }catch(e){}  /* re-offer install after every fresh login */
 }
-function touch(){ if(sess()){ sess().lastActivity=Date.now(); saveDB(); updateIdleChip(); } }
+function touch(){ const s=sess(); if(s){ s.lastActivity=Date.now(); saveSessionBackup(s); saveDB(); updateIdleChip(); } }
 function endSession(msg){
   try{ logActivity(me(), 'logout'); }catch(e){}   /* Round-205: record the sign-out before clearing the session */
-  DB.session=null; saveDB();
+  DB.session=null;
+  saveSessionBackup(null);
+  saveDB();
   showAuth('login', msg||'You have been signed out.');
 }
 
@@ -6557,7 +6682,7 @@ A.installApp=function(ev){
 ['click','keydown','pointerdown','wheel','touchstart'].forEach(ev=>document.addEventListener(ev, ()=>touch(), {passive:true}));
 /* Round-44: LIVE inactivity countdown — ticks every second (mm:ss), goes red under 1:00, signs out at 0:00 */
 function idleSweep(){ const s=sess(); if(!s) return;
-  if(Date.now()-s.lastActivity >= IDLE_LIMIT_MS){ endSession('⏱ Session expired after 5 minutes of inactivity. Please sign in again.'); return; }
+  if(Date.now()-s.lastActivity >= IDLE_LIMIT_MS){ endSession('⏱ Session expired after 15 minutes of inactivity. Please sign in again.'); return; }
   updateIdleChip(); }
 setInterval(idleSweep, 1000);
 function updateIdleChip(){ const c=$('#idlechip'); if(!c) return;
@@ -7890,6 +8015,23 @@ let SIG_PAD_IS_DRAWING = false;
 let SIG_PAD_HAS_STROKES = false;
 
 A.openSigDrawModal = function(target, prevId){
+  // Stash in-progress registration inputs so nothing is lost
+  if(target === 'headTmp' && typeof REG !== 'undefined' && REG && REG.data){
+    const sn = $('#js-sn'), fn = $('#js-fn'), on = $('#js-on'), gn = $('#js-gender'), em = $('#js-email');
+    if(sn) REG.data.sn = sn.value;
+    if(fn) REG.data.fn = fn.value;
+    if(on) REG.data.on = on.value;
+    if(gn) REG.data.gender = gn.value;
+    if(em) REG.data.email = em.value;
+    const ct = document.querySelector('input[name="js-canteen"]:checked');
+    if(ct) REG.data.canteen = ct.value;
+  }
+  if(target === 'treg' && typeof REG !== 'undefined' && REG && REG.data){
+    const sn = $('#tr-sn'), fn = $('#tr-fn'), on = $('#tr-on');
+    if(sn) REG.data.sn = sn.value;
+    if(fn) REG.data.fn = fn.value;
+    if(on) REG.data.on = on.value;
+  }
   const isHead = (target === 'head' || target === 'headTmp');
   const title = isHead ? "✍️ Head Teacher's Signature" : "✍️ Class Teacher's Signature";
   openModal(mHead(title + ' — Solid White Background', true) + `
@@ -8064,13 +8206,13 @@ A.setTeacherSigFile = function(tid, inp){
   if(f.size > 8000000) return toast('Image too large (max ~8MB)', 'bad');
   const r = new FileReader();
   r.onload = e => {
-    processSignatureWhiteBackground(e.target.result, 360, (cleanSig) => {
+    processSignatureWhiteBackground(e.target.result, 320, (cleanSig) => {
       const t = (DB.users || []).find(x => x.id === tid);
       if(t){
         t.sig = cleanSig;
         saveDB();
         closeModal();
-        render();
+        if(me()){ try{ render(); }catch(err){} }
         toast('✍️ Signature assigned for ' + esc(t.name) + ' ✅️', 'ok');
       }
     });
@@ -8084,7 +8226,7 @@ A.setTeacherDemoSig = function(tid){
   t.sig = demoSig(t.name);
   saveDB();
   closeModal();
-  render();
+  if(me()){ try{ render(); }catch(err){} }
   toast('🖋️ Stylized signature generated and assigned for ' + esc(t.name) + ' ✅️', 'ok');
 };
 
@@ -8138,33 +8280,62 @@ A.saveSigPad = function(target, prevId){
   if(!SIG_PAD_HAS_STROKES){
     return toast('Please draw your signature before saving or tap Cancel', 'bad');
   }
-  const rawUrl = cv.toDataURL('image/jpeg', 0.92);
-  processSignatureWhiteBackground(rawUrl, 360, (cleanSig)=>{
+  const rawUrl = cv.toDataURL('image/jpeg', 0.85);
+  processSignatureWhiteBackground(rawUrl, 320, (cleanSig)=>{
     if(target === 'headTmp'){
       HEAD_SIG_TMP = cleanSig;
+      saveRegState();
       const el = $('#' + (prevId || 'js-sig-prev'));
       if(el) el.innerHTML = `<img class="sig-img" style="border:1.5px solid var(--line);border-radius:8px;padding:4px;background:#ffffff;max-height:100px" src="${cleanSig}">`;
-    } else if(target === 'head'){
-      mySchool().headSig = cleanSig;
-      saveDB();
-    } else if(target === 'treg'){
-      REG.data.sig = cleanSig;
+      closeModal();
+      toast('✍️ Head Teacher signature saved with clean white background ✅️', 'ok');
+      return; // CRITICAL: NEVER CALL render() during registration!
+    }
+    if(target === 'treg'){
+      if(typeof REG !== 'undefined' && REG && REG.data){
+        REG.data.sig = cleanSig;
+      }
       const el = $('#' + (prevId || 'tr-sig-prev'));
       if(el) el.innerHTML = `<img class="sig-img" style="border:1.5px solid var(--line);border-radius:8px;padding:4px;background:#ffffff;max-height:110px" src="${cleanSig}">`;
-    } else if(target === 'me'){
-      me().sig = cleanSig;
-      saveDB();
-    } else if(target){
+      closeModal();
+      toast('✍️ Class Teacher signature saved with clean white background ✅️', 'ok');
+      return; // CRITICAL: NEVER CALL render() during registration!
+    }
+    if(target === 'head'){
+      const s = mySchool();
+      if(s){
+        s.headSig = cleanSig;
+        saveDB();
+      }
+      closeModal();
+      if(me()){ try{ render(); }catch(e){} }
+      toast('✍️ Head Teacher signature saved with solid white background ✅️', 'ok');
+      return;
+    }
+    if(target === 'me'){
+      const u = me();
+      if(u){
+        u.sig = cleanSig;
+        saveDB();
+      }
+      closeModal();
+      if(me()){ try{ render(); }catch(e){} }
+      toast('✍️ Signature saved with solid white background ✅️', 'ok');
+      return;
+    }
+    if(target){
       const tch = (DB.users || []).find(x => x.id === target);
       if(tch){
         tch.sig = cleanSig;
         saveDB();
         toast('✍️ Signature saved for ' + esc(tch.name) + ' ✅️', 'ok');
       }
+      closeModal();
+      if(me()){ try{ render(); }catch(e){} }
+      return;
     }
     closeModal();
-    render();
-    toast('✍️ Signature saved with solid white background ✅️', 'ok');
+    if(me()){ try{ render(); }catch(e){} }
   });
 };
 
@@ -8177,7 +8348,23 @@ function showAuth(mode, flash){
   let painted=true;   /* Round-98 */
   if(mode==='login') r.innerHTML = authShell(loginHTML(flash));
   else if(mode==='pick') r.innerHTML = authShell(pickHTML());
-  else if(mode==='join') { REG={step:1, data:{}}; HEAD_SIG_TMP=null; r.innerHTML=authShell(joinSchoolHTML()); }   // Round-58: school admins redeem a one-time code from the Super Admin
+  else if(mode==='join_resume') {
+    if(!REG) REG = loadRegState() || {step:1, data:{}};
+    if(!HEAD_SIG_TMP) HEAD_SIG_TMP = loadSavedHeadSig();
+    r.innerHTML = authShell(joinSchoolHTML());
+  }
+  else if(mode==='join') {
+    const saved = loadRegState();
+    if(saved && saved.step === 2 && saved.data && saved.data.schoolId){
+      REG = saved;
+      HEAD_SIG_TMP = loadSavedHeadSig();
+    } else {
+      REG = {step:1, data:{}};
+      HEAD_SIG_TMP = null;
+      clearRegState();
+    }
+    r.innerHTML = authShell(joinSchoolHTML());
+  }
   else if(mode==='teacher'){ REG={step:1, data:{}}; r.innerHTML=authShell(teacherRegHTML()); }
   else if(mode==='parent'){ REG={step:1, data:{}}; r.innerHTML=authShell(parentRegHTML()); }
   else if(mode==='about'){ r.innerHTML=aboutPageHTML(); }   /* Round-100: About Us page — reachable BEFORE login and from inside every portal */
@@ -8303,7 +8490,7 @@ A.applyClientFile=function(text){
   if(!s){ s=got.school; if(!s.logo && typeof APP_LOGO_URI !== 'undefined') s.logo = APP_LOGO_URI; if(!s.address) s.address = s.location || ''; if(!s.portalUrl && got.school && got.school.portalUrl) s.portalUrl = got.school.portalUrl; DB.schools.push(s); migrateDB(); saveDB(); } else { if(!s.portalUrl && got.school && got.school.portalUrl){ s.portalUrl = got.school.portalUrl; saveDB(); } }   // plant the school locally — zero cloud/sync dependency
   if(got.kind==='school-client'){
     if(s.joinStatus!=='PENDING'||s.joinActive===false){ toast('This client file has already been used — that school has joined. Ask the System Administrator if that wasn\'t you.','bad'); return false; }
-    REG={step:2, data:{code:s.joinCode||'', schoolId:s.id}}; HEAD_SIG_TMP=null;
+    REG={step:2, data:{code:s.joinCode||'', schoolId:s.id}}; saveRegState(); HEAD_SIG_TMP=null;
     const r=$('#auth-root'); r.classList.remove('hidden'); const ap=$('#app'); if(ap) ap.classList.add('hidden');
     r.innerHTML=authShell(joinSchoolHTML());
     toast('✅️ '+s.name+' file loaded — create your administrator credentials below','ok'); return true;
@@ -8651,13 +8838,13 @@ function joinSchoolHTML(){
     <h2>👤 Create Administrator Credentials</h2><div class="mut small">Step 2 of 2 — ${s?`<b>${esc(s.name)}</b> · code <b>${esc(s.joinCode||'')}</b>`:''}</div>
     ${stepsHTML(2,2)}
     <div class="frow c2">
-      <div><label>Surname *</label><input id="js-sn" value="${esc(d.sn||'')}" placeholder="e.g. Mensah" oninput="A.syncFullName('js')"></div>
-      <div><label>First name *</label><input id="js-fn" value="${esc(d.fn||'')}" placeholder="e.g. Kofi" oninput="A.syncFullName('js')"></div>
+      <div><label>Surname *</label><input id="js-sn" value="${esc(d.sn||'')}" placeholder="e.g. Mensah" oninput="A.syncFullName('js');saveRegState()"></div>
+      <div><label>First name *</label><input id="js-fn" value="${esc(d.fn||'')}" placeholder="e.g. Kofi" oninput="A.syncFullName('js');saveRegState()"></div>
     </div>
     <div class="frow c2">
-      <div><label>Other name</label><input id="js-on" value="${esc(d.on||'')}" placeholder="e.g. Kwabena (optional)" oninput="A.syncFullName('js')"></div>
+      <div><label>Other name</label><input id="js-on" value="${esc(d.on||'')}" placeholder="e.g. Kwabena (optional)" oninput="A.syncFullName('js');saveRegState()"></div>
       <div><label>Gender * <span class="mut">(for your dashboard greeting)</span></label>
-      <select id="js-gender"><option value="">— choose —</option><option ${d.gender==='Male'?'selected':''}>Male</option><option ${d.gender==='Female'?'selected':''}>Female</option></select></div>
+      <select id="js-gender" onchange="saveRegState()"><option value="">— choose —</option><option ${d.gender==='Male'?'selected':''}>Male</option><option ${d.gender==='Female'?'selected':''}>Female</option></select></div>
     </div>
     <div style="margin-bottom:1rem">
       <label>Full name <span class="mut">(auto-concatenated: Surname First Name Other Name)</span></label>
@@ -8665,7 +8852,7 @@ function joinSchoolHTML(){
     </div>
     <div style="margin-bottom:1rem">
       <label>Administrator Login Email * <span class="mut">(format: firstname@${esc(schoolEmailDomain(s, true))})</span></label>
-      <select id="js-em-sel" style="font-weight:700;color:var(--brand);background:#f0f9ff;border:1.5px solid #38bdf8;padding:.6rem .75rem" onchange="A.onEmailDropdownChange('js')">
+      <select id="js-em-sel" style="font-weight:700;color:var(--brand);background:#f0f9ff;border:1.5px solid #38bdf8;padding:.6rem .75rem" onchange="A.onEmailDropdownChange('js');saveRegState()">
         ${emailOptionsHTML(d.fn||'', d.sn||'', d.on||'', schoolEmailDomain(s, true), d.email||'')}
       </select>
       <input type="hidden" id="js-email" value="${esc(d.email||'')}">
@@ -8678,8 +8865,12 @@ function joinSchoolHTML(){
     </div>
     <label>✍️ Head Teacher's signature * <span class="mut">(white background required — appears on report cards)</span></label>
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <label class="btn sm" data-tip="Upload signature image">📁 Upload signature<input id="js-sig" type="file" accept="image/*" hidden onchange="A.setHeadSigTmp(this,'js-sig-prev')"></label>
-      <label class="btn sm gold" data-tip="Take a photo of paper signature">📸 Take photo<input type="file" accept="image/*" capture="user" hidden onchange="A.setHeadSigTmp(this,'js-sig-prev')"></label>
+      <button type="button" class="btn sm" onclick="$('#js-sig').click()">📁 Upload signature</button>
+      <input id="js-sig" type="file" accept="image/*" style="display:none" onchange="A.setHeadSigTmp(this,'js-sig-prev')">
+
+      <button type="button" class="btn sm gold" onclick="$('#js-cam').click()">📸 Take photo</button>
+      <input id="js-cam" type="file" accept="image/*" capture="environment" style="display:none" onchange="A.setHeadSigTmp(this,'js-sig-prev')">
+
       <button type="button" class="btn sm ghost" onclick="A.openSigDrawModal('headTmp','js-sig-prev')">✍️ Draw signature</button>
     </div>
     <div class="small mut mt1" style="font-size:.76rem">✍️ Must have a solid white background (automatically formatted with clean white background).</div>
@@ -8688,10 +8879,10 @@ function joinSchoolHTML(){
       <label style="font-size:.96rem;font-weight:700;display:block;margin-bottom:.4rem;color:#1e293b">🍚 Will this school use the portal to collect canteen? *</label>
       <div style="display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap">
         <label style="display:flex;align-items:center;gap:.45rem;cursor:pointer;font-weight:600">
-          <input type="radio" name="js-canteen" value="yes" ${s&&s.use_app_for_canteen===false?'':'checked'}> <span>Yes (Teachers take canteen daily in the app)</span>
+          <input type="radio" name="js-canteen" value="yes" ${s&&s.use_app_for_canteen===false?'':'checked'} onchange="saveRegState()"> <span>Yes (Teachers take canteen daily in the app)</span>
         </label>
         <label style="display:flex;align-items:center;gap:.45rem;cursor:pointer;font-weight:600">
-          <input type="radio" name="js-canteen" value="no" ${s&&s.use_app_for_canteen===false?'checked':''}> <span>No (Print physical sheets & enter daily totals)</span>
+          <input type="radio" name="js-canteen" value="no" ${s&&s.use_app_for_canteen===false?'checked':''} onchange="saveRegState()"> <span>No (Print physical sheets & enter daily totals)</span>
         </label>
       </div>
       <div class="small mut" style="margin-top:.4rem;line-height:1.45">
@@ -8707,16 +8898,19 @@ function joinSchoolHTML(){
     </div>`;
 }
 function stepsHTML(n, total){ return `<div class="steps">${Array.from({length:total},(_,i)=>`<div class="st ${i<n?'on':''}">STEP ${i+1}</div>`).join('')}</div>`; }
-A.joinBack = function(){ REG.step=1; $('#auth-root').innerHTML=authShell(joinSchoolHTML()); };
+A.joinBack = function(){ REG.step=1; saveRegState(); $('#auth-root').innerHTML=authShell(joinSchoolHTML()); };
 A.setHeadSigTmp=function(inp, prevId){
   const f=inp.files&&inp.files[0]; if(!f) return;
-  if(f.size>8000000) return toast('Image too large (max 8MB)','bad');
+  if(f.size>8000000) { try{ inp.value=''; }catch(e){} return toast('Image too large (max 8MB)','bad'); }
+  saveRegState();
   const r=new FileReader(); r.onload=e=>{
-    processSignatureWhiteBackground(e.target.result, 360, (cleanSig)=>{
+    processSignatureWhiteBackground(e.target.result, 320, (cleanSig)=>{
       HEAD_SIG_TMP=cleanSig;
+      saveRegState();
       const el=$('#'+(prevId||'js-sig-prev'));
       if(el) el.innerHTML=`<img class="sig-img" style="border:1.5px solid var(--line);border-radius:8px;padding:4px;background:#ffffff;max-height:100px" src="${cleanSig}">`;
       toast('✍️ Head Teacher signature saved with clean white background ✅️','ok');
+      try{ inp.value=''; }catch(err){}
     });
   };
   r.readAsDataURL(f);
@@ -8739,6 +8933,7 @@ A.joinVerify = async function(){
   if(s.joinStatus==='JOINED'||s.joinActive===false) return toast('Code already used','bad');
   if(s.joinStatus!=='PENDING') return toast('Invalid code','bad');
   REG.data.code=code; REG.data.schoolId=s.id; REG.step=2;
+  saveRegState();
   $('#auth-root').innerHTML=authShell(joinSchoolHTML());
 };
 
@@ -8823,7 +9018,8 @@ A.joinFinish = function(){
   saveDB();
   /* Automatic sync to Super Admin upon joining (exempt from daily sync chance) */
   syncJoinToSuperAdmin(s, admin);
-  HEAD_SIG_TMP=null; REG={step:1, data:{}};
+  clearRegState();
+  HEAD_SIG_TMP=null; REG=null;
   showAuth('login', `✅️ Administrator account created for ${esc(name)}! Sign in with your email (${esc(em)}) · Initial Default Password: <span style="opacity:0.65;font-family:monospace;font-weight:700;color:#64748b">${esc(defPw)}</span> (compulsory change on first login)`);
   toast('Account created — welcome! Sign in to continue 🎉','ok'); maybeInstallPrompt();
 };
@@ -9871,6 +10067,7 @@ function renderShell(){
     <button id="tb-chrome" class="theme-btn" data-tip="Colourful emoji or the plain icon set — your choice, remembered on this device" onclick="A.toggleChrome()">${HPS_CHROME()==='emoji'?'🎨':'🖼'}<span>${HPS_CHROME()==='emoji'?'Emoji':'Icons'}</span></button>
     <div class="menu" style="margin-left:auto;flex-shrink:0"><button class="btn ghost sm tb-user" onclick="document.getElementById('umm').classList.toggle('hidden')">${avatarIcon(u)}<span class="tb-uname"> ${esc(u.name.split(' ')[0])} ▾</span></button>   <!-- Round-50: icon-only on phones -->
       <div id="umm" class="menu-pop hidden">
+        <div onclick="A.editMyProfile()">👤 My Profile / Edit Details</div>
         <div onclick="A.changePwModal()">🔐 Change password</div>
         ${u.role==='schooladmin'&&!sess().cashUnlocked?'<div onclick="A.cashUnlockModal()">🔑 Unlock cash modules</div>':''}
         ${u.role==='schooladmin'&&sess().cashUnlocked?'<div onclick="A.lockCash()">🔒 Lock cash modules</div>':''}
@@ -10183,7 +10380,17 @@ A.mockMaster=function(mid, mockIds){const s=mySchool(),m=(DB.mocks||[]).find(x=>
   if(Array.isArray(mockIds)&&mockIds.length){ mocks=mocks.filter(x=>mockIds.indexOf(x.id)>=0); if(!mocks.some(x=>x.id===m.id)) mocks.push(m); }   /* Round-311: only the Administrator's chosen mocks ride the comparison */if(!s||!m)return;const cs=mockActiveClasses(s,m),rows=[];cs.forEach(c=>{const subs=studentSubjectsForClass(s,c);activeStudents(s.id).filter(st=>st.classId===c.id).forEach(st=>{const z=mockStudentStats(s,m,st,subs),vals=subs.map(x=>Number(((m.scores||{})[st.id]||{})[x])).filter(Number.isFinite);rows.push({st,c,subs,vals,total:z.total,rawScore:z.rawScore,avg:z.avg,aggregate:z.aggregate});});});rows.sort((a,b)=>b.rawScore-a.rawScore);const table='<table><thead><tr><th>Position</th><th>Student</th><th>Class</th><th>Total<br>all subjects</th><th>Raw Score<br>best six</th><th>Average<br>raw ÷ 6</th><th>Aggregate</th></tr></thead><tbody>'+rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.st.firstName+' '+r.st.surname)+'</td><td>'+esc(r.c.name)+'</td><td>'+r.total.toFixed(2)+'</td><td><b>'+r.rawScore.toFixed(2)+'</b></td><td>'+r.avg.toFixed(2)+'</td><td><b>'+r.aggregate+'</b></td></tr>').join('')+'</tbody></table>';const sheets='<div class="mock-report-sheet mock-master mock-landscape">'+mockWM(s)+mockHead(s, esc(m.name))+mockMasterStudentsGraph(rows,mocks,s)+'</div><div class="mock-report-sheet mock-master">'+mockWM(s)+mockHead(s,'Master Score Report \u00b7 '+esc(m.name)+' \u00b7 Best-six raw score, average and aggregate')+'<div class="mock-subspace"></div>'+table+'</div>'+mockSubjectSheets(s,m,rows);$('#print-root').innerHTML=sheets;window.print();};
 
 function render(){
-  const c=$('#content'); if(!me()) return showAuth('login');
+  const c=$('#content');
+  if(!me()){
+    if(typeof REG !== 'undefined' && REG && (REG.step || (REG.data && Object.keys(REG.data).length))) {
+      return; // NEVER show login while registration is in progress!
+    }
+    const ar = document.getElementById('auth-root');
+    if(ar && !ar.classList.contains('hidden')) {
+      return; // NEVER show login if auth/registration screen is visible!
+    }
+    return showAuth('login');
+  }
   const _anim=!!window.__hpNavAnim; window.__hpNavAnim=false;   /* Round-97 */
   const R={dashboard:renderDashboard, schools:renderSchools, sync:renderSync, settings:renderSettings, profile:schoolProfileHTML, schoolabout:schoolAboutHTML, updates:renderUpdates,
     students:renderStudents, admissions:renderAdmissions, genderana:renderGender, directory:renderDirectory, archives:renderArchives, teachers:renderTeachers, subjects:renderSubjects, scores:renderScores,
@@ -11592,57 +11799,89 @@ A.regFeeDel = function(k, i){
   refreshRegFee(k);
 };
 
-A.studentModal=function(id){
+function stashStudentForm(){
+  try{
+    const sn = $('#st-sn') ? $('#st-sn').value : '';
+    const fn = $('#st-fn') ? $('#st-fn').value : '';
+    const on = $('#st-on') ? $('#st-on').value : '';
+    const g = $('#st-g') ? $('#st-g').value : '';
+    const dob = $('#st-dob') ? $('#st-dob').value : '';
+    const adm = $('#st-adm') ? $('#st-adm').value : '';
+    const str = $('#st-str') ? $('#st-str').value : '';
+    const cls = $('#st-cls') ? $('#st-cls').value : '';
+    const house = $('#st-house') ? $('#st-house').value : '';
+    const ph = $('#st-ph') ? $('#st-ph').value : '';
+    const rel = $('#st-rel') ? $('#st-rel').value : '';
+    const res = $('#st-res') ? $('#st-res').value : '';
+    const gn = $('#st-gn') ? $('#st-gn').value : '';
+    const nat = $('#st-nat') ? $('#st-nat').value : '';
+    const enr = $('#st-enr') ? $('#st-enr').value : '';
+    const cms = ['Call','SMS','WhatsApp'].filter(m => $('#cm-'+m) && $('#cm-'+m).checked);
+    return { sn, fn, on, g, dob, adm, str, cls, house, ph, rel, res, gn, nat, enr, cms, photo:_tmpPhoto, photoFrom:_tmpPhotoFrom };
+  }catch(e){ return null; }
+}
+
+A.studentModal=function(id, stash){
   if(!id && featureBlocked('addStudent')) return lockFeatureToast('Student registration');
   const s=mySchool();
   const st=id? DB.students.find(x=>x.id===id):null;
-  _tmpPhoto=st?st.photo:null; _tmpPhotoFrom=(st&&st.photo)?'current':'files'; PHOTO_RAW_URL.st=st?st.photo:null;   /* Round-220: a pupil who already has a picture previews it as the CURRENT photo on file */
-  regSeed('st', st);   /* Round-221: the tick + school-set fees load with the pupil */
+  if(stash){
+    _tmpPhoto = stash.photo !== undefined ? stash.photo : (st?st.photo:null);
+    _tmpPhotoFrom = stash.photoFrom || ((st&&st.photo)?'current':'files');
+    PHOTO_RAW_URL.st = _tmpPhoto;
+  } else {
+    _tmpPhoto=st?st.photo:null; _tmpPhotoFrom=(st&&st.photo)?'current':'files'; PHOTO_RAW_URL.st=st?st.photo:null;
+  }
+  regSeed('st', st);
   const classes=sortClasses(s);
-  const curCls=st? (classOf(s,st.classId)||null) : null;   /* Round-188: prefill stream → class on edit */
+  const curCls=st? (classOf(s,st.classId)||null) : null;
+  const curStream = (stash && stash.str) ? stash.str : (curCls ? curCls.stream : '');
+  const curClassId = (stash && stash.cls) ? stash.cls : (st ? st.classId : '');
+  const curGender = (stash && stash.g) ? stash.g : (st ? st.gender : '');
+  const curRel = (stash && stash.rel) ? stash.rel : (st ? st.relationship : '');
   const photoOK=fullAccess(s);
   openModal(`${mHead(st?'✏️ Edit student':'🎓 Register student')}
   <div class="m-body">
     <div class="frow c3">
-      <div><label>Surname *</label><input id="st-sn" value="${esc(st?st.surname:'')}" placeholder="e.g. Mensah" oninput="A.syncFullName('st')"></div>
-      <div><label>First name *</label><input id="st-fn" value="${esc(st?st.firstName:'')}" placeholder="e.g. Kwame" oninput="A.syncFullName('st')"></div>
-      <div><label>Other name</label><input id="st-on" value="${esc(st?st.otherName||'':'')}" placeholder="e.g. Osei (optional)" oninput="A.syncFullName('st')"></div>
+      <div><label>Surname *</label><input id="st-sn" value="${esc(stash&&stash.sn!==undefined?stash.sn:(st?st.surname:''))}" placeholder="e.g. Mensah" oninput="A.syncFullName('st')"></div>
+      <div><label>First name *</label><input id="st-fn" value="${esc(stash&&stash.fn!==undefined?stash.fn:(st?st.firstName:''))}" placeholder="e.g. Kwame" oninput="A.syncFullName('st')"></div>
+      <div><label>Other name</label><input id="st-on" value="${esc(stash&&stash.on!==undefined?stash.on:(st?st.otherName||'':''))}" placeholder="e.g. Osei (optional)" oninput="A.syncFullName('st')"></div>
     </div>
     <div style="margin-bottom:1rem">
       <label>Full name <span class="mut">(auto-concatenated: Surname First Name Other Name)</span></label>
-      <input id="st-full" readonly class="mut-input" style="background:#f8fafc;font-weight:600;color:#1e293b;border:1.5px solid #cbd5e1;cursor:not-allowed" value="${esc([st?st.surname:'',st?st.firstName:'',st?(st.otherName||''):''].filter(Boolean).join(' '))}" placeholder="e.g. Mensah Kwame Osei">
+      <input id="st-full" readonly class="mut-input" style="background:#f8fafc;font-weight:600;color:#1e293b;border:1.5px solid #cbd5e1;cursor:not-allowed" value="${esc([stash&&stash.sn!==undefined?stash.sn:(st?st.surname:''),stash&&stash.fn!==undefined?stash.fn:(st?st.firstName:''),stash&&stash.on!==undefined?stash.on:(st?(st.otherName||''):'')].filter(Boolean).join(' '))}" placeholder="e.g. Mensah Kwame Osei">
     </div>
     <div class="frow c3">
-      <div><label>Gender *</label><select id="st-g"><option value="">—</option><option value="M" ${st&&st.gender==='M'?'selected':''}>Male</option><option value="F" ${st&&st.gender==='F'?'selected':''}>Female</option></select></div>
-      <div><label>Date of birth *</label><input id="st-dob" type="date" value="${st?st.dob:''}"></div>
-      <div><label>Admission date *</label><input id="st-adm" type="date" value="${st?st.adm:todayISO()}"></div>
+      <div><label>Gender *</label><select id="st-g"><option value="">—</option><option value="M" ${curGender==='M'?'selected':''}>Male</option><option value="F" ${curGender==='F'?'selected':''}>Female</option></select></div>
+      <div><label>Date of birth *</label><input id="st-dob" type="date" value="${stash&&stash.dob!==undefined?stash.dob:(st?st.dob:'')}"></div>
+      <div><label>Admission date *</label><input id="st-adm" type="date" value="${stash&&stash.adm!==undefined?stash.adm:(st?st.adm:todayISO())}"></div>
     </div>
     <div class="frow c2">
       <div><label>Class stream *</label><select id="st-str" onchange="A.stuStrChange(this.value)">
         <option value="">— choose a stream first —</option>
-        ${STREAMS_ORDER.filter(st2=>classes.some(c=>c.stream===st2)).map(st2=>`<option value="${st2}" ${st&&curCls&&curCls.stream===st2?'selected':''}>${st2}</option>`).join('')}
+        ${STREAMS_ORDER.filter(st2=>classes.some(c=>c.stream===st2)).map(st2=>`<option value="${st2}" ${curStream===st2?'selected':''}>${st2}</option>`).join('')}
       </select>
       <div class="small mut mt1" id="st-cls-note">👆 Tap a stream — only its classes show for you to pick the preferred one.</div></div>
       <div><label>Class *</label><select id="st-cls" onchange="A.stuClsChange(this.value)">
-        ${st&&curCls? `<option value="">— choose class —</option>`+classes.filter(c=>c.stream===curCls.stream).map(c=>`<option value="${c.id}" ${st.classId===c.id?'selected':''}>${esc(c.name)}</option>`).join('') : '<option value="">— pick a stream above first —</option>'}
+        ${curStream? `<option value="">— choose class —</option>`+classes.filter(c=>c.stream===curStream).map(c=>`<option value="${c.id}" ${curClassId===c.id?'selected':''}>${esc(c.name)}</option>`).join('') : '<option value="">— pick a stream above first —</option>'}
       </select></div>
-    </div>   <!-- Round-188: house field intentionally hidden — houses keep working silently via auto-assign (managed under 🏠 Houses) -->
+    </div>
     <div class="small mut mb1" style="background:#f8fafc;border:1px dashed #e2e8f0;border-radius:10px;padding:.4rem .6rem">🆕 Registering a <b>brand-new admission or transfer</b>? Use the dedicated <b>🆕 Admissions</b> portal (left menu) — same details, PLUS the previous school. This quick form is for continuing students.</div>
     <div class="frow c2">
-      <div><label>Parent / guardian phone *</label><input id="st-ph" value="${esc(st?st.parentPhone:'')}" placeholder="0244 000 000"></div>
-      <div><label>Relationship to guardian *</label><select id="st-rel"><option value="" disabled ${st&&st.relationship?'':'selected'}>— click to select relationship —</option>${RELATIONSHIPS.map(r=>`<option ${st&&st.relationship===r?'selected':''}>${r}</option>`).join('')}</select></div>
+      <div><label>Parent / guardian phone *</label><input id="st-ph" value="${esc(stash&&stash.ph!==undefined?stash.ph:(st?st.parentPhone:''))}" placeholder="0244 000 000"></div>
+      <div><label>Relationship to guardian *</label><select id="st-rel"><option value="" disabled ${curRel?'':'selected'}>— click to select relationship —</option>${RELATIONSHIPS.map(r=>`<option ${curRel===r?'selected':''}>${r}</option>`).join('')}</select></div>
     </div>
     <label>Residence * <span class="mut">(where the student lives)</span></label>
-    <input id="st-res" value="${esc(st?st.residence||'':'')}" placeholder="e.g. Block 4, Nsawam Road, Adenta">
+    <input id="st-res" value="${esc(stash&&stash.res!==undefined?stash.res:(st?st.residence||'':''))}" placeholder="e.g. Block 4, Nsawam Road, Adenta">
     <div class="frow c2">
-      <div><label>Guardian's full name</label><input id="st-gn" value="${esc(st?st.guardianName||'':'')}" placeholder="e.g. Kwame Mensah"></div>
-      <div><label>Nationality</label><input id="st-nat" value="${esc(st?st.nationality||'Ghanaian':'Ghanaian')}"></div>
+      <div><label>Guardian's full name</label><input id="st-gn" value="${esc(stash&&stash.gn!==undefined?stash.gn:(st?st.guardianName||'':''))}" placeholder="e.g. Kwame Mensah"></div>
+      <div><label>Nationality</label><input id="st-nat" value="${esc(stash&&stash.nat!==undefined?stash.nat:(st?st.nationality||'Ghanaian':'Ghanaian'))}"></div>
     </div>
     <label>Preferred Mode of Communication * <span class="mut">(how should we contact the parent? tick one or more)</span></label>
     <div class="flex wrap mb1" style="gap:1.1rem">
-      ${['Call','SMS','WhatsApp'].map(m=>`<div class="checkline"><input type="checkbox" id="cm-${m}" ${st&&st.commModes&&st.commModes.includes(m)?'checked':''}><span>${m==='Call'?'📞 Phone Call':m==='SMS'?'💬 SMS':waIco()+' WhatsApp'}</span></div>`).join('')}
+      ${['Call','SMS','WhatsApp'].map(m=>{ const checked = stash&&stash.cms ? stash.cms.includes(m) : (st&&st.commModes&&st.commModes.includes(m)); return `<div class="checkline"><input type="checkbox" id="cm-${m}" ${checked?'checked':''}><span>${m==='Call'?'📞 Phone Call':m==='SMS'?'💬 SMS':waIco()+' WhatsApp'}</span></div>`; }).join('')}
     </div>
-    ${regFeeBlockHTML('st')}   <!-- Round-221 (owner): 🎓 regular or 🤝 scholarship tick + the school-set fees -->
+    ${regFeeBlockHTML('st')}
     <label class="mt2">Photo ${photoOK?'(optional)':'🔒 <span class="mut">(locked — grace expired & unpaid)</span>'}</label>
     ${photoOK? `<div class="photo-act-row">
       <button type="button" class="btn sm gold" style="font-weight:700" onclick="A.openPassportGuideModal('st','${id||''}')">📷 Take / Upload Passport Photo</button>
@@ -11650,13 +11889,12 @@ A.studentModal=function(id){
       <input id="st-photo" type="file" accept="image/*,.heic,.heif,.heics,.hif" hidden onchange="A.setPhoto(this)">
     </div>
       <div class="small mut mt1 no-hyph">📷 JPG · PNG · WEBP · GIF · BMP · <b>HEIC (iPhone)</b> — converted to the required photo <b>instantly</b>.</div>
-      <!-- Round-220 (owner): the same labelled 150px preview as everywhere else -->
       <div id="st-photo-prev" class="mt1">${_tmpPhoto?photoPreviewBlockHTML(_tmpPhoto, _tmpPhotoFrom, _tmpPhotoFrom==='current'?'tap 📸 Take Photo or 📁 Choose from files to replace it.':'tap 💾 Save to keep it, or 📸 / 📁 to replace it.'):''}</div>`
       : `<div class="notice warn mini">Photo upload unlocks with payment (free during the ${graceLeft(mySchool())}-day grace period).</div>`}
   </div>
   <div class="m-foot"><button class="btn ghost" onclick="A.closeModal()">Cancel</button>
   ${!id?`<div class="small mut" style="margin-right:auto">📥 Registering many? <a href="#" onclick="A.closeModal();A.stuImportModal();return false">Upload an Excel/CSV list</a> — missing details can be completed later.</div>`:''}<button class="btn" id="st-save-btn" onclick="A.saveStudent('${id||''}')">💾 Save — ID auto-generates</button></div>`,{wide:true});
-  A.stuClsChange(st? st.classId : '');
+  A.stuClsChange(curClassId || (st? st.classId : ''));
 };
 A.stuClsChange=function(classId){
   const s=mySchool(); const c=classId? classOf(s,classId):null;
@@ -11903,7 +12141,19 @@ function analyzePassportPhotoColors(dataUrl, cb){
    Upload is BLOCKED if requirements are not met. */
 window.__PHOTO_GUIDE = window.__PHOTO_GUIDE || { prefix: 'st', stId: '', attire: 'other', bg: 'white' };
 
+A.closePassportGuideModal = function(){
+  const g = window.__PHOTO_GUIDE || {};
+  closeModal();
+  if(g.prefix === 'st' && window.__STU_FORM_STASH){
+    A.studentModal(g.stId, window.__STU_FORM_STASH);
+    window.__STU_FORM_STASH = null;
+  }
+};
+
 A.openPassportGuideModal = function(prefix, stId){
+  if(prefix === 'st' && typeof stashStudentForm === 'function'){
+    window.__STU_FORM_STASH = stashStudentForm();
+  }
   const st = (prefix === 'pp' && stId) ? (DB.students || []).find(x => x.id === stId) : null;
   const studentName = st ? ((st.firstName || '') + ' ' + (st.surname || '')) : 'Student';
 
@@ -12033,7 +12283,7 @@ A.openPassportGuideModal = function(prefix, stId){
     </div>
   </div>
   <div class="m-foot">
-    <button type="button" class="btn ghost" onclick="A.closeModal()">Cancel</button>
+    <button type="button" class="btn ghost" onclick="A.closePassportGuideModal()">Cancel</button>
   </div>`, { wide: true });
 };
 
@@ -12128,9 +12378,15 @@ A.handleGuidedPhotoFile = function(inp){
         if(prefix === 'st'){
           _tmpPhoto = res.url;
           _tmpPhotoFrom = from;
-          showPhotoPreview('#st-photo-prev', res.url, from, 'tap 💾 Save to keep it, or tap above to replace it.', 'st');
-          A.updatePhotoValidationUI('st', finalAttire, finalBg, val);
-          toast('📸 Passport picture verified & compliant ✅️', 'ok');
+          if(window.__STU_FORM_STASH){
+            window.__STU_FORM_STASH.photo = res.url;
+            window.__STU_FORM_STASH.photoFrom = from;
+            A.studentModal(stId, window.__STU_FORM_STASH);
+            window.__STU_FORM_STASH = null;
+          } else {
+            A.studentModal(stId);
+          }
+          toast('📸 Passport picture verified & added to registration ✅️', 'ok');
         } else if(prefix === 'ad'){
           _tmpPhoto = res.url;
           _tmpPhotoFrom = from;
@@ -12953,6 +13209,131 @@ A.deactTeacher=async function(id){ if(!(await uiConfirm('Deactivate this teacher
 /* ============ HIERARCHICAL PASSWORD RESET (Round-16) — shared by School Admin & Super Admin ============
    RULE: nobody self-resets a forgotten password. Teacher→School Admin, School Admin→Super Admin, Super Admin→anyone.
    Every reset sets a TEMPORARY password and forces a personal one at next login (mustChange). */
+
+/* =========================================================================
+   ADMINISTRATOR PROFILE EDITING & GENDER CORRECTION
+   Allows correcting mistakes during registration (e.g. selected Female instead of Male,
+   name spelling, phone number, contact email).
+   ========================================================================= */
+A.saEditAdmin = function(id){
+  const a = (DB.users || []).find(x => x.id === id);
+  if(!a) return;
+  const sc = (DB.schools || []).find(x => x.id === a.schoolId);
+  openModal(`${mHead('✏️ Edit School Administrator — ' + esc(a.name))}<div class="m-body tight">
+  <div class="small mut mb2">Correct administrator details, including gender (controls dashboard greeting: <b>Sir</b> vs <b>Madam</b>), names, and contact email.</div>
+  <div class="frow c2">
+    <div><label>Surname *</label><input id="sa-adm-sn" value="${esc(a.surname || a.name.split(' ')[0] || '')}"></div>
+    <div><label>First name *</label><input id="sa-adm-fn" value="${esc(a.firstName || a.name.split(' ').slice(1).join(' ') || '')}"></div>
+  </div>
+  <div class="frow c2">
+    <div><label>Other name</label><input id="sa-adm-on" value="${esc(a.otherName || '')}"></div>
+    <div><label>Gender * <span class="mut">(used for dashboard greeting)</span></label>
+      <select id="sa-adm-gender">
+        <option value="">— choose —</option>
+        <option value="Male" ${a.gender==='Male'?'selected':''}>Male (Sir)</option>
+        <option value="Female" ${a.gender==='Female'?'selected':''}>Female (Madam)</option>
+      </select>
+    </div>
+  </div>
+  <div class="frow c2">
+    <div><label>Login Email *</label><input id="sa-adm-email" value="${esc(a.email || '')}"></div>
+    <div><label>Phone Number</label><input id="sa-adm-phone" value="${esc(a.phone || '')}" placeholder="0244 000 000"></div>
+  </div>
+  ${sc ? `<div class="small mut mt2" style="background:#f8fafc;padding:.6rem .8rem;border-radius:8px;border:1px dashed #cbd5e1">🏫 School: <b>${esc(sc.name)}</b> (${esc(sc.code)})</div>` : ''}
+  </div><div class="m-foot"><button class="btn ghost" onclick="A.closeModal()">Cancel</button>
+  <button class="btn gold" onclick="A.saSaveAdmin('${a.id}')">💾 Save Changes</button></div>`);
+};
+
+A.saSaveAdmin = function(id){
+  const a = (DB.users || []).find(x => x.id === id);
+  if(!a) return;
+  const sn = ($('#sa-adm-sn').value || '').trim().toUpperCase();
+  const fn = ($('#sa-adm-fn').value || '').trim().toUpperCase();
+  const on = ($('#sa-adm-on').value || '').trim().toUpperCase();
+  const gn = $('#sa-adm-gender').value;
+  const em = ($('#sa-adm-email').value || '').trim();
+  const ph = ($('#sa-adm-phone').value || '').trim();
+  if(!sn || !fn) return toast('Surname and first name are required', 'bad');
+  if(!gn) return toast('Select a gender (Male or Female)', 'bad');
+  if(!em || !/.+@.+\..+/.test(em)) return toast('Enter a valid email address', 'bad');
+  if(DB.users.some(u => u.id !== id && u.email && u.email.toLowerCase() === em.toLowerCase())) return toast('Email already in use by another user', 'bad');
+
+  a.surname = sn;
+  a.firstName = fn;
+  a.otherName = on;
+  a.name = `${sn} ${fn}${on ? ' ' + on : ''}`;
+  a.gender = gn;
+  a.email = em;
+  a.phone = ph;
+  try { SESS_GREET = null; } catch(e){}
+  saveDB();
+  closeModal();
+  render();
+  toast('✅ School Administrator details updated successfully!', 'ok');
+};
+
+A.editMyProfile = function(){
+  const u = me();
+  if(!u) return;
+  const isSuper = u.role === 'superadmin';
+  openModal(`${mHead('👤 My Profile — Edit Details')}<div class="m-body tight">
+  <div class="small mut mb2">Update your account details, including your gender (controls dashboard greeting: <b>Sir</b> vs <b>Madam</b>) and phone number.</div>
+  <div class="frow c2">
+    <div><label>Surname *</label><input id="my-prof-sn" value="${esc(u.surname || (u.name||'').split(' ')[0] || '')}"></div>
+    <div><label>First name *</label><input id="my-prof-fn" value="${esc(u.firstName || (u.name||'').split(' ').slice(1).join(' ') || '')}"></div>
+  </div>
+  <div class="frow c2">
+    <div><label>Other name</label><input id="my-prof-on" value="${esc(u.otherName || '')}"></div>
+    <div><label>Gender * <span class="mut">(used for dashboard greeting)</span></label>
+      <select id="my-prof-gender">
+        <option value="">— choose —</option>
+        <option value="Male" ${u.gender==='Male'?'selected':''}>Male (Sir)</option>
+        <option value="Female" ${u.gender==='Female'?'selected':''}>Female (Madam)</option>
+      </select>
+    </div>
+  </div>
+  <div class="frow c2">
+    <div><label>Login Email *</label><input id="my-prof-email" value="${esc(u.email || '')}" ${isSuper?'':'readonly style="background:#f1f5f9;cursor:not-allowed"'}></div>
+    <div><label>Phone Number</label><input id="my-prof-phone" value="${esc(u.phone || '')}" placeholder="0244 000 000"></div>
+  </div>
+  ${!isSuper ? '<div class="small mut mt1" style="font-size:.76rem">💡 Login email is managed by your Super Administrator. To change your login email domain, contact Super Admin.</div>' : ''}
+  </div><div class="m-foot"><button class="btn ghost" onclick="A.closeModal()">Cancel</button>
+  <button class="btn gold" onclick="A.saveMyProfile()">💾 Save Profile</button></div>`);
+};
+
+A.saveMyProfile = function(){
+  const u = me();
+  if(!u) return;
+  const sn = ($('#my-prof-sn').value || '').trim().toUpperCase();
+  const fn = ($('#my-prof-fn').value || '').trim().toUpperCase();
+  const on = ($('#my-prof-on').value || '').trim().toUpperCase();
+  const gn = $('#my-prof-gender').value;
+  const ph = ($('#my-prof-phone').value || '').trim();
+  if(!sn || !fn) return toast('Surname and first name are required', 'bad');
+  if(!gn) return toast('Select a gender (Male or Female)', 'bad');
+
+  u.surname = sn;
+  u.firstName = fn;
+  u.otherName = on;
+  u.name = `${sn} ${fn}${on ? ' ' + on : ''}`;
+  u.gender = gn;
+  u.phone = ph;
+
+  if(u.role === 'superadmin'){
+    const em = ($('#my-prof-email').value || '').trim();
+    if(em && /.+@.+\..+/.test(em)) u.email = em;
+  }
+
+  // Reset SESS_GREET so the greeting recomputes immediately with the corrected gender (Sir vs Madam)
+  try { SESS_GREET = null; } catch(e){}
+
+  saveDB();
+  closeModal();
+  renderShell();
+  render();
+  toast('✅ Profile details updated successfully! Your greeting and gender are now corrected.', 'ok');
+};
+
 A.resetUserPw=function(id){
   const t=DB.users.find(x=>x.id===id); if(!t) return;
   const def = t.role==='teacher'? TEACHER_RESET_PW : ADMIN_RESET_PW;
@@ -24057,9 +24438,15 @@ A.setLogo=function(inp){ const f=inp.files[0]; if(!f) return;
 A.setHeadSig=function(inp){ const f=inp.files&&inp.files[0]; if(!f) return;
   if(f.size>8000000) return toast('Image too large (max ~8MB)','bad');
   const r=new FileReader(); r.onload=e=>{
-    processSignatureWhiteBackground(e.target.result, 360, (cleanSig)=>{
-      mySchool().headSig=cleanSig; saveDB(); render();
-      toast('✍️ Head Teacher signature updated with clean white background ✅️','ok');
+    processSignatureWhiteBackground(e.target.result, 320, (cleanSig)=>{
+      const s = mySchool();
+      if(s){
+        s.headSig=cleanSig; saveDB();
+        if(me()){ try{ render(); }catch(err){} }
+        toast('✍️ Head Teacher signature updated with clean white background ✅️','ok');
+      } else {
+        toast('⚠️ School record not found', 'bad');
+      }
     });
   };
   r.readAsDataURL(f); };
@@ -25292,9 +25679,13 @@ function accountHTML(){
 A.setMySig=function(inp){ const f=inp.files&&inp.files[0]; if(!f) return;
   if(f.size>8000000) return toast('Image too large (max ~8MB)','bad');
   const r=new FileReader(); r.onload=e=>{
-    processSignatureWhiteBackground(e.target.result, 360, (cleanSig)=>{
-      me().sig=cleanSig; saveDB(); render();
-      toast('✍️ Signature updated with clean white background ✅️','ok');
+    processSignatureWhiteBackground(e.target.result, 320, (cleanSig)=>{
+      const u = me();
+      if(u){
+        u.sig=cleanSig; saveDB();
+        if(me()){ try{ render(); }catch(err){} }
+        toast('✍️ Signature updated with clean white background ✅️','ok');
+      }
     });
   };
   r.readAsDataURL(f); };
@@ -25611,7 +26002,8 @@ function renderAdmins(){
       ${a.mustChange? `<div style="margin-bottom:3px"><span class="faint-pw" style="opacity:0.65;font-family:monospace;font-size:.82rem;font-weight:700;color:#64748b;background:#f1f5f9;padding:2px 6px;border-radius:4px" title="Initial default password awaiting first login">${esc(schoolDefaultPw(sc))}</span></div>` : '<span class="pw-ghost" data-tip="Passwords are GHOSTED (one-way salted SHA-256)">🔒 ghosted</span>'}
       <button class="btn sm ghost" data-tip="About ghosted passwords" onclick="A.ghostPwInfo('${a.id}')">ℹ️</button>
       <button class="btn sm gold" data-tip="Super-Admin only — restricted" onclick="A.pwRevealGate('${a.id}')">🔓</button>
-      <button class="btn sm ghost" data-tip="Reset to default or a custom temporary password" onclick="A.resetUserPw('${a.id}')">🔑 Reset</button></td></tr>`).join('')
+      <button class="btn sm ghost" data-tip="Reset to default or a custom temporary password" onclick="A.resetUserPw('${a.id}')">🔑 Reset</button>
+      <button class="btn sm" data-tip="Edit administrator details (name, gender, email, phone)" onclick="A.saEditAdmin('${a.id}')">✏️ Edit</button></td></tr>`).join('')
     ||'<tr><td colspan="6" class="center mut" style="padding:2rem">No school admins have registered yet.</td></tr>'}
   </tbody></table></div>
   <div class="small mut mt1">Reset options: <b>Reset to Default</b> (<code>${ADMIN_RESET_PW}</code>) or <b>Create Custom Password</b> — the admin is forced to set a personal password at next login.</div></div>
@@ -26362,7 +26754,7 @@ function renderUpdates(){
     <div class="small mut">One tap packs your <b>whole school</b> — every received teacher package, all scores, fees &amp; records — as ONE 🌐 HTML package for the <b>Super Administrator</b>, with your 🏫 notification riding inside it. Choose <b>📨 push it straight to him</b> (no file kept here) or <b>💾 download the file</b>. He imports it, ✔️ Acknowledges, and his ☁️ Sync now publishes your school to every device.</div>
     <div class="flex mt1" style="gap:8px;align-items:center;flex-wrap:wrap"><button class="btn gold" data-tip="Send this term's whole-school data up to the Super Administrator — your notification rides inside the package" onclick="A.syncToSuper()">📤 Sync to the Super Administrator</button>
       <span class="small mut">${schupStatusLine(u)||'No school package sent yet — send one after 📥 receiving your teachers&#39; packages on the ☁️ Sync page.'}</span></div>
-    <div class="small mut mt1">🗓 ${(()=>{ const g=schSyncGate(); return 'Window: <b>every day 08:00 – 18:00</b> · <b>'+g.used+' of '+g.cap+'</b> used today'+(g.ok?(' · the window is open now'):(' · '+schSyncReasonText(g))) +(g.termEnd&&g.termEnd.ended?' · <b>end of term</b> — synced automatically':''); })()}</div></div>
+    <div class="small mut mt1">🗓 ${(()=>{ const g=schSyncGate(); return 'Window: <b>every day 08:00 – 22:00</b> · <b>'+g.used+' of '+g.cap+'</b> used today'+(g.ok?(' · the window is open now'):(' · '+schSyncReasonText(g))) +(g.termEnd&&g.termEnd.ended?' · <b>end of term</b> — synced automatically':''); })()}</div></div>
   <div class="card" id="fused-folder-card"><h3>📁 My fused data folder — the local safety net</h3>   <!-- Round-159: save locally to the folder HE created · Round-164: 🔍 check now lands the School Administrator here -->
     ${fld?`<div class="notice ok mini mb2">📁 <span>Fused with <b>${esc(fld.name)}</b> since ${new Date(fld.at).toLocaleDateString()} — <b>every save on this device is copied here automatically</b> (<code>HEREMS-DATA-LIVE.json</code>).</span></div>`
       :`<div class="notice info mini mb2">✨️ <span><b>Finish your setup:</b> create &amp; link ONE folder on this laptop/PC. From then on, all data you save <b>goes into that folder automatically</b> — no repeat picking, permanently fused until you change it.</span></div>`}
@@ -26555,29 +26947,51 @@ loadDB();
 const PORTABLE_BOOT=loadPortableIfAny();   /* Round-80: a portable school .html carries its data INSIDE itself — absorb BEFORE anything renders */
 const EMBEDDED_CLIENT=loadEmbeddedClientIfAny();   /* Round-83: a .html CLIENT file routes straight into join/setup (must not be bounced back to login) */
 if('serviceWorker' in navigator){ try{
-  navigator.serviceWorker.register('sw.js', {updateViaCache:'none'}).then(reg=>{   /* Round-219 (owner): updateViaCache:'none' — the browser's own cache may NEVER answer for the worker file itself, so a new build always gets noticed */
+  navigator.serviceWorker.register('sw.js', {updateViaCache:'none'}).then(reg=>{
     try{ reg.update(); }catch(e){}
-    const probe=()=>{ try{ reg.update(); }catch(e){} };
-    setInterval(probe, 60*60*1000);                                          /* Round-219: hourly look for a newer build */
-    document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) probe(); });   /* Round-219: and every time the phone returns to the app */
+    const probe=()=>{
+      try{
+        // Never probe while user is actively filling forms or taking photos!
+        const mr = document.getElementById('modal-root');
+        if(mr && mr.classList.contains('open')) return;
+        reg.update();
+      }catch(e){}
+    };
+    setInterval(probe, 60*60*1000); // hourly check
   }).catch(()=>{});
-  const HAD_SW_CONTROLLER=!!(navigator.serviceWorker&&navigator.serviceWorker.controller);   /* Round-341 */
-  navigator.serviceWorker.addEventListener('controllerchange',()=>{ try{
-      /* Round-341: a FIRST install must not reload the page — the build already in the browser IS the
-         newest one, and that reload threw away a brand-new visitor's first screen (and interrupted
-         anything mid-flight, which is what made some test runs fail at random). Only a page that was
-         ALREADY served by a worker reloads, because then a new worker really does mean a new build. */
-      if(!HAD_SW_CONTROLLER) return;
-      if(sessionStorage.getItem('hpsms_sw_reloaded')) return;
-      sessionStorage.setItem('hpsms_sw_reloaded','1'); location.reload(); }catch(e){} });
-}catch(e){} }   /* Round-112: a NEW version taking over = the app refreshes itself once, instantly · Round-219: hourly + on-return probes */
+  // Never reload the page on controllerchange — let updates activate naturally on next visit
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>{});
+}catch(e){} }
 (function init(){
-  try{ if(localStorage.getItem('hpsms_sbm')==='1') document.body.classList.add('sb-mini'); }catch(e){}   /* Round-238: the fold survives every refresh */
-  playIntroIfAny();   /* Round-97: catchy opening — logo pop-in + ring sweep (once per launch, tap to skip) */
-  const s=sess();
-  if(s && me() && Date.now()-s.lastActivity < IDLE_LIMIT_MS){ touch(); boot(); } // session persistence: refresh keeps you in place
-  else if(EMBEDDED_CLIENT){ if(s) DB.session=null, saveDB(); }   /* client file already rendered the join/admin step — leave it */
-  else { if(s) DB.session=null, saveDB(); if(!silentAutoLogin()) showAuth('login'); }   // Round-43: device login opens the portal directly
+  try{ if(localStorage.getItem('hpsms_sbm')==='1') document.body.classList.add('sb-mini'); }catch(e){}
+  playIntroIfAny();
+  let s=sess();
+  if((!s || !s.userId) && typeof loadSessionBackup === 'function'){
+    const bk = loadSessionBackup();
+    if(bk && bk.userId){
+      s = bk;
+      if(typeof DB !== 'undefined' && DB) DB.session = s;
+    }
+  }
+  const lastAct = (s && (s.lastActivity || s.at)) ? Number(s.lastActivity || s.at) : Date.now();
+  if(s && me() && (Date.now() - lastAct < IDLE_LIMIT_MS)){
+    s.lastActivity = Date.now();
+    if(typeof saveSessionBackup === 'function') saveSessionBackup(s);
+    touch();
+    boot();
+  }
+  else if(EMBEDDED_CLIENT){ if(s) { DB.session=null; if(typeof saveSessionBackup==='function') saveSessionBackup(null); saveDB(); } }
+  else {
+    if(s) { DB.session=null; if(typeof saveSessionBackup==='function') saveSessionBackup(null); saveDB(); }
+    const activeReg = loadRegState();
+    if(activeReg && activeReg.step && (!s || !me())){
+      REG = activeReg;
+      HEAD_SIG_TMP = loadSavedHeadSig();
+      showAuth('join_resume');
+      return;
+    }
+    if(!silentAutoLogin()) showAuth('login');
+  }
   if(PORTABLE_BOOT) setTimeout(function(){ try{ toast(PORTABLE_BOOT.absorbed? ('📦 <b>'+esc(PORTABLE_BOOT.school)+'</b> portable data loaded — sign in as usual; ☁️ sync stays live.') : ('ℹ️ This device already has <b>'+esc(PORTABLE_BOOT.school)+'</b> — your live-synced data is the freshest, so nothing was overlaid.'), PORTABLE_BOOT.absorbed?'gold':'ok'); }catch(e){} }, 1200);
   const VAULT_BOOT=loadVaultIfAny();   /* Round-89: double-clicked a backup/archive .html → OFFER the restore (never surprise-apply) */
   if(VAULT_BOOT) setTimeout(function(){ try{
