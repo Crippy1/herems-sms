@@ -6976,7 +6976,13 @@ function classOf(school, classId){ return (school.classes||[]).find(c=>c.id===cl
 /* Round-200: a class label with its chosen colour (a coloured dot + tinted name) — used in registers/lists */
 function clsTag(c){ if(!c) return '—'; const col=c.color||'';
   return col? `<span class="cls-lbl" style="color:${col}"><span class="cls-lbl-dot" style="background:${col}"></span>${esc(c.name)}</span>` : esc(c.name); }
-function genderLabel(g){ return (g==='M'||g==='Male')?'Male':(g==='F'||g==='Female')?'Female':'—'; }
+function genderLabel(g){
+  if(!g) return '—';
+  const s = String(g).trim().toUpperCase();
+  if(s === 'M' || s === 'MALE' || s.startsWith('MALE')) return 'Male';
+  if(s === 'F' || s === 'FEMALE' || s.startsWith('FEMALE')) return 'Female';
+  return g;
+}
 /* canonical class order: stream order, then the pre-loaded ladder order (ord), then name */
 /* Round-200: a class is "active" (being run by the school) when active!==false.
    Admin ticks the classes actually running (Classes & Streams manager); everywhere else
@@ -13824,7 +13830,7 @@ function renderGender(){
 }
 /* Round-210 (owner): Gender Insights now DRILLS as a graph — gender → that gender's streams chart → classes chart → student list → portal.
    It no longer jumps into the registration list. */
-function genderLabel(g){ return g==='M'?'👦 Boys':'👧 Girls'; }
+function genderInsightLabel(g){ const s=String(g||'').trim().toUpperCase(); return (s==='M'||s==='MALE'||s.startsWith('MALE'))?'👦 Boys':'👧 Girls'; }
 function genderColor(g){ return g==='M'?'#1d4ed8':'#db2777'; }
 A.genderGoAll=function(g){   /* tap a gender card → bar chart of that gender across every stream */
   const s=mySchool(); if(!s) return;
@@ -13832,7 +13838,7 @@ A.genderGoAll=function(g){   /* tap a gender card → bar chart of that gender a
   const data=streams.map(str=>{ const ids=(s.classes||[]).filter(c=>classIsActive(c)&&c.stream===str).map(c=>c.id);
     return {label:str, value:activeStudents(s.id).filter(st=>st.gender===g&&ids.indexOf(st.classId)>-1).length, color:genderColor(g), onclick:"A.genderStreamClasses('"+str.replace(/'/g,"\\'")+"','"+g+"')"}; }).filter(r=>r.value>0);
   const tot=activeStudents(s.id).filter(st=>st.gender===g).length;
-  openModal(`${mHead(genderLabel(g)+' — by stream ('+tot+')', true)}<div class="m-body">
+  openModal(`${mHead(genderInsightLabel(g)+' — by stream ('+tot+')', true)}<div class="m-body">
     <div class="small mut mb1">Every ${g==='M'?'boy':'girl'} grouped by stream, <b>as a graph</b> — <b>tap a stream bar</b> to see its classes.</div>
     ${data.length? barChartSVG(data) : emptyMini('No '+(g==='M'?'boys':'girls')+' enrolled yet.')}</div>
     <div class="m-foot"><button class="btn" onclick="A.closeModal()">Close</button></div>`);
@@ -13842,7 +13848,7 @@ A.genderStreamClasses=function(str, g){   /* stream bar → classes in that stre
   const cls=sortClasses(s).filter(c=>c.stream===str);
   const data=cls.map(c=>({label:c.name, value:activeStudents(s.id).filter(st=>st.gender===g&&st.classId===c.id).length, color:genderColor(g), onclick:"A.drillGender('"+c.id+"','"+g+"')"})).filter(r=>r.value>0);
   const tot=data.reduce((a,r)=>a+r.value,0);
-  openModal(`${mHead(genderLabel(g)+' · '+esc(str)+' — by class ('+tot+')', true)}<div class="m-body">
+  openModal(`${mHead(genderInsightLabel(g)+' · '+esc(str)+' — by class ('+tot+')', true)}<div class="m-body">
     <div class="small mut mb1">${g==='M'?'Boys':'Girls'} per class in <b>${esc(str)}</b> — <b>tap a class bar</b> for the full student list, then tap a student for their portal.</div>
     ${data.length? barChartSVG(data) : emptyMini('No '+(g==='M'?'boys':'girls')+' in this stream yet.')}</div>
     <div class="m-foot"><button class="btn ghost" onclick="A.genderGoAll('${g}')">← Back to streams</button>
