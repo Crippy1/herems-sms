@@ -2770,6 +2770,238 @@ td.grow, .box-grow{white-space:normal;overflow-wrap:anywhere;word-break:break-wo
 /* Round-258: age labels and their colourful cake emoji stay entirely within the age chip/table cell */
 .age-col .badge,.badge.info{display:inline-flex;align-items:center;justify-content:center;max-width:100%;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
 .age-col .badge .twj,.badge.info .twj{flex:0 0 auto;width:1.05em!important;height:1.05em!important}
+
+/* ================= STUDENT BOARD — FULL-PAGE VIEW ================= */
+.stubord-wrap {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0.5rem 0 2.5rem 0;
+  box-sizing: border-box;
+}
+.stubord-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.65rem 1rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.stubord-hero {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #ffffff;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 4px 14px rgba(15,23,42,0.18);
+  display: flex;
+  align-items: center;
+  gap: 1.35rem;
+  flex-wrap: wrap;
+}
+.stubord-avatar {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3.5px solid #f59e0b;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  background: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #f8fafc;
+  flex-shrink: 0;
+}
+.stubord-hero-info {
+  flex: 1 1 320px;
+}
+.stubord-hero-title {
+  margin: 0 0 0.35rem 0;
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.stubord-chips {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.4rem;
+}
+.stubord-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.22rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.12);
+  color: #f8fafc;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.stubord-chip.gold {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: #f59e0b;
+  color: #fef08a;
+}
+.stubord-chip.ok {
+  background: rgba(34, 197, 94, 0.25);
+  border-color: #22c55e;
+  color: #bbf7d0;
+}
+.stubord-chip.warn {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
+  color: #fecaca;
+}
+.stubord-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 2.5px solid #e2e8f0;
+  padding-bottom: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.stubord-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.75rem 1.15rem;
+  font-size: 0.94rem;
+  font-weight: 700;
+  border-radius: 10px 10px 0 0;
+  border: 1.5px solid transparent;
+  border-bottom: none;
+  background: #f1f5f9;
+  color: #475569;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.stubord-tab:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+.stubord-tab.active {
+  background: #ffffff;
+  color: #1e40af;
+  border-color: #cbd5e1;
+  border-bottom: 3.5px solid #2563eb;
+  margin-bottom: -2.5px;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.04);
+}
+.stubord-body {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.35rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.stubord-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.35rem;
+}
+.stubord-kpi-card {
+  padding: 0.9rem 1.1rem;
+  border-radius: 11px;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.stubord-kpi-title {
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #64748b;
+  margin-bottom: 0.35rem;
+}
+.stubord-kpi-val {
+  font-size: 1.32rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+.stubord-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+.stubord-info-card {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.15rem 1.25rem;
+  background: #fafafa;
+}
+.stubord-info-header {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+  border-bottom: 1.5px solid #e2e8f0;
+  padding-bottom: 0.55rem;
+  margin-bottom: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.stubord-info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.45rem 0;
+  border-bottom: 1px dashed #e2e8f0;
+  font-size: 0.88rem;
+  gap: 0.5rem;
+}
+.stubord-info-row:last-child {
+  border-bottom: none;
+}
+.stubord-info-label {
+  color: #64748b;
+  font-weight: 600;
+}
+.stubord-info-value {
+  color: #0f172a;
+  font-weight: 700;
+  text-align: right;
+}
+@media (max-width: 640px) {
+  .stubord-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  .stubord-avatar {
+    width: 72px;
+    height: 72px;
+    font-size: 1.7rem;
+  }
+  .stubord-tab {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.84rem;
+  }
+  .stubord-body {
+    padding: 1rem;
+  }
+}
+
 </style>
 <style>
 /* ==========================================================================================
@@ -6807,12 +7039,47 @@ function getSchoolAssessmentConfig(s){
   return ac;
 }
 
-function getAssessmentTotalMarks(s, type, subject){
-  const ac = getSchoolAssessmentConfig(s);
+function getStreamAssessmentConfig(s, stream){
+  if(!s) s = (typeof mySchool === 'function' ? mySchool() : null) || {};
+  s.conversion = s.conversion || {};
+  const st = stream || 'Primary';
+  s.conversion[st] = s.conversion[st] || {};
+  const sc = s.conversion[st];
+  
+  // Stream-specific defaults (Ghana standard curriculum: Pre-school 50/50, Lower Primary 40/60, Upper Primary 30/70, JHS 30/70)
+  if(sc.c === undefined){
+    sc.c = (st === 'Pre-school' ? 50 : (st === 'Lower Primary' ? 40 : 30));
+  }
+  if(sc.e === undefined){
+    sc.e = 100 - sc.c;
+  }
+  if(!sc.classScoreType) sc.classScoreType = 'class_test';
+  sc.totals = sc.totals || {};
+  if(sc.totals.class_test === undefined) sc.totals.class_test = 30;
+  if(sc.totals.mid_term === undefined) sc.totals.mid_term = 30;
+  if(sc.totals.monthly_exam === undefined) sc.totals.monthly_exam = 30;
+  if(sc.totals.weekly_test === undefined) sc.totals.weekly_test = 20;
+  if(sc.totals.end_term === undefined) sc.totals.end_term = 100;
+  
+  if(sc.combinedClassTestWeight === undefined) sc.combinedClassTestWeight = Math.round(sc.c / 2);
+  if(sc.combinedMidTermWeight === undefined) sc.combinedMidTermWeight = sc.c - sc.combinedClassTestWeight;
+  
+  return sc;
+}
+
+function getAssessmentTotalMarks(s, type, subject, stream){
   if(type === 'mid') type = 'mid_term';
   if(type === 'monthly') type = 'monthly_exam';
   if(type === 'weekly') type = 'weekly_test';
   if(type === 'end') type = 'end_term';
+  
+  if(stream){
+    const stConfig = getStreamAssessmentConfig(s, stream);
+    if(stConfig.totals && stConfig.totals[type] !== undefined){
+      return Number(stConfig.totals[type]) || (type === 'end_term' ? 100 : 30);
+    }
+  }
+  const ac = getSchoolAssessmentConfig(s);
   if(subject && ac.customTotals && ac.customTotals[`${type}|${subject}`] !== undefined){
     return Number(ac.customTotals[`${type}|${subject}`]) || 30;
   }
@@ -6841,23 +7108,22 @@ function normalizeScoreToTotal(rawScore, setTotal, originalBase){
   return { normalized: converted, isConverted: true, raw: raw, originalBase: base, setTotal: setTotal };
 }
 
-/* Calculates terminal marks: Class Score + Exam Score = Final Mark (out of 100) */
+/* Calculates terminal marks strictly according to each stream's separate conversion rules: Class Score + Exam Score = Final Mark (out of 100) */
 function calculateTerminalMarks(sc, s, stream){
   if(!sc) return { c: '', e: '', total: '', grade: ['—','—'] };
-  const ac = getSchoolAssessmentConfig(s);
-  const streamConv = (s && s.conversion && s.conversion[stream]) ? s.conversion[stream] : null;
-  const csWeight = (ac.weights && ac.weights.classScoreWeight !== undefined) ? ac.weights.classScoreWeight : (streamConv ? streamConv.c : 30);
-  const esWeight = (ac.weights && ac.weights.examScoreWeight !== undefined) ? ac.weights.examScoreWeight : (streamConv ? streamConv.e : 70);
+  const stConfig = getStreamAssessmentConfig(s, stream);
+  const csWeight = (stConfig.c !== undefined) ? Number(stConfig.c) : 30;
+  const esWeight = (stConfig.e !== undefined) ? Number(stConfig.e) : 70;
   
   let classScoreContrib = 0;
   let hasClassScore = false;
-  const csType = ac.classScoreType || 'class_test';
+  const csType = stConfig.classScoreType || 'class_test';
   
   if(csType === 'combined'){
-    const ctWeight = (ac.weights && ac.weights.combinedClassTestWeight !== undefined) ? ac.weights.combinedClassTestWeight : (csWeight / 2);
-    const mtWeight = (ac.weights && ac.weights.combinedMidTermWeight !== undefined) ? ac.weights.combinedMidTermWeight : (csWeight / 2);
-    const ctTotal = ac.totals.class_test || 30;
-    const mtTotal = ac.totals.mid_term || 30;
+    const ctWeight = (stConfig.combinedClassTestWeight !== undefined) ? Number(stConfig.combinedClassTestWeight) : (csWeight / 2);
+    const mtWeight = (stConfig.combinedMidTermWeight !== undefined) ? Number(stConfig.combinedMidTermWeight) : (csWeight / 2);
+    const ctTotal = (stConfig.totals && stConfig.totals.class_test) || 30;
+    const mtTotal = (stConfig.totals && stConfig.totals.mid_term) || 30;
     
     const ctVal = (sc.classTest !== undefined && sc.classTest !== '') ? sc.classTest : sc.c;
     const mtVal = (sc.midTerm !== undefined && sc.midTerm !== '') ? sc.midTerm : '';
@@ -6875,29 +7141,29 @@ function calculateTerminalMarks(sc, s, stream){
     let total = 30;
     if(csType === 'class_test'){
       val = (sc.classTest !== undefined && sc.classTest !== '') ? sc.classTest : sc.c;
-      total = ac.totals.class_test || 30;
+      total = (stConfig.totals && stConfig.totals.class_test) || 30;
     } else if(csType === 'mid_term' || csType === 'mid'){
       val = (sc.midTerm !== undefined && sc.midTerm !== '') ? sc.midTerm : sc.c;
-      total = ac.totals.mid_term || 30;
+      total = (stConfig.totals && stConfig.totals.mid_term) || 30;
     } else if(csType === 'monthly_exam' || csType === 'monthly'){
       val = (sc.monthlyExam !== undefined && sc.monthlyExam !== '') ? sc.monthlyExam : sc.c;
-      total = ac.totals.monthly_exam || 30;
+      total = (stConfig.totals && stConfig.totals.monthly_exam) || 30;
     } else if(csType === 'weekly_test' || csType === 'weekly'){
       val = (sc.weeklyTest !== undefined && sc.weeklyTest !== '') ? sc.weeklyTest : sc.c;
-      total = ac.totals.weekly_test || 20;
+      total = (stConfig.totals && stConfig.totals.weekly_test) || 20;
     }
     if(val !== '' && val !== null && val !== undefined){
       const norm = normalizeScoreToTotal(val, total).normalized;
-      if(norm !== ''){ classScoreContrib = (norm / total) * csWeight; hasClassScore = true; }
+      if(norm !== ''){ classScoreContrib += (norm / total) * csWeight; hasClassScore = true; }
     }
   }
   
-  const examTotal = ac.totals.end_term || 100;
+  const examTotal = (stConfig.totals && stConfig.totals.end_term) || 100;
   let hasExamScore = false;
   let examScoreContrib = 0;
   if(sc.e !== '' && sc.e !== null && sc.e !== undefined){
     const normE = normalizeScoreToTotal(sc.e, examTotal, 100).normalized;
-    if(normE !== ''){ examScoreContrib = (normE / examTotal) * esWeight; hasExamScore = true; }
+    if(normE !== ''){ examScoreContrib += (normE / examTotal) * esWeight; hasExamScore = true; }
   }
   
   if(!hasClassScore && !hasExamScore){
@@ -6911,18 +7177,15 @@ function calculateTerminalMarks(sc, s, stream){
   return { c: finalC, e: finalE, total: totalMark, grade: g };
 }
 
-function convRules(stream){
-  const s = (typeof mySchool === 'function' ? mySchool() : null);
-  const ac = getSchoolAssessmentConfig(s);
-  if(ac && ac.weights && ac.weights.classScoreWeight !== undefined){
-    return { c: ac.weights.classScoreWeight, e: ac.weights.examScoreWeight };
-  }
-  const cr = (s && s.conversion) || {};
-  return cr[stream] || { c: 30, e: 70 };
+/* Returns stream-specific score conversion rules: { c, e } */
+function convRules(stream, school){
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null);
+  const stConfig = getStreamAssessmentConfig(s, stream);
+  return { c: Number(stConfig.c) || 30, e: Number(stConfig.e) || 70 };
 }
 
-function convertScore(rawC, rawE, stream){
-  const s = (typeof mySchool === 'function' ? mySchool() : null);
+function convertScore(rawC, rawE, stream, school){
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null);
   const res = calculateTerminalMarks({ c: rawC, e: rawE }, s, stream);
   if(res.total === '') return { c: '', e: '', total: '' };
   return { c: r1(res.c), e: r1(res.e), total: r1(res.total) };
@@ -7042,7 +7305,13 @@ function autoAssignFees(school, st){
   }catch(e){ return 0; }
 }
 function feeAssignmentsOf(stId, year){ return (DB.feeAssignments||[]).filter(a=>a.studentId===stId && String(a.year)===String(year)); }
-function carriedOf(student, year){ return (student.carried && student.carried.year===year)? Number(student.carried.amount||0) : 0; }
+function carriedOf(student, year){
+  if(!student || isStopped(student)) return 0;
+  if(!student.carried) return 0;
+  if(typeof student.carried === 'number') return Math.max(0, student.carried);
+  if(student.carried.amount !== undefined) return Math.max(0, Number(student.carried.amount) || 0);
+  return 0;
+}
 function billOf(student, year){
   const school=DB.schools.find(s=>s.id===student.schoolId); if(!school) return 0;
   if(specialFeeStudent(student)) return r1((student.protocolFees||[]).reduce((a,i)=>a+Number(i.amount||0),0));   /* Round-218 (owner): protocol + 🤝 sponsored pupils owe ONLY the admin-set fees */
@@ -9687,6 +9956,7 @@ A.sabPick=function(i){   /* Round-187: tap a section tile → its colour floods 
 A.sabEdit=function(){ PROF_TAB=1; go('profile'); };   /* Round-187: straight to the 📖 About Our School editor card on the School Profile */
 function canAccess(p){
   const u=me(); if(!u) return false;
+  if(p==='stubord' || p==='studentboard') return true;
   /* Round-201: 'schoolabout' fused into the School Admin's 🏫 Profile portal (removed from their sidebar),
      but the school crest still opens the read-only About explorer on any portal — allow it as a hidden page. */
   if(p==='schoolabout' && u.role==='schooladmin') return true;
@@ -10405,7 +10675,7 @@ function render(){
     messages:renderMessages, events:renderEvents, termset:renderTermSet,
     attendance:renderAttendance, comments:renderComments, houses:renderHouses, prefects:renderPrefects,
     committees:renderCommittees, pta:renderPTA, ptac:renderPTACommittee, fees:renderFees, debt:renderDebt, mydebt:renderMyDebt, canteen:renderCanteen, canteenprint:function(){ CT.tab='print'; return renderCanteen(); }, canteenmanual:function(){ CT.tab='manual'; return renderCanteen(); }, salaries:renderSalaries, expenditure:renderExpenditure, audit:renderAudit,
-    reports:renderReports, mocks:renderMocks, myclasses:renderMyClasses, children:renderChildren, personalise:renderPersonalise};
+    reports:renderReports, mocks:renderMocks, myclasses:renderMyClasses, children:renderChildren, personalise:renderPersonalise, stubord:renderStudentBoard, studentboard:renderStudentBoard};
   // freemium gate
   if(me().role!=='superadmin' && moduleLocked(PAGE)){ paintContent(c,_anim,lockScreenHTML(PAGE)); return; }
   // cash gate for canteen/expenditure (fees & debt stay viewable read-only)
@@ -10413,7 +10683,7 @@ function render(){
     paintContent(c,_anim,cashLockHTML(PAGE)); return;
   }
   paintContent(c,_anim,(R[PAGE]||renderDashboard)());
-  const after={scores:afterRenderScores, reports:afterRenderReports, fees:afterRenderFees,
+  const after={scores:afterRenderScores, reports:afterRenderReports, fees:afterRenderFees, stubord:afterRenderStudentBoard, studentboard:afterRenderStudentBoard,
     admissions:startNewAdmissionsLive};   /* Round-202: arm the 🆕 Live New Admissions Count · Round-212 (owner): the card lives on the 🆕 Admissions portal only (removed from the Students portal) */
   if(after[PAGE]) after[PAGE]();
   if(PAGE==='dashboard' && $('#greet-banner')) armGreetTimer();
@@ -11039,7 +11309,7 @@ function nacBarsGraphHTML(s,d){
           ${r.girls?`<span class="nac-gseg girls" style="width:${gPc}%" data-tip="Girls — ${r.girls}">${gPc>=24?('👧 '+r.girls):''}</span>`:''}
         </div>
         <div class="nac-gnames">${r.kids.slice().sort(sorter).map(st=>
-          `<button class="nac-nchip ${st.gender==='F'?'g':'b'}" data-tip="Tap to open ${esc(st.firstName)} ${esc(st.surname)}'s Student Portal" onclick="A.studentModal('${st.id}')">${st.gender==='F'?'👧':'👦'} ${esc(st.firstName)} ${esc(st.surname)}</button>`).join('')}</div>
+          `<button class="nac-nchip ${st.gender==='F'?'g':'b'}" data-tip="Tap to open ${esc(st.firstName)} ${esc(st.surname)}'s Student Board" onclick="A.viewStudent('${st.id}')">${st.gender==='F'?'👧':'👦'} ${esc(st.firstName)} ${esc(st.surname)}</button>`).join('')}</div>
       </div>`; }).join('')}
     <div class="nac-legend"><span class="nac-lg b">👦 Boys — ${d.boys}</span><span class="nac-lg g">👧 Girls — ${d.girls}</span>
       <span class="nac-lg mut">each bar = one class · tap a name to open the pupil</span></div>
@@ -12869,68 +13139,958 @@ A.protoCheck=function(id,on){ const st=DB.students.find(x=>x.id===id); if(!st) r
   toast(on? `🏅 ${esc(st.firstName||'')} ${esc(st.surname||'')} marked as a <b>PROTOCOL student</b> — exempt from standard class fees. Set their fees below.`
           : `${esc(st.firstName||'')} is no longer a protocol student — the class's standard fees apply again.`,'ok');
   A.viewStudent(id); };
-A.viewStudent=function(id, via){
-  const u=me(); const s=mySchool(); const year=yearSel();
-  const st=DB.students.find(x=>x.id===id); if(!st) return;
-  const c=classOf(s,st.classId);
-  const h=(s.houses||[]).find(x=>x.id===st.houseId);
-  // per-term aggregate trend (converted)
-  const terms=termsForClass(c);
-  const trend=terms.map(t=>{ const agg=studentAggregate(st.id,c,t,year); return {label:t.replace('Term ','T'), value:agg?agg.total:0}; });
-  const bece=isJHS(c)? beceAggregate(st.id,c,'Term 2',year):null;   // Round-35: every JHS class
-  const bal=balanceOf(st,year);
-  const debt=debtBreakdown(s,st,year);
-  const prefs=DB.prefects.filter(p=>p.studentId===id);
-  const pays=DB.payments.filter(p=>p.studentId===id).slice().sort((a,b)=>b.ts-a.ts).slice(0,6);
-  const fullName=[[st.surname?st.surname+',':''].join(''),st.firstName,st.otherName].filter(Boolean).join(' ')||st.name||'—';
-  openModal(`${mHead('🎓 Student Portal — '+esc(fullName))}
-  <div class="m-body">
-    <div class="flex mb2">${st.photo?`<img class="avatar lg" src="${st.photo}">`:`<span class="av-fallback lg">${esc(((st.firstName||'?')[0]||'?')+((st.surname||'')[0]||''))}</span>`}
-      <div><div class="b">${esc(st.sid||'—')}</div>
-      <div class="small mut">${c?esc(c.name)+' · '+c.stream:''} ${(pupilShowsHouse(s,st)&&h)?`· <span class="house-dot" style="background:${h.color}"></span> ${esc(h.name)}`:''}</div>
-      ${prefs.length?`<div class="mt1">${prefs.map(p=>`<span class="badge gold">🎖 ${esc(p.title)}</span>`).join(' ')}</div>`:''}</div></div>
-    <h4>👤 Bio data</h4>
-    <div class="kv mb2">
-      <div>Full name</div><div><b>${esc(fullName)}</b></div>
-      <div>Gender / Date of birth / Age</div><div>${genderLabel(st.gender)} · ${fmtD(st.dob)} · <b>${ageOf(st)==null?'—':ageOf(st)+' yrs'}</b> (${ageGroup(ageOf(st))})   <!-- Round-60: auto age --></div>
-      <div>Admitted / promoted</div><div>${fmtD(st.adm)}${st.previousClass?` · prev. class: <b>${esc(st.previousClass)}</b> (${esc(st.year||year)})`:''}</div>
-      <div>Residence</div><div>${esc(st.residence||'—')}</div>
-      <div>Nationality${st.religion?' / Religion':''}</div><div>${esc(st.nationality||'Ghanaian')}${st.religion?' · '+esc(st.religion):''}</div>
-      <div>Status</div><div>${isStudentNew(st)?'<span class="badge ok" data-tip="Newly registered student (expires after 2 days)">NEW</span> ':''}${st.protocol?'<span class="badge gold" data-tip="Exempt from standard class fees — admin-set protocol fees only">🏅 Protocol</span> ':''}${st.enroll==='SPO'?'<span class="badge gold" data-tip="Sponsored (scholarship) — pays only the admin-set fees">🤝 Sponsored</span> ':''}${st.archived?'<span class="badge info">🗄 Archived'+(st.graduated?' (Graduate)':'')+'</span>':'<span class="badge ok">Active</span>'}</div>
+A.viewStudent = function(id, tab){
+  try { closeModal(); } catch(e){}
+  if(!id) return;
+  STU_BOARD_TAB = tab || 'details';
+  STU_BOARD_ID = id;
+  go('stubord', id);
+};
+A.legacyViewStudentModal = function(id){
+  A.viewStudent(id);
+};
+
+/* ==================== STUDENT BOARD — FULL PAGE VIEW ====================
+   When clicking any student's name from the dashboard or student lists:
+   - Full page view (full width on phone & laptop)
+   - Neatly arranged in tabs / sections:
+     A. Student Details: Name, Class, Age, Gender, Admission Number, Photo, Location / Address.
+     B. Parent / Guardian Details: Father, Mother, Phone Numbers, Occupation, Location.
+     C. Payment History & Arrears: Arrears pulled from previous terms, Term 1, 2, 3 payments, Current Balance, and integrated payment view with split by fee type.
+     D. Academics - Termly Progress: Class Tests / Marks, Exams Reports, Position in Class, Attendance, and Report Card Printing.
+*/
+let STU_BOARD_ID = null;
+let STU_BOARD_TAB = 'details';
+let STU_BOARD_TERM = null;
+let STU_BOARD_YEAR = null;
+
+function renderStudentBoard(){
+  const s = mySchool();
+  if(!s) return `<div class="card p3 center"><h3>Please log in to view Student Board</h3></div>`;
+  const allStus = activeStudents(s.id);
+  const curId = PARAM || STU_BOARD_ID || (allStus[0] && allStus[0].id);
+  STU_BOARD_ID = curId;
+  const st = (DB.students || []).find(x => x.id === curId);
+  if(!st){
+    return `<div class="stubord-wrap"><div class="card p3 center"><h3>⚠️ Student Not Found</h3><p class="mut">The requested student could not be located or has been archived.</p><button class="btn gold" onclick="go('students')">← Back to Students</button></div></div>`;
+  }
+
+  const yr = STU_BOARD_YEAR || yearSel();
+  STU_BOARD_YEAR = yr;
+  const terms = (s.terms || []).map(t => t.name).filter(Boolean);
+  const termList = terms.length ? terms : ['Term 1', 'Term 2', 'Term 3'];
+  const curTerm = STU_BOARD_TERM || currentTermName(s) || termList[0];
+  STU_BOARD_TERM = curTerm;
+
+  const cls = classOf(s, st.classId);
+  const house = (s.houses || []).find(h => h.id === st.houseId);
+  const prefects = (DB.prefects || []).filter(p => p.studentId === st.id);
+  const fullName = [st.surname, st.firstName, st.otherName].filter(Boolean).join(' ') || st.name || '—';
+  const age = ageOf(st);
+
+  // Financial summary for Tab C badge
+  const payInfo = getStudentTermPaymentInfo(st, curTerm, yr, s);
+  const netBal = Math.max(0, Math.round((payInfo.totalDue - payInfo.paidThisTerm) * 10) / 10);
+
+  return `
+  <div class="stubord-wrap">
+    <!-- Top Bar Navigation & Actions -->
+    <div class="stubord-topbar">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button class="btn ghost sm" onclick="A.stuBoardBack()" style="font-weight:700">← Back</button>
+        <div style="font-size:.85rem;color:#64748b;font-weight:600">
+          <span style="cursor:pointer;color:#0369a1" onclick="go('dashboard')">Dashboard</span> &gt;
+          <span style="cursor:pointer;color:#0369a1" onclick="go('students')">Students</span> &gt;
+          <b style="color:#0f172a">${esc(fullName)}</b>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <select style="font-size:.82rem;padding:5px 8px;border-radius:6px;max-width:220px;border:1px solid #cbd5e1;font-weight:600" onchange="go('stubord', this.value)">
+          ${allStus.map(x => `<option value="${x.id}" ${x.id === st.id ? 'selected' : ''}>${esc(x.firstName)} ${esc(x.surname)} (${esc(x.sid)})</option>`).join('')}
+        </select>
+        <button class="btn ghost sm" onclick="A.studentModal('${st.id}')" title="Edit Bio Details">✏️ Edit</button>
+        <button class="btn ghost sm" onclick="A.studentReport('${st.id}', '${curTerm}')" title="Print Official Report Card">🖨 Report Card</button>
+        <button class="btn gold sm" onclick="A.stuBoardTab('payment')" title="Record Fee Payment">💳 Make Payment</button>
+      </div>
     </div>
-    <h4>👨‍👩‍👧 Parent / guardian</h4>
-    <div class="kv mb2">
-      <div>Guardian name</div><div>${esc(st.guardianName||'—')}</div>
-      <div>Relationship / phone</div><div>${esc(st.relationship||'—')} · <b>${phShow(st.parentPhone)||'—'}</b></div>
-      <div>Contact via</div><div>${(st.commModes||[]).length? st.commModes.map(m=>`<span class="tag">${m==='Call'?'📞':m==='SMS'?'💬':waIco()} ${m}</span>`).join(' ') : '—'}</div>
-      <div>Reach the guardian</div><div>${st.parentPhone?actBtns(st.parentPhone):'—'}</div>   <!-- Round-188: REAL call / SMS / WhatsApp -->
+
+    <!-- Student Hero Identity Banner -->
+    <div class="stubord-hero">
+      ${st.photo
+        ? `<img class="stubord-avatar" src="${st.photo}" alt="${esc(fullName)}">`
+        : `<div class="stubord-avatar">${esc(((st.firstName||'?')[0]||'?') + ((st.surname||'')[0]||''))}</div>`
+      }
+      <div class="stubord-hero-info">
+        <h1 class="stubord-hero-title">
+          <span>${esc(fullName)}</span>
+          ${st.gender === 'F' ? '<span title="Female">👧</span>' : '<span title="Male">👦</span>'}
+        </h1>
+        <div class="stubord-chips">
+          <span class="stubord-chip gold">🆔 ${esc(st.sid || '—')}</span>
+          <span class="stubord-chip">🏫 ${esc(cls ? cls.name : 'No Class')} ${cls ? '(' + esc(cls.stream) + ')' : ''}</span>
+          <span class="stubord-chip">🎂 ${age != null ? age + ' yrs' : '—'} (${genderLabel(st.gender)})</span>
+          ${house ? `<span class="stubord-chip" style="background:${house.color}44;border-color:${house.color}"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${house.color}"></span> ${esc(house.name)}</span>` : ''}
+          ${prefects.length ? `<span class="stubord-chip gold">🎖️ ${esc(prefects.map(p => p.title).join(', '))}</span>` : ''}
+          ${st.residence ? `<span class="stubord-chip">📍 ${esc(st.residence)}</span>` : ''}
+          ${isStudentNew(st) ? '<span class="stubord-chip ok">NEW</span>' : ''}
+          ${st.protocol ? '<span class="stubord-chip gold">🏅 PROTOCOL</span>' : ''}
+          ${st.enroll === 'SPO' ? '<span class="stubord-chip gold">🤝 SCHOLARSHIP</span>' : ''}
+        </div>
+      </div>
+      <div style="text-align:right;background:rgba(255,255,255,0.08);padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.14)">
+        <div style="font-size:.74rem;color:#cbd5e1;font-weight:700;text-transform:uppercase">Fee Balance (${curTerm})</div>
+        <div style="font-size:1.35rem;font-weight:900;color:${netBal > 0 ? '#f87171' : '#4ade80'}">${netBal > 0 ? ghs(netBal) : '✔️ Cleared'}</div>
+        <div class="small mt1">${st.parentPhone ? actBtns(st.parentPhone) : '<span class="mut" style="color:#94a3b8">No phone set</span>'}</div>
+      </div>
     </div>
-    ${via==='fees'?'<div class="notice gold mini mb1" id="vs-fees-flash">⏰️ You jumped here from the owing drill-down — this student\'s debt details are below.</div>':''}
-    <h4 id="vs-fees">💵 Fees &amp; debt (${year})</h4>   <!-- Round-60 -->
-    <div class="mb1" style="background:${specialFeeStudent(st)?'#fdf6e3':'#f8fafc'};border:1px dashed ${specialFeeStudent(st)?'#d9b25f':'#e2e8f0'};border-radius:10px;padding:.4rem .55rem">   <!-- Round-214+218 (owner): PROTOCOL / 🤝 SPONSORED (scholarship) — the School Admin sets their fees -->
-      <div class="checkline" style="cursor:pointer"><input type="checkbox" id="vs-protocol" ${st.protocol?'checked':''} onchange="A.protoCheck('${st.id}',this.checked)"> 🏅 <b>Protocol student</b> <span class="small mut">— does <b>not</b> pay the class's standard fees</span>${st.enroll==='SPO'?' · 🤝 <b>Sponsored (scholarship)</b> admission':''}</div>
-      ${specialFeeStudent(st)?protoEditorHTML(st):'<div class="small mut mt1">Tick <b>Protocol student</b> (or admit the pupil as 🤝 <b>Sponsored</b>) to take them off the class fees — then set the exact fees the school decides they should pay (the only fees they will owe).</div>'}
+
+    <!-- Navigation Tabs Bar -->
+    <div class="stubord-tabs">
+      <button class="stubord-tab ${STU_BOARD_TAB === 'details' ? 'active' : ''}" onclick="A.stuBoardTab('details')">
+        <span>👤 A. Student Details</span>
+      </button>
+      <button class="stubord-tab ${STU_BOARD_TAB === 'guardian' ? 'active' : ''}" onclick="A.stuBoardTab('guardian')">
+        <span>👨‍👩‍👧 B. Parent &amp; Guardian Details</span>
+      </button>
+      <button class="stubord-tab ${STU_BOARD_TAB === 'payment' ? 'active' : ''}" onclick="A.stuBoardTab('payment')">
+        <span>💳 C. Payment History &amp; Arrears</span>
+        <span class="badge ${netBal > 0 ? 'warn' : 'ok'} sm" style="font-size:.72rem">${netBal > 0 ? ghs(netBal) : '✔️ Cleared'}</span>
+      </button>
+      <button class="stubord-tab ${STU_BOARD_TAB === 'academics' ? 'active' : ''}" onclick="A.stuBoardTab('academics')">
+        <span>📊 D. Academics - Termly Progress</span>
+      </button>
     </div>
-    <div class="kv mb2">
-      <div>Fees balance</div><div class="${bal>0?'bad b':'ok b'}">${bal>0?ghs(bal):'Not owing ✔️'}</div>
-      ${debt.carried && !isStopped(st)?`<div>↳ carried forward</div><div>${ghs(debt.carried)}</div>`:''}
-      ${debt.cant?`<div>Canteen (${esc(debt.cantPlan)})</div><div class="bad b">${ghs(debt.cant)}</div>`:''}
-      <div>Recent payments</div><div>${pays.length? pays.map(p=>`<div class="small">🧾 ${ghs(p.amount)} · ${fmtD(p.date)} · ${esc(p.method)} <span class="mut">#${esc(p.receiptNo)}</span></div>`).join('') : '<span class="mut small">No payments recorded yet.</span>'}</div>
-    </div>
-    <h4>📈 Results / reports (${year}) — converted totals</h4>
-    ${trend.some(p=>p.value>0)? lineChartSVG(trend) : emptyMini('No scores recorded yet this year.')}
-    ${bece? `<div class="notice info mt2"><div><b>Best-six aggregate (Term 2):</b> ${bece.total}
-      ${bece.partial?'<span class="badge warn ml1">partial — fewer than 6 subjects scored</span>':''}
-      <div class="small mt1">${bece.chosen.map(x=>esc(subAbbr(x.sub, true))).join(' · ')}</div>   <!-- Round-36: no per-subject marks --></div></div>`:''}
-    <div class="flex wrap mt2" style="gap:.4rem">
-      ${(u && c && (u.role==='schooladmin'||(u.role==='teacher'&&teacherScope(u).ids.has(c.id))))? `<button class="btn sm" data-tip="Print this student's report card for ANY term — the implemented term never blocks it" onclick="A.studentReport('${id}')">🖨 Print report card (any term)</button>`:''}   <!-- Round-49 -->
-      <button class="btn sm ghost" onclick="A.closeModal();go('reports')">Reports page →</button>
+
+    <!-- Active Tab Content Section -->
+    <div class="stubord-body">
+      ${STU_BOARD_TAB === 'guardian' ? renderStuBoardGuardian(st, s, cls) :
+        STU_BOARD_TAB === 'payment' ? renderStuBoardPayment(st, s, cls, curTerm, yr) :
+        STU_BOARD_TAB === 'academics' ? renderStuBoardAcademics(st, s, cls, curTerm, yr) :
+        renderStuBoardDetails(st, s, cls, house, prefects, yr)
+      }
     </div>
   </div>
-  <div class="m-foot"><button class="btn ghost" onclick="A.closeModal()">Close</button>
-  <button class="btn" onclick="A.closeModal();go('reports')">📄 Go to Reports</button></div>`,{wide:true});
-  if(via==='fees'){ try{ const el=document.getElementById('vs-fees'); if(el&&el.scrollIntoView) el.scrollIntoView({block:'start'}); }catch(e){} }
+  `;
+}
+
+function afterRenderStudentBoard(){
+  if(STU_BOARD_TAB === 'payment'){
+    A.stuBoardPayInit();
+  }
+}
+
+A.stuBoardBack = function(){
+  if(window.history && window.history.length > 1){
+    goBack();
+  } else {
+    go('dashboard');
+  }
 };
+
+A.stuBoardTab = function(t){
+  STU_BOARD_TAB = t;
+  render();
+};
+
+A.stuBoardSetTerm = function(t){
+  STU_BOARD_TERM = t;
+  render();
+};
+
+A.stuBoardSetYear = function(y){
+  STU_BOARD_YEAR = y;
+  render();
+};
+
+/* SECTION A: STUDENT DETAILS */
+function renderStuBoardDetails(st, s, cls, house, prefects, yr){
+  const fullName = [st.surname, st.firstName, st.otherName].filter(Boolean).join(' ') || st.name || '—';
+  const age = ageOf(st);
+  return `
+  <div class="stubord-grid-2">
+    <!-- Card 1: Official Bio Data -->
+    <div class="stubord-info-card">
+      <div class="stubord-info-header">
+        <span>👤 Official Student Bio Data</span>
+        <button class="btn sm ghost" onclick="A.studentModal('${st.id}')">✏️ Edit Bio</button>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Full Name:</span>
+        <span class="stubord-info-value">${esc(fullName)}</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Student ID (SID):</span>
+        <span class="stubord-info-value"><b style="color:#0369a1">${esc(st.sid || '—')}</b></span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Class &amp; Stream:</span>
+        <span class="stubord-info-value">${esc(cls ? cls.name : 'Unassigned')} · <b>${esc(cls ? cls.stream : '—')}</b></span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Gender:</span>
+        <span class="stubord-info-value">${genderLabel(st.gender)}</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Date of Birth &amp; Age:</span>
+        <span class="stubord-info-value">${fmtD(st.dob)} (<b>${age != null ? age + ' years' : '—'}</b> · ${ageGroup(age)})</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">House:</span>
+        <span class="stubord-info-value">${house ? `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${house.color}"></span> ${esc(house.name)}` : '—'}</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Prefect Role:</span>
+        <span class="stubord-info-value">${prefects.length ? prefects.map(p => `<span class="badge gold sm">🎖️ ${esc(p.title)}</span>`).join(' ') : '—'}</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Residential Address:</span>
+        <span class="stubord-info-value">${esc(st.residence || '—')}</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Nationality &amp; Religion:</span>
+        <span class="stubord-info-value">${esc(st.nationality || 'Ghanaian')} ${st.religion ? '· ' + esc(st.religion) : ''}</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Admission Date:</span>
+        <span class="stubord-info-value">${fmtD(st.adm)} ${st.previousClass ? `(prev: ${esc(st.previousClass)})` : ''}</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Enrollment Status:</span>
+        <span class="stubord-info-value">
+          ${isStudentNew(st) ? '<span class="badge ok sm">NEW</span> ' : ''}
+          ${st.protocol ? '<span class="badge gold sm">🏅 Protocol</span> ' : ''}
+          ${st.enroll === 'SPO' ? '<span class="badge gold sm">🤝 Sponsored</span> ' : ''}
+          ${st.archived ? '<span class="badge info sm">🗄 Archived</span>' : '<span class="badge ok sm">Active Pupil</span>'}
+        </span>
+      </div>
+    </div>
+
+    <!-- Card 2: Student Actions & Quick Tools -->
+    <div class="stubord-info-card">
+      <div class="stubord-info-header">
+        <span>⚡ Quick Actions &amp; Documents</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:12px">
+          <div style="font-weight:700;color:#0369a1;margin-bottom:4px">🖨 Terminal Report Card</div>
+          <div class="small mut mb2">Generate and print the student's official terminal report card with school letterhead and stamp.</div>
+          <button class="btn gold sm" onclick="A.studentReport('${st.id}')">🖨 Print Report Card →</button>
+        </div>
+
+        <div style="background:#fdf4ff;border:1px solid #f0abfc;border-radius:8px;padding:12px">
+          <div style="font-weight:700;color:#86198f;margin-bottom:4px">📷 Passport Photo</div>
+          <div class="small mut mb2">Update or capture the student's official passport picture for ID cards and registers.</div>
+          <button class="btn ghost sm" onclick="A.openPassportGuideModal('st', '${st.id}')">📸 Update Photo →</button>
+        </div>
+
+        <div style="background:#fefce8;border:1px solid #fef08a;border-radius:8px;padding:12px">
+          <div style="font-weight:700;color:#854d0e;margin-bottom:4px">💳 Fee Status &amp; Receipts</div>
+          <div class="small mut mb2">View complete term ledger, previous arrears, and record payments with instant receipt printing.</div>
+          <button class="btn ghost sm" onclick="A.stuBoardTab('payment')">💳 Go to Payment Portal →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  `;
+}
+
+/* SECTION B: PARENT / GUARDIAN DETAILS */
+function renderStuBoardGuardian(st, s, cls){
+  const fatherName = st.fatherName || (st.relationship && st.relationship.toLowerCase() === 'father' ? st.guardianName : '—');
+  const motherName = st.motherName || (st.relationship && st.relationship.toLowerCase() === 'mother' ? st.guardianName : '—');
+  const primaryPhone = st.parentPhone || '';
+  const secondaryPhone = st.guardianPhone2 || '';
+  const modes = st.commModes || ['Call', 'SMS', 'WhatsApp'];
+
+  return `
+  <div class="stubord-grid-2">
+    <!-- Card 1: Primary Guardian & Parents -->
+    <div class="stubord-info-card">
+      <div class="stubord-info-header">
+        <span>👨‍👩‍👧 Parent &amp; Guardian Information</span>
+        <button class="btn sm ghost" onclick="A.studentModal('${st.id}')">✏️ Edit Details</button>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Primary Guardian Name:</span>
+        <span class="stubord-info-value"><b>${esc(st.guardianName || '—')}</b></span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Relationship to Pupil:</span>
+        <span class="stubord-info-value">${esc(st.relationship || 'Guardian')}</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Father's Name:</span>
+        <span class="stubord-info-value">${esc(fatherName)}</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Mother's Name:</span>
+        <span class="stubord-info-value">${esc(motherName)}</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Primary Contact Phone:</span>
+        <span class="stubord-info-value"><b style="color:#0369a1">${phShow(primaryPhone) || '—'}</b></span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Secondary / Emergency Phone:</span>
+        <span class="stubord-info-value">${phShow(secondaryPhone) || '—'}</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Occupation / Profession:</span>
+        <span class="stubord-info-value">${esc(st.occupation || st.guardianOccupation || '—')}</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Residential Address:</span>
+        <span class="stubord-info-value">${esc(st.residence || '—')}</span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Preferred Channels:</span>
+        <span class="stubord-info-value">${modes.map(m => `<span class="tag sm">${m === 'Call' ? '📞' : m === 'SMS' ? '💬' : waIco()} ${m}</span>`).join(' ')}</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Instant Contact & SMS Messaging -->
+    <div class="stubord-info-card">
+      <div class="stubord-info-header">
+        <span>📞 Contact &amp; SMS Communication</span>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-weight:700;margin-bottom:8px">Direct Contact Actions:</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${primaryPhone ? `
+            <a href="tel:${primaryPhone}" class="btn ghost sm" style="text-decoration:none">📞 Call (${esc(primaryPhone)})</a>
+            <a href="sms:${primaryPhone}" class="btn ghost sm" style="text-decoration:none">💬 Text SMS</a>
+            <a href="https://wa.me/${primaryPhone.replace(/[^0-9]/g, '')}" target="_blank" rel="noopener" class="btn ghost sm" style="text-decoration:none">${waIco()} WhatsApp</a>
+          ` : '<span class="mut small">No guardian phone number saved yet.</span>'}
+        </div>
+      </div>
+
+      <!-- Quick SMS Sender -->
+      <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:12px">
+        <div style="font-weight:700;color:#0f172a;margin-bottom:6px;font-size:.88rem">
+          💬 Send SMS to Guardian (${esc(primaryPhone || 'No phone')})
+        </div>
+        <div style="margin-bottom:8px">
+          <select id="sb-sms-preset" style="width:100%;font-size:.8rem;margin-bottom:6px" onchange="A.stuBoardApplySMSPreset(this.value, '${esc(st.firstName)}', '${esc(st.sid)}')">
+            <option value="">— Select Quick Template —</option>
+            <option value="fee">💳 Fee Reminder / Arrears Notice</option>
+            <option value="academic">📊 Academic Progress Update</option>
+            <option value="attendance">📅 Attendance / Absence Alert</option>
+            <option value="custom">✏️ Custom Message</option>
+          </select>
+          <textarea id="sb-sms-text" rows="3" style="width:100%;font-size:.84rem;box-sizing:border-box" placeholder="Write SMS message to parent here..."></textarea>
+        </div>
+        <button class="btn gold sm" onclick="A.stuBoardSendSMS('${st.id}')">📤 Send SMS Now</button>
+      </div>
+    </div>
+  </div>
+  `;
+}
+
+A.stuBoardApplySMSPreset = function(preset, name, sid){
+  const txt = $('#sb-sms-text'); if(!txt) return;
+  const s = mySchool(); const sch = s ? s.abbrev : 'HEREMS';
+  if(preset === 'fee'){
+    txt.value = `${sch}: Dear Parent, this is a friendly reminder regarding the outstanding school fees for ${name} (${sid}). Kindly settle via MoMo/Bank or at the school accounts desk. Thank you.`;
+  } else if(preset === 'academic'){
+    txt.value = `${sch}: Dear Parent, terminal academic reports for ${name} (${sid}) are now compiled. Kindly visit the school or check the student board for full results. Management`;
+  } else if(preset === 'attendance'){
+    txt.value = `${sch}: Dear Parent, kindly note that ${name} (${sid}) was marked absent/late today. Please contact class teacher or administration. Management`;
+  } else {
+    txt.value = '';
+  }
+};
+
+A.stuBoardSendSMS = function(stId){
+  const st = (DB.students || []).find(x => x.id === stId);
+  if(!st || !st.parentPhone) return toast('No parent phone number found', 'bad');
+  const txt = ($('#sb-sms-text') || {}).value;
+  if(!txt || !txt.trim()) return toast('Please enter an SMS message', 'bad');
+  sendSMS(st.parentPhone, txt.trim());
+  toast(`SMS queued for transmission to ${esc(st.parentPhone)} ✅`, 'ok');
+  const box = $('#sb-sms-text'); if(box) box.value = '';
+};
+
+/* SECTION C: PAYMENT HISTORY & ARREARS (with Integrated Payment Form) */
+function renderStuBoardPayment(st, s, cls, curTerm, yr){
+  const terms = (s.terms || []).map(t => t.name).filter(Boolean);
+  const termList = terms.length ? terms : ['Term 1', 'Term 2', 'Term 3'];
+  const payInfo = getStudentTermPaymentInfo(st, curTerm, yr, s);
+  const netBal = Math.max(0, Math.round((payInfo.totalDue - payInfo.paidThisTerm) * 10) / 10);
+
+  // All payments recorded for this student
+  const studentPayments = (DB.payments || [])
+    .filter(p => p.studentId === st.id && String(p.year) === String(yr))
+    .slice()
+    .sort((a, b) => (b.ts || 0) - (a.ts || 0));
+
+  // Term ledger breakdown
+  const t1Paid = studentPayments.filter(p => p.term === 'Term 1').reduce((a, p) => a + Number(p.amount || 0), 0);
+  const t2Paid = studentPayments.filter(p => p.term === 'Term 2').reduce((a, p) => a + Number(p.amount || 0), 0);
+  const t3Paid = studentPayments.filter(p => p.term === 'Term 3').reduce((a, p) => a + Number(p.amount || 0), 0);
+
+  const t1Info = getStudentTermPaymentInfo(st, 'Term 1', yr, s);
+  const t2Info = getStudentTermPaymentInfo(st, 'Term 2', yr, s);
+  const t3Info = getStudentTermPaymentInfo(st, 'Term 3', yr, s);
+
+  window.__CURRENT_SB_PAY_INFO = payInfo;
+
+  return `
+  <div>
+    <!-- Top Filter & Term Selector -->
+    <div class="flex between wrap mb2" style="align-items:center;gap:.6rem;background:#f8fafc;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px">
+      <div style="font-weight:800;color:#0f172a;display:flex;align-items:center;gap:6px">
+        <span>💳 Financial Portal for</span>
+        <span style="color:#0369a1">${esc(st.firstName)} ${esc(st.surname)}</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <div>
+          <label style="font-size:.78rem;font-weight:700">Academic Year:</label>
+          <select style="font-weight:700;font-size:.82rem" onchange="A.stuBoardSetYear(this.value)">
+            ${academicYearOptions(yr)}
+          </select>
+        </div>
+        <div>
+          <label style="font-size:.78rem;font-weight:700">Select Term:</label>
+          <select style="font-weight:800;font-size:.82rem;color:#0369a1" onchange="A.stuBoardSetTerm(this.value)">
+            ${termList.map(t => `<option value="${t}" ${curTerm === t ? 'selected' : ''}>${t}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 KPI Summary Cards -->
+    <div class="stubord-kpi-grid">
+      <div class="stubord-kpi-card" style="border-left:4px solid #64748b">
+        <div class="stubord-kpi-title">1. Previous Paid (${yr})</div>
+        <div class="stubord-kpi-val" style="color:#475569">${ghs(payInfo.previousPaid)}</div>
+        <div class="small mut mt1">Cumulative payments this year</div>
+      </div>
+
+      <div class="stubord-kpi-card" style="border-left:4px solid #f59e0b;background:#fffbeb">
+        <div class="stubord-kpi-title">2. Arrears Brought Forward</div>
+        <div class="stubord-kpi-val" style="color:#b45309">${ghs(payInfo.arrears)}</div>
+        <div class="small mut mt1"><span class="badge sm gold">${esc(payInfo.arrearsLabel)}</span></div>
+      </div>
+
+      <div class="stubord-kpi-card" style="border-left:4px solid #0284c7">
+        <div class="stubord-kpi-title">3. Current Term Fees (${curTerm})</div>
+        <div class="stubord-kpi-val" style="color:#0369a1">${ghs(payInfo.currentTermFees)}</div>
+        <div class="small mut mt1">${payInfo.items.length} fee component(s)</div>
+      </div>
+
+      <div class="stubord-kpi-card" style="border-left:4px solid #7c3aed;background:#faf5ff">
+        <div class="stubord-kpi-title">4. Total Due (Arrears + Current)</div>
+        <div class="stubord-kpi-val" style="color:#6d28d9">${ghs(payInfo.totalDue)}</div>
+        <div class="small mut mt1">${ghs(payInfo.arrears)} + ${ghs(payInfo.currentTermFees)}</div>
+      </div>
+
+      <div class="stubord-kpi-card" style="border-left:4px solid ${netBal > 0 ? '#ef4444' : '#10b981'};background:${netBal > 0 ? '#fef2f2' : '#f0fdf4'}">
+        <div class="stubord-kpi-title">5. Current Balance</div>
+        <div class="stubord-kpi-val" style="color:${netBal > 0 ? '#b91c1c' : '#15803d'}">
+          ${netBal > 0 ? ghs(netBal) : '✔️ Cleared'}
+        </div>
+        <div class="small mut mt1">${netBal > 0 ? 'Payment outstanding' : 'Fully settled ✔️'}</div>
+      </div>
+    </div>
+
+    <!-- Integrated Payment Form -->
+    <div class="card mb3" style="background:#fff;border:2px solid #3b82f6;border-radius:12px;padding:16px">
+      <div class="flex between wrap mb2" style="align-items:center;border-bottom:1.5px solid #dbeafe;padding-bottom:10px">
+        <div>
+          <h3 style="margin:0;color:#1e40af;display:flex;align-items:center;gap:6px">
+            <span>💵 Record New Payment &amp; Issue Receipt</span>
+          </h3>
+          <div class="small mut">Record payment for <b>${esc(st.firstName)} ${esc(st.surname)}</b> (${esc(curTerm)} · ${yr}). Auto-splits across fee types and prints official receipt.</div>
+        </div>
+        <div class="badge gold" style="font-size:.85rem">Total Due: <b>${ghs(payInfo.totalDue)}</b></div>
+      </div>
+
+      <div class="grid g3 mb2" style="gap:12px">
+        <div>
+          <label style="font-size:.82rem;font-weight:700">Payment Date *</label>
+          <input type="date" id="sb-pay-date" value="${todayISO()}" style="width:100%;font-weight:700">
+        </div>
+        <div>
+          <label style="font-size:.82rem;font-weight:700">Payment Method *</label>
+          <select id="sb-pay-mth" style="width:100%;font-weight:700">
+            <option>Cash</option>
+            <option>MTN MoMo</option>
+            <option>Telecel Cash</option>
+            <option>AT Money</option>
+            <option>Bank Deposit</option>
+            <option>Cheque</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:.82rem;font-weight:700">Amount Paid (GH₵) *</label>
+          <input type="number" step="0.5" min="1" id="sb-pay-amt" placeholder="0.00" style="width:100%;font-size:1.15rem;font-weight:900;color:#1e40af" oninput="A.stuBoardPayAmtInput(this.value)">
+        </div>
+      </div>
+
+      <!-- Split Table -->
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin-bottom:14px">
+        <div class="flex between wrap" style="align-items:center;margin-bottom:8px">
+          <div style="font-weight:700;font-size:.86rem;color:#0f172a">
+            Fee Type Split Allocation:
+          </div>
+          <button type="button" class="btn ghost sm" onclick="A.stuBoardAutoSplit()" style="border-color:#3b82f6;color:#1d4ed8;font-weight:700">
+            ⚡ Auto-Split Amount
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table style="width:100%;font-size:.84rem">
+            <thead>
+              <tr style="background:#e2e8f0">
+                <th>Fee Item Name</th>
+                <th style="width:140px;text-align:right">Billed Amount</th>
+                <th style="width:180px;text-align:right">Allocated Payment (GH₵)</th>
+              </tr>
+            </thead>
+            <tbody id="sb-split-tbody">
+              ${payInfo.arrears > 0 ? `
+                <tr style="background:#fffbeb">
+                  <td><b>${esc(payInfo.arrearsLabel)}</b></td>
+                  <td style="text-align:right;font-weight:700;color:#b45309">${ghs(payInfo.arrears)}</td>
+                  <td style="text-align:right">
+                    <input type="number" step="0.5" min="0" class="sb-split-item" data-name="${esc(payInfo.arrearsLabel)}" value="0" style="width:120px;text-align:right;font-weight:700;color:#b45309" oninput="A.stuBoardCalcSplitSum()">
+                  </td>
+                </tr>
+              ` : ''}
+              ${payInfo.items.map(it => `
+                <tr>
+                  <td><b>${esc(it.name)}</b></td>
+                  <td style="text-align:right;font-weight:700;color:#0f172a">${ghs(it.amount)}</td>
+                  <td style="text-align:right">
+                    <input type="number" step="0.5" min="0" class="sb-split-item" data-name="${esc(it.name)}" value="0" style="width:120px;text-align:right;font-weight:700;color:#0f172a" oninput="A.stuBoardCalcSplitSum()">
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+            <tfoot>
+              <tr style="background:#f1f5f9;font-weight:900">
+                <td colspan="2" style="text-align:right">Total Allocated:</td>
+                <td style="text-align:right;font-size:1.05rem;color:#1e40af">
+                  <span id="sb-split-sum">GH₵ 0.00</span>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="flex between wrap" style="align-items:center;gap:10px">
+        <div id="sb-split-feedback" class="small mut">
+          Enter the amount paid above or click <b>⚡ Auto-Split Amount</b>.
+        </div>
+        <button class="btn gold" style="font-size:1rem;padding:8px 22px" onclick="A.stuBoardSavePayment('${st.id}')">
+          💾 Save Payment &amp; Print Official Receipt
+        </button>
+      </div>
+    </div>
+
+    <!-- Term by Term Ledger Table -->
+    <div class="card mb3" style="background:#f8fafc">
+      <div style="font-weight:800;color:#0f172a;margin-bottom:8px;font-size:.9rem">
+        📋 Term-by-Term Ledger Summary (${yr})
+      </div>
+      <div class="table-wrap">
+        <table style="width:100%;font-size:.84rem">
+          <thead>
+            <tr style="background:#e2e8f0">
+              <th>Academic Term</th>
+              <th style="text-align:right">Term Fees Billed</th>
+              <th style="text-align:right">Arrears Brought In</th>
+              <th style="text-align:right">Total Due</th>
+              <th style="text-align:right">Amount Paid</th>
+              <th style="text-align:right">Outstanding Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Term 1</b></td>
+              <td style="text-align:right">${ghs(t1Info.currentTermFees)}</td>
+              <td style="text-align:right">${ghs(t1Info.arrears)}</td>
+              <td style="text-align:right;font-weight:700">${ghs(t1Info.totalDue)}</td>
+              <td style="text-align:right;font-weight:700;color:#16a34a">${ghs(t1Paid)}</td>
+              <td style="text-align:right;font-weight:800;color:${(t1Info.totalDue - t1Paid) > 0 ? '#dc2626' : '#16a34a'}">
+                ${(t1Info.totalDue - t1Paid) > 0 ? ghs(t1Info.totalDue - t1Paid) : '✔️ Cleared'}
+              </td>
+            </tr>
+            <tr>
+              <td><b>Term 2</b></td>
+              <td style="text-align:right">${ghs(t2Info.currentTermFees)}</td>
+              <td style="text-align:right">${ghs(t2Info.arrears)}</td>
+              <td style="text-align:right;font-weight:700">${ghs(t2Info.totalDue)}</td>
+              <td style="text-align:right;font-weight:700;color:#16a34a">${ghs(t2Paid)}</td>
+              <td style="text-align:right;font-weight:800;color:${(t2Info.totalDue - t2Paid) > 0 ? '#dc2626' : '#16a34a'}">
+                ${(t2Info.totalDue - t2Paid) > 0 ? ghs(t2Info.totalDue - t2Paid) : '✔️ Cleared'}
+              </td>
+            </tr>
+            <tr>
+              <td><b>Term 3</b></td>
+              <td style="text-align:right">${ghs(t3Info.currentTermFees)}</td>
+              <td style="text-align:right">${ghs(t3Info.arrears)}</td>
+              <td style="text-align:right;font-weight:700">${ghs(t3Info.totalDue)}</td>
+              <td style="text-align:right;font-weight:700;color:#16a34a">${ghs(t3Paid)}</td>
+              <td style="text-align:right;font-weight:800;color:${(t3Info.totalDue - t3Paid) > 0 ? '#dc2626' : '#16a34a'}">
+                ${(t3Info.totalDue - t3Paid) > 0 ? ghs(t3Info.totalDue - t3Paid) : '✔️ Cleared'}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Complete Payment History Table -->
+    <div class="card">
+      <div style="font-weight:800;color:#0f172a;margin-bottom:8px;font-size:.9rem">
+        🧾 Complete Payment History &amp; Receipts (${yr})
+      </div>
+      <div class="table-wrap">
+        <table style="width:100%;font-size:.82rem">
+          <thead>
+            <tr style="background:#e2e8f0">
+              <th>Receipt No</th>
+              <th>Date</th>
+              <th>Term</th>
+              <th style="text-align:right">Amount Paid</th>
+              <th>Fee Breakdown</th>
+              <th>Payment Method</th>
+              <th>Received By</th>
+              <th style="text-align:center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${studentPayments.map(p => `
+              <tr>
+                <td><b style="color:#0369a1">${esc(p.receiptNo || '—')}</b></td>
+                <td>${fmtD(p.date)}</td>
+                <td><span class="badge info sm">${esc(p.term || 'Term 1')}</span></td>
+                <td style="text-align:right;font-weight:900;color:#16a34a">${ghs(p.amount)}</td>
+                <td class="small">${renderPaymentBreakdownHTML(p)}</td>
+                <td>${esc(p.method || 'Cash')}</td>
+                <td class="small mut">${esc(p.by || 'Admin')}</td>
+                <td style="text-align:center">
+                  <button class="btn sm ghost" onclick="A.viewReceipt('${p.id}')">🖨 Receipt</button>
+                </td>
+              </tr>
+            `).join('') || `<tr><td colspan="8" class="center mut" style="padding:1.5rem">No payments recorded for this academic year yet.</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  `;
+}
+
+A.stuBoardPayInit = function(){
+  A.stuBoardCalcSplitSum();
+};
+
+A.stuBoardPayAmtInput = function(val){
+  const amt = parseFloat(val) || 0;
+  if(amt > 0){
+    A.stuBoardAutoSplit();
+  } else {
+    $$('.sb-split-item').forEach(inp => { inp.value = '0'; });
+    A.stuBoardCalcSplitSum();
+  }
+};
+
+A.stuBoardAutoSplit = function(){
+  const amtInput = $('#sb-pay-amt');
+  if(!amtInput) return;
+  const total = parseFloat(amtInput.value) || 0;
+  if(total <= 0) return toast('Enter amount paid first', 'bad');
+
+  let remaining = total;
+  const items = $$('.sb-split-item');
+
+  // 1. First priority: Arrears (if exists)
+  items.forEach(inp => {
+    const isArrears = (inp.dataset.name || '').toLowerCase().includes('arrears');
+    if(isArrears && remaining > 0){
+      const info = window.__CURRENT_SB_PAY_INFO || {};
+      const due = Number(info.arrears || 0);
+      const alloc = Math.min(remaining, due);
+      inp.value = alloc > 0 ? alloc : 0;
+      remaining -= alloc;
+    }
+  });
+
+  // 2. Next: School Fees
+  items.forEach(inp => {
+    const isSF = (inp.dataset.name || '').toLowerCase().includes('school fees');
+    if(isSF && remaining > 0){
+      const info = window.__CURRENT_SB_PAY_INFO || {};
+      const itemObj = (info.items || []).find(x => (x.name || '').toLowerCase().includes('school fees'));
+      const due = itemObj ? Number(itemObj.amount || 0) : remaining;
+      const alloc = Math.min(remaining, due);
+      inp.value = alloc > 0 ? alloc : 0;
+      remaining -= alloc;
+    }
+  });
+
+  // 3. Other fee items
+  items.forEach(inp => {
+    const nm = (inp.dataset.name || '').toLowerCase();
+    if(!nm.includes('arrears') && !nm.includes('school fees') && remaining > 0){
+      const info = window.__CURRENT_SB_PAY_INFO || {};
+      const itemObj = (info.items || []).find(x => (x.name || '').toLowerCase() === nm);
+      const due = itemObj ? Number(itemObj.amount || 0) : remaining;
+      const alloc = Math.min(remaining, due);
+      inp.value = alloc > 0 ? alloc : 0;
+      remaining -= alloc;
+    }
+  });
+
+  // 4. Any leftover remaining assigned to first fee item
+  if(remaining > 0 && items.length > 0){
+    const first = items[0];
+    first.value = (parseFloat(first.value) || 0) + remaining;
+  }
+
+  A.stuBoardCalcSplitSum();
+};
+
+A.stuBoardCalcSplitSum = function(){
+  let sum = 0;
+  $$('.sb-split-item').forEach(inp => {
+    sum += parseFloat(inp.value) || 0;
+  });
+  sum = Math.round(sum * 10) / 10;
+  const sumEl = $('#sb-split-sum');
+  if(sumEl) sumEl.textContent = ghs(sum);
+
+  const amtInput = $('#sb-pay-amt');
+  const targetAmt = amtInput ? (parseFloat(amtInput.value) || 0) : 0;
+  const fb = $('#sb-split-feedback');
+  if(fb){
+    if(targetAmt > 0 && Math.abs(sum - targetAmt) < 0.01){
+      fb.innerHTML = `<span style="color:#16a34a;font-weight:700">✔️ Split total matches amount paid (${ghs(sum)})</span>`;
+    } else if(targetAmt > 0 && sum < targetAmt){
+      fb.innerHTML = `<span style="color:#d97706;font-weight:700">⚠️ Remaining unallocated: ${ghs(targetAmt - sum)}</span>`;
+    } else if(targetAmt > 0 && sum > targetAmt){
+      fb.innerHTML = `<span style="color:#dc2626;font-weight:700">❌ Split exceeds amount paid by ${ghs(sum - targetAmt)}</span>`;
+    } else {
+      fb.innerHTML = `Enter amount paid above or click <b>⚡ Auto-Split Amount</b>.`;
+    }
+  }
+};
+
+A.stuBoardSavePayment = function(stId){
+  if(!needCash()) return;
+  const s = mySchool();
+  const yr = STU_BOARD_YEAR || yearSel();
+  const tm = STU_BOARD_TERM || currentTermName(s) || 'Term 1';
+  const st = (DB.students || []).find(x => x.id === stId);
+  if(!st) return toast('Student not found', 'bad');
+
+  const amt = parseFloat(($('#sb-pay-amt') || {}).value);
+  if(!(amt > 0)) return toast('Please enter a valid amount paid', 'bad');
+
+  const info = window.__CURRENT_SB_PAY_INFO || getStudentTermPaymentInfo(st, tm, yr, s);
+
+  // Collect split breakdown
+  const splitMap = {};
+  $$('.sb-split-item').forEach(inp => {
+    const v = parseFloat(inp.value) || 0;
+    if(v > 0){
+      splitMap[inp.dataset.name] = v;
+    }
+  });
+
+  if(!Object.keys(splitMap).length){
+    splitMap['School Fees'] = amt;
+  }
+
+  const allocArray = Object.entries(splitMap).map(([name, amount]) => ({ name, amount }));
+  const feeType = Object.keys(splitMap).join(' + ');
+  const rno = nextReceiptNo(s);
+  const balAfter = Math.max(0, Math.round((info.totalDue - amt) * 10) / 10);
+
+  const p = {
+    id: uid('pay'),
+    schoolId: s.id,
+    studentId: st.id,
+    year: yr,
+    term: tm,
+    amount: amt,
+    method: ($('#sb-pay-mth') || {}).value || 'Cash',
+    feeType,
+    previousPaid: info.previousPaid,
+    arrears: info.arrears,
+    arrearsLabel: info.arrearsLabel,
+    currentTermFees: info.currentTermFees,
+    totalDue: info.totalDue,
+    balance: balAfter,
+    splitBreakdown: splitMap,
+    alloc: allocArray,
+    date: ($('#sb-pay-date') || {}).value || todayISO(),
+    receiptNo: rno,
+    by: me().name,
+    ts: Date.now()
+  };
+
+  DB.payments.push(p);
+
+  // Send SMS confirmation to parent
+  if(st.parentPhone){
+    sendSMS(st.parentPhone,
+      `HEREMS ${s.abbrev}: Payment of GHS ${amt.toFixed(2)} received for ${st.firstName} ${st.surname} (${st.sid}). ` +
+      `Receipt #${rno}. Total Due: GHS ${info.totalDue.toFixed(2)}. ` +
+      (balAfter > 0 ? `Outstanding balance: GHS ${balAfter.toFixed(2)}.` : `All fees CLEARED ✔️. Thank you.`) +
+      `\nBy Management`);
+  }
+
+  saveDB();
+  toast(`Payment recorded — receipt <b>#${rno}</b> generated + SMS sent ✅`, 'ok');
+  render();
+  A.viewReceipt(p.id);
+};
+
+/* SECTION D: ACADEMICS - TERMLY PROGRESS */
+function renderStuBoardAcademics(st, s, cls, curTerm, yr){
+  const terms = (s.terms || []).map(t => t.name).filter(Boolean);
+  const termList = terms.length ? terms : ['Term 1', 'Term 2', 'Term 3'];
+  const subs = cls ? studentSubjectsForClass(s, cls) : [];
+
+  // Attendance for student
+  const att = attTermTotals(st.id, yr, curTerm);
+  const attTotal = att.m || (att.p + att.a + att.l + att.x);
+  const attPct = attTotal > 0 ? Math.round((att.p / attTotal) * 100) : 100;
+
+  // Class positions calculation
+  const allClsStus = activeStudents(s.id).filter(x => x.classId === st.classId);
+  const peerRankings = allClsStus.map(p => {
+    let sum = 0, count = 0;
+    subs.forEach(sb => {
+      const t = studentTotal(p.id, sb, curTerm, yr, cls ? cls.stream : '');
+      if(t !== null && t !== ''){
+        sum += Number(t);
+        count++;
+      }
+    });
+    return { id: p.id, sum: Math.round(sum * 10) / 10, count, avg: count ? Math.round((sum / count) * 10) / 10 : 0 };
+  }).sort((a, b) => b.sum - a.sum);
+
+  const myRankIdx = peerRankings.findIndex(x => x.id === st.id);
+  const myRankStr = myRankIdx >= 0 ? `${myRankIdx + 1}${myRankIdx === 0 ? 'st' : myRankIdx === 1 ? 'nd' : myRankIdx === 2 ? 'rd' : 'th'} of ${peerRankings.length}` : '—';
+  const myTotalObj = peerRankings.find(x => x.id === st.id);
+  const myTotal = myTotalObj ? myTotalObj.sum : 0;
+  const myAvg = myTotalObj ? myTotalObj.avg : 0;
+
+  // Performance trend data across terms
+  const trendData = termList.map(t => {
+    const agg = studentAggregate(st.id, cls, t, yr);
+    return { label: t.replace('Term ', 'T'), value: agg ? agg.total : 0 };
+  });
+
+  return `
+  <div>
+    <!-- Academic Filter & Term Selector -->
+    <div class="flex between wrap mb2" style="align-items:center;gap:.6rem;background:#f8fafc;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px">
+      <div style="font-weight:800;color:#0f172a;display:flex;align-items:center;gap:6px">
+        <span>📊 Academic Progress &amp; Marks for</span>
+        <span style="color:#0369a1">${esc(st.firstName)} ${esc(st.surname)}</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <div>
+          <label style="font-size:.78rem;font-weight:700">Academic Year:</label>
+          <select style="font-weight:700;font-size:.82rem" onchange="A.stuBoardSetYear(this.value)">
+            ${academicYearOptions(yr)}
+          </select>
+        </div>
+        <div>
+          <label style="font-size:.78rem;font-weight:700">Select Term:</label>
+          <select style="font-weight:800;font-size:.82rem;color:#0369a1" onchange="A.stuBoardSetTerm(this.value)">
+            ${termList.map(t => `<option value="${t}" ${curTerm === t ? 'selected' : ''}>${t}</option>`).join('')}
+          </select>
+        </div>
+        <button class="btn gold sm" onclick="A.studentReport('${st.id}', '${curTerm}')">
+          🖨 Print Report Card
+        </button>
+      </div>
+    </div>
+
+    <!-- Performance Highlights (3 KPIs) -->
+    <div class="stubord-kpi-grid">
+      <div class="stubord-kpi-card" style="border-left:4px solid #f59e0b;background:#fffbeb">
+        <div class="stubord-kpi-title">🏆 Position in Class</div>
+        <div class="stubord-kpi-val" style="color:#b45309">${esc(myRankStr)}</div>
+        <div class="small mut mt1">${peerRankings.length} pupils in ${esc(cls ? cls.name : 'class')}</div>
+      </div>
+
+      <div class="stubord-kpi-card" style="border-left:4px solid #0284c7">
+        <div class="stubord-kpi-title">📈 Overall Aggregate &amp; Average</div>
+        <div class="stubord-kpi-val" style="color:#0369a1">${myTotal} <span style="font-size:.9rem;color:#64748b">(${myAvg}%)</span></div>
+        <div class="small mut mt1">${subs.length} total subjects registered</div>
+      </div>
+
+      <div class="stubord-kpi-card" style="border-left:4px solid #10b981;background:#f0fdf4">
+        <div class="stubord-kpi-title">📅 Term Attendance Rate</div>
+        <div class="stubord-kpi-val" style="color:#15803d">${attPct}%</div>
+        <div class="small mut mt1">Present: <b>${att.p}</b> · Absent: <b>${att.a}</b> · Late: <b>${att.l}</b></div>
+      </div>
+    </div>
+
+    <!-- Subject Scores Table -->
+    <div class="card mb3">
+      <div class="flex between wrap mb2" style="align-items:center">
+        <h4 style="margin:0;color:#0f172a">📝 Terminal Assessment &amp; Examination Marks — ${esc(curTerm)} (${yr})</h4>
+        <button class="btn sm ghost" onclick="go('scores')">Go to Score Sheet →</button>
+      </div>
+
+      <div class="table-wrap">
+        <table style="width:100%;font-size:.84rem">
+          <thead>
+            <tr style="background:#e2e8f0">
+              <th>Subject</th>
+              <th style="width:110px;text-align:right">Class Score (C)</th>
+              <th style="width:110px;text-align:right">Exam Score (E)</th>
+              <th style="width:110px;text-align:right">Total (100%)</th>
+              <th style="width:90px;text-align:center">Grade</th>
+              <th>Remark</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${subs.map(sb => {
+              const sc = getScore(st.id, sb, curTerm, yr);
+              const rawC = sc ? sc.c : '';
+              const rawE = sc ? sc.e : '';
+              const conv = convertScore(rawC, rawE, cls ? cls.stream : '', s);
+              const hasScore = (conv.total !== '');
+              const totalVal = hasScore ? Number(conv.total) : 0;
+              const [grd, rmk] = hasScore ? gradeBand(totalVal, s) : ['—', 'No score'];
+              return `<tr>
+                <td><b>${esc(sb)}</b></td>
+                <td style="text-align:right">${hasScore ? conv.c : '—'}</td>
+                <td style="text-align:right">${hasScore ? conv.e : '—'}</td>
+                <td style="text-align:right;font-weight:900;color:#0f172a">${hasScore ? conv.total : '—'}</td>
+                <td style="text-align:center">${hasScore ? gradeChip(grd) : '—'}</td>
+                <td><span style="font-weight:600;color:${gradeColor(grd)}">${esc(rmk)}</span></td>
+              </tr>`;
+            }).join('') || `<tr><td colspan="6" class="center mut" style="padding:1.5rem">No subjects assigned for this class stream.</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Performance Trend Chart -->
+    <div class="card">
+      <h4 style="margin:0 0 10px 0;color:#0f172a">📊 Annual Performance Trend (${yr})</h4>
+      ${trendData.some(p => p.value > 0) ? lineChartSVG(trendData) : emptyMini('No term scores recorded yet this academic year.')}
+    </div>
+  </div>
+  `;
+}
+
+try {
+  window.renderStudentBoard = renderStudentBoard;
+  window.afterRenderStudentBoard = afterRenderStudentBoard;
+} catch(e){}
+
 
 /* ================= TEACHERS MGMT ================= */
 /* ==================== Round-229 (owner): STAFF — ONE PORTAL, TWO REGISTERS ====================
@@ -14767,6 +15927,13 @@ A.saveTotalMarks = function(type, subject){
   const mEl = $('#ptm-month');
   if(mEl && mEl.value) ac.monthlyExamMonth = mEl.value;
 
+  const cls = (s.classes || []).find(c => c.id === SC.cls);
+  if(cls && cls.stream && scope !== 'subject'){
+    const stConfig = getStreamAssessmentConfig(s, cls.stream);
+    stConfig.totals = stConfig.totals || {};
+    stConfig.totals[type] = val;
+  }
+
   saveDB();
   closeModal();
   toast(`Total marks set to ${val} for ${type.replace(/_/g,' ')}` + (scope==='subject'?` (${subject})`:' (All subjects)'), 'ok');
@@ -14781,8 +15948,14 @@ A.setQuickTotal = function(type, val, subject){
   if(type === 'weekly') type = 'weekly_test';
   if(type === 'end') type = 'end_term';
   ac.totals[type] = Number(val);
+  const cls = (s.classes || []).find(c => c.id === SC.cls);
+  if(cls && cls.stream){
+    const stConfig = getStreamAssessmentConfig(s, cls.stream);
+    stConfig.totals = stConfig.totals || {};
+    stConfig.totals[type] = Number(val);
+  }
   saveDB();
-  toast(`Set total marks to ${val} for ${type.replace(/_/g,' ')}`, 'ok');
+  toast(`Set total marks to ${val} for ${type.replace(/_/g,' ')}` + (cls ? ` (${cls.stream})` : ''), 'ok');
   render();
 };
 
@@ -14809,9 +15982,10 @@ function renderScores(){
   if(SC.examType === 'mock') return termClosedNote + renderMocks();
   
   const ac = getSchoolAssessmentConfig(s);
-  const w = convRules(cls ? cls.stream : '');
+  const stream = cls ? cls.stream : '';
+  const w = convRules(stream);
   const curType = SC.examType || 'end';
-  const curTotal = getAssessmentTotalMarks(s, curType, SC.sub);
+  const curTotal = getAssessmentTotalMarks(s, curType, SC.sub, stream);
 
   const examField = `<div><label>Assessment / Exam Type</label>
     <select style="width:230px;font-weight:700;color:#0f172a" onchange="A.scExamTypeChange(this.value)">
@@ -14850,7 +16024,7 @@ function renderScores(){
       <div class="grow"></div>
       <div class="flex wrap" style="gap:.5rem;align-items:center;margin-top:1.4rem">
         <button class="btn gold" data-tip="Print official score sheets with class and exam scores for any class" onclick="A.scoreSheetModal('${cls?cls.id:''}')">🖨 Printable Score Sheets</button>
-        ${me().role==='schooladmin'?`<button class="btn" onclick="A.convModal()">⚖️ Class &amp; Exam Setup</button>`:''}
+        ${me().role==='schooladmin'?`<button class="btn" onclick="A.convModal('${cls?cls.stream:''}')">⚖️ Stream Conversion Setup</button>`:''}
       </div>
     </div>
 
@@ -14868,23 +16042,24 @@ function renderTotalMarksBar(s, cls, type, sub, curTotal, ac){
   if(type === 'mock' || !cls) return '';
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const curMonth = ac.monthlyExamMonth || months[new Date().getMonth()] || 'September';
+  const stConfig = getStreamAssessmentConfig(s, cls.stream);
   
   if(type === 'end'){
-    const csW = ac.weights.classScoreWeight !== undefined ? ac.weights.classScoreWeight : 30;
-    const esW = ac.weights.examScoreWeight !== undefined ? ac.weights.examScoreWeight : 70;
+    const csW = stConfig.c !== undefined ? stConfig.c : 30;
+    const esW = stConfig.e !== undefined ? stConfig.e : 70;
     const compLabel = {
       class_test: 'Class Test only',
       mid_term: 'Mid-Term Exam only',
       monthly_exam: 'Monthly Exam',
       weekly_test: 'Weekly Test',
-      combined: 'Class Test (' + (ac.weights.combinedClassTestWeight||15) + '%) + Mid-Term (' + (ac.weights.combinedMidTermWeight||15) + '%)'
-    }[ac.classScoreType] || 'Class Test';
+      combined: 'Class Test (' + (stConfig.combinedClassTestWeight||Math.round(csW/2)) + '%) + Mid-Term (' + (stConfig.combinedMidTermWeight||(csW-Math.round(csW/2))) + '%)'
+    }[stConfig.classScoreType] || 'Class Test';
 
     return `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 14px;background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 12px;margin-top:10px">
       <div style="font-size:.84rem;color:#0f172a">
-        🎓 <b>Terminal Exam Mode:</b> Class Score (<b>${csW}%</b> via ${compLabel}) + Exam Score (<b>${esW}%</b>) = <b>100%</b>.
+        🎓 <b>Terminal Exam Mode (${esc(cls.stream)}):</b> Class Score (<b>${csW}%</b> via ${compLabel}) + Exam Score (<b>${esW}%</b>) = <b>100%</b>.
       </div>
-      <button class="btn sm ghost" onclick="A.convModal()">⚙️ Change Weights &amp; Composition</button>
+      <button class="btn sm ghost" onclick="A.convModal('${esc(cls.stream)}')">⚙️ Stream Rules (${esc(cls.stream)})</button>
     </div>`;
   }
 
@@ -15194,66 +16369,65 @@ A.saveScores = function(clsId, pre){
 
 /* Interactive Live Conversion Explainer Component for Admins and Teachers */
 function scoreConversionExplainerHTML(s, stream){
-  const ac = getSchoolAssessmentConfig(s);
-  const csW = ac.weights.classScoreWeight !== undefined ? ac.weights.classScoreWeight : 30;
-  const esW = ac.weights.examScoreWeight !== undefined ? ac.weights.examScoreWeight : 70;
-  const ctTot = ac.totals.class_test || 30;
-  const mtTot = ac.totals.mid_term || 30;
-  const etTot = ac.totals.end_term || 100;
+  const stConfig = getStreamAssessmentConfig(s, stream);
+  const csW = stConfig.c !== undefined ? stConfig.c : 30;
+  const esW = stConfig.e !== undefined ? stConfig.e : 70;
+  const ctTot = (stConfig.totals && stConfig.totals.class_test) || 30;
+  const mtTot = (stConfig.totals && stConfig.totals.mid_term) || 30;
+  const etTot = (stConfig.totals && stConfig.totals.end_term) || 100;
 
   const compText = {
     class_test: `<b>Class Test only</b> (marked out of <b>${ctTot}</b>, counts <b>${csW}%</b>)`,
     mid_term: `<b>Mid-Term Exam only</b> (marked out of <b>${mtTot}</b>, counts <b>${csW}%</b>)`,
-    monthly_exam: `<b>Monthly Exam</b> (marked out of <b>${ac.totals.monthly_exam||30}</b>, counts <b>${csW}%</b>)`,
-    weekly_test: `<b>Weekly Test</b> (marked out of <b>${ac.totals.weekly_test||20}</b>, counts <b>${csW}%</b>)`,
-    combined: `<b>Combination:</b> Class Test (${ac.weights.combinedClassTestWeight||15}%) + Mid-Term Exam (${ac.weights.combinedMidTermWeight||15}%) = <b>${csW}%</b>`
-  }[ac.classScoreType] || 'Class Test only';
+    monthly_exam: `<b>Monthly Exam</b> (marked out of <b>${(stConfig.totals&&stConfig.totals.monthly_exam)||30}</b>, counts <b>${csW}%</b>)`,
+    weekly_test: `<b>Weekly Test</b> (marked out of <b>${(stConfig.totals&&stConfig.totals.weekly_test)||20}</b>, counts <b>${csW}%</b>)`,
+    combined: `<b>Combination:</b> Class Test (${stConfig.combinedClassTestWeight||Math.round(csW/2)}%) + Mid-Term Exam (${stConfig.combinedMidTermWeight||(csW-Math.round(csW/2))}%) = <b>${csW}%</b>`
+  }[stConfig.classScoreType] || 'Class Test only';
+
+  const initDemo = calculateTerminalMarks({ c: 24, e: 75 }, s, stream);
 
   return `
   <details class="desc-strip mt2" style="background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:10px;padding:8px 12px">
     <summary style="font-weight:800;font-size:.88rem;color:#0f172a;cursor:pointer">
-      📖 <b>How Score Conversion &amp; Terminal Marks Work (Click to expand)</b>
-      <span class="ds-hint" style="color:#0284c7">show formula &amp; live demo ▾</span>
+      📖 <b>How Score Conversion &amp; Terminal Marks Work for ${esc(stream||'This Stream')} (Click to expand)</b>
+      <span class="ds-hint" style="color:#0284c7">show stream rules &amp; live demo ▾</span>
     </summary>
     <div style="margin-top:10px;font-size:.82rem;line-height:1.45;color:#334155">
       <div class="grid g3" style="gap:10px;margin-bottom:12px">
         <div style="background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:10px">
-          <div style="font-weight:800;color:#0369a1;margin-bottom:4px">1. Class Score Composition</div>
+          <div style="font-weight:800;color:#0369a1;margin-bottom:4px">1. Class Score Composition (${esc(stream||'Stream')})</div>
           <div>${compText}</div>
-          <div class="small mut mt1">School decides what builds the continuous assessment score.</div>
+          <div class="small mut mt1">Configured specifically for ${esc(stream||'this stream')} by School Admin.</div>
         </div>
         <div style="background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:10px">
           <div style="font-weight:800;color:#0369a1;margin-bottom:4px">2. Live Normalization Rule</div>
           <div>• If entered score <b>≤ set total</b>: keeps same mark.</div>
           <div>• If entered score <b>> set total</b>: converts: <code>(Score ÷ 100) × Total</code>.</div>
-          <div class="small mut mt1">Example: 80 out of 100 on a /30 test ➜ <b>24 / 30</b>.</div>
+          <div class="small mut mt1">Example: 80 out of 100 on a /${ctTot} test ➜ <b>${Math.round((80/100)*ctTot*10)/10} / ${ctTot}</b>.</div>
         </div>
         <div style="background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:10px">
           <div style="font-weight:800;color:#0369a1;margin-bottom:4px">3. Terminal Mark Formula</div>
           <div><code>Final = Class (${csW}%) + Exam (${esW}%)</code></div>
           <div>Max terminal mark is <b>100%</b>.</div>
-          <div class="small mut mt1">Powers report cards, broadsheets &amp; positions automatically.</div>
+          <div class="small mut mt1">Applied to all report cards and broadsheets in ${esc(stream||'this stream')}.</div>
         </div>
       </div>
 
       <!-- Live Interactive Conversion Calculator -->
       <div style="background:#f0f9ff;border:1.5px solid #7dd3fc;border-radius:8px;padding:10px 14px">
-        <b style="color:#0369a1;font-size:.86rem">🧮 Interactive Live Conversion Demo:</b>
+        <b style="color:#0369a1;font-size:.86rem">🧮 Interactive Live Conversion Demo (${esc(stream||'Stream')}):</b>
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:6px">
           <div>
             <label style="font-size:.78rem;margin:0 0 2px">Sample Class Score (e.g. 24 or 80):</label>
-            <input id="demo-c" type="number" value="24" style="width:100px;font-weight:700" oninput="A.runLiveDemo('${stream}')">
+            <input id="demo-c" type="number" value="24" style="width:100px;font-weight:700" oninput="A.runLiveDemo('${esc(stream)}')">
           </div>
           <div>
             <label style="font-size:.78rem;margin:0 0 2px">Sample Exam Score (raw 0–100):</label>
-            <input id="demo-e" type="number" value="75" style="width:100px;font-weight:700" oninput="A.runLiveDemo('${stream}')">
+            <input id="demo-e" type="number" value="75" style="width:100px;font-weight:700" oninput="A.runLiveDemo('${esc(stream)}')">
           </div>
-          ${(()=>{
-  const initDemo = calculateTerminalMarks({ c: 24, e: 75 }, s, stream);
-  return `<div id="demo-output" style="background:#fff;border:1px solid #0284c7;border-radius:6px;padding:6px 14px;font-weight:800;color:#0f172a">
-    Converted Class: <b>${initDemo.c}%</b> (/ ${csW}%) + Converted Exam: <b>${initDemo.e}%</b> (/ ${esW}%) = <span style="font-size:1.15rem;color:#0284c7">${initDemo.total}%</span> (${initDemo.grade[0]} - ${initDemo.grade[1]})
-  </div>`;
-})()}
+          <div id="demo-output" style="background:#fff;border:1px solid #0284c7;border-radius:6px;padding:6px 14px;font-weight:800;color:#0f172a">
+            Converted Class: <b>${initDemo.c}%</b> (/ ${csW}%) + Converted Exam: <b>${initDemo.e}%</b> (/ ${esW}%) = <span style="font-size:1.15rem;color:#0284c7">${initDemo.total}%</span> (${initDemo.grade[0]} - ${initDemo.grade[1]})
+          </div>
         </div>
       </div>
     </div>
@@ -15267,123 +16441,220 @@ A.runLiveDemo = function(stream){
   const res = calculateTerminalMarks({ c: cVal, e: eVal }, s, stream);
   const outEl = $('#demo-output');
   if(!outEl) return;
-  const ac = getSchoolAssessmentConfig(s);
-  const csW = ac.weights.classScoreWeight || 30;
-  const esW = ac.weights.examScoreWeight || 70;
+  const stConfig = getStreamAssessmentConfig(s, stream);
+  const csW = stConfig.c !== undefined ? stConfig.c : 30;
+  const esW = stConfig.e !== undefined ? stConfig.e : 70;
   outEl.innerHTML = `Converted Class: <b>${res.c}%</b> (/ ${csW}%) + Converted Exam: <b>${res.e}%</b> (/ ${esW}%) = <span style="font-size:1.15rem;color:#0284c7">${res.total}%</span> (${res.grade[0]} - ${res.grade[1]})`;
 };
 
-/* ---------- CLASS SCORE & EXAM SCORE CONFIGURATION MODAL ---------- */
-A.convModal = function(){
+/* ---------- STREAM-BASED SCORE CONVERSION CONFIGURATION MODAL ---------- */
+A.convModal = function(targetStream){
   const s = mySchool(); if(!s) return;
-  const ac = getSchoolAssessmentConfig(s);
   
-  openModal(`${mHead('⚖️ Class Score & Exam Score Configuration')}
+  // Available streams: standard streams plus any other active streams in school
+  const streams = STREAMS_ORDER.slice();
+  if(s.classes){
+    s.classes.forEach(c => {
+      if(c.stream && !streams.includes(c.stream)) streams.push(c.stream);
+    });
+  }
+  
+  const curStream = (targetStream && streams.includes(targetStream)) ? targetStream : streams[0];
+  const stConfig = getStreamAssessmentConfig(s, curStream);
+  
+  // Classes in this stream
+  const streamClasses = (s.classes || []).filter(c => c.stream === curStream).map(c => c.name);
+  const clsListStr = streamClasses.length ? streamClasses.join(', ') : 'No classes assigned yet';
+
+  openModal(`${mHead('⚖️ Stream-Based Score Conversion Configuration')}
   <div class="m-body">
     <div class="notice info mini mb2">
-      Configure how your school computes the <b>Class Score</b> and <b>Exam Score</b>.
-      Set the assessment composition, total marks, and percentage weights contributing to final 100% terminal report card marks.
+      <b>Stream-Specific Rules:</b> Score conversion rules for terminal reports and continuous assessment are set <b>separately according to educational stream</b> (Pre-school, Lower Primary, Upper Primary, JHS) rather than generally or by individual class.
     </div>
 
-    <!-- Section 1: Class Score Composition -->
-    <div class="card mb2" style="background:#f8fafc">
-      <h4 style="margin:0 0 8px;color:#0f172a">1. What makes up the Class Score?</h4>
-      <div class="small mut mb1">Choose which assessment component feeds into the terminal Class Score:</div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="radio" name="cfg-cs-type" value="class_test" ${ac.classScoreType==='class_test'?'checked':''} onchange="A.updateConvModalUI()">
-          <b>Class Test only</b> — Class Score is derived from Class Tests
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="radio" name="cfg-cs-type" value="mid_term" ${ac.classScoreType==='mid_term'?'checked':''} onchange="A.updateConvModalUI()">
-          <b>Mid-Term Exam Score only</b> — Class Score is derived from Mid-Term Exam
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="radio" name="cfg-cs-type" value="monthly_exam" ${ac.classScoreType==='monthly_exam'?'checked':''} onchange="A.updateConvModalUI()">
-          <b>Monthly Exam</b> — Class Score is derived from Monthly Exams
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="radio" name="cfg-cs-type" value="weekly_test" ${ac.classScoreType==='weekly_test'?'checked':''} onchange="A.updateConvModalUI()">
-          <b>Weekly Test Score</b> — Class Score is derived from Weekly Tests
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-          <input type="radio" name="cfg-cs-type" value="combined" ${ac.classScoreType==='combined'?'checked':''} onchange="A.updateConvModalUI()">
-          <b>Combination</b> — e.g. Class Test (15%) + Mid-Term Exam (15%) = 30% Class Score
-        </label>
-      </div>
+    <!-- Stream Selection Tabs -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;border-bottom:2px solid #e2e8f0;padding-bottom:10px">
+      ${streams.map(st => {
+        const conf = getStreamAssessmentConfig(s, st);
+        const isCur = (st === curStream);
+        return `<button type="button" class="btn sm ${isCur ? 'gold' : 'ghost'}" 
+          style="font-weight:${isCur ? '800' : '600'};border-radius:20px;padding:4px 14px;display:inline-flex;align-items:center;gap:6px"
+          onclick="A.convModal('${esc(st)}')">
+          <span>${st === 'Pre-school' ? '🧸' : (st === 'Lower Primary' ? '📘' : (st === 'Upper Primary' ? '📗' : '🎓'))} ${esc(st)}</span>
+          <span style="font-size:.72rem;background:${isCur ? '#0f172a' : '#e2e8f0'};color:${isCur ? '#fff' : '#475569'};padding:1px 6px;border-radius:10px">${conf.c}% / ${conf.e}%</span>
+        </button>`;
+      }).join('')}
     </div>
 
-    <!-- Section 2: Total Marks Configuration -->
-    <div class="card mb2" style="background:#f8fafc">
-      <h4 style="margin:0 0 8px;color:#0f172a">2. Set Total Marks per Assessment Type</h4>
-      <div class="small mut mb1">Total marks are not fixed — set what each assessment is marked out of (e.g. 15, 20, 25, 30, 50, 100):</div>
-      <div class="grid g2" style="gap:10px">
-        <div>
-          <label style="font-size:.82rem;font-weight:700">Class Test Total Marks:</label>
-          <input id="cfg-tot-ct" type="number" min="1" max="500" value="${ac.totals.class_test||30}">
-        </div>
-        <div>
-          <label style="font-size:.82rem;font-weight:700">Mid-Term Total Marks:</label>
-          <input id="cfg-tot-mt" type="number" min="1" max="500" value="${ac.totals.mid_term||30}">
-        </div>
-        <div>
-          <label style="font-size:.82rem;font-weight:700">Monthly Exam Total Marks:</label>
-          <input id="cfg-tot-mo" type="number" min="1" max="500" value="${ac.totals.monthly_exam||30}">
-        </div>
-        <div>
-          <label style="font-size:.82rem;font-weight:700">End of Term Exam Total Marks:</label>
-          <input id="cfg-tot-et" type="number" min="1" max="500" value="${ac.totals.end_term||100}">
-        </div>
+    <!-- Overview Table: All Streams Comparison -->
+    <div class="card mb2" style="background:#f8fafc;padding:10px 14px">
+      <div style="font-weight:800;color:#0f172a;margin-bottom:8px;font-size:.86rem;display:flex;align-items:center;justify-content:space-between">
+        <span>📋 Current Stream Rules Overview:</span>
+        <span class="small mut" style="font-size:.74rem">Click any stream tab or row to configure</span>
       </div>
-    </div>
-
-    <!-- Section 3: Percentage Contribution Weights -->
-    <div class="card mb2" style="background:#f8fafc">
-      <h4 style="margin:0 0 8px;color:#0f172a">3. Terminal Report Weights (Must equal 100%)</h4>
-      <div class="grid g2" style="gap:10px">
-        <div>
-          <label style="font-size:.82rem;font-weight:700">Class Score Contribution %:</label>
-          <input id="cfg-w-c" type="number" min="0" max="100" value="${ac.weights.classScoreWeight||30}" oninput="A.checkConvModalWeights()">
-        </div>
-        <div>
-          <label style="font-size:.82rem;font-weight:700">Exam Score Contribution %:</label>
-          <input id="cfg-w-e" type="number" min="0" max="100" value="${ac.weights.examScoreWeight||70}" oninput="A.checkConvModalWeights()">
-        </div>
-      </div>
-
-      <div id="cfg-comb-row" style="display:${ac.classScoreType==='combined'?'grid':'none'};grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;padding:8px;background:#e0f2fe;border-radius:6px">
-        <div>
-          <label style="font-size:.78rem;font-weight:700;color:#0369a1">Class Test Share %:</label>
-          <input id="cfg-w-comb-ct" type="number" min="0" max="100" value="${ac.weights.combinedClassTestWeight||15}">
-        </div>
-        <div>
-          <label style="font-size:.78rem;font-weight:700;color:#0369a1">Mid-Term Share %:</label>
-          <input id="cfg-w-comb-mt" type="number" min="0" max="100" value="${ac.weights.combinedMidTermWeight||15}">
-        </div>
-      </div>
-
-      <div id="cfg-w-status" class="mt1" style="font-weight:800;font-size:.88rem">
-        <span class="ok b">✔️ Class Score + Exam Score = 100%</span>
+      <div class="table-wrap" style="max-height:160px;overflow-y:auto">
+        <table style="width:100%;font-size:.78rem;border-collapse:collapse">
+          <thead>
+            <tr style="background:#e2e8f0">
+              <th style="padding:6px;text-align:left">Stream</th>
+              <th style="padding:6px;text-align:center">Class Score %</th>
+              <th style="padding:6px;text-align:center">Exam Score %</th>
+              <th style="padding:6px;text-align:left">Class Score Composition</th>
+              <th style="padding:6px;text-align:center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${streams.map(st => {
+              const conf = getStreamAssessmentConfig(s, st);
+              const isCur = (st === curStream);
+              const cText = {
+                class_test: `Class Test only (/${conf.totals?.class_test || 30})`,
+                mid_term: `Mid-Term only (/${conf.totals?.mid_term || 30})`,
+                monthly_exam: `Monthly Exam (/${conf.totals?.monthly_exam || 30})`,
+                weekly_test: `Weekly Test (/${conf.totals?.weekly_test || 20})`,
+                combined: `CT ${conf.combinedClassTestWeight || Math.round(conf.c/2)}% + MT ${conf.combinedMidTermWeight || (conf.c-Math.round(conf.c/2))}%`
+              }[conf.classScoreType] || 'Class Test only';
+              return `<tr style="background:${isCur ? '#fef3c7' : 'transparent'};border-bottom:1px solid #e2e8f0;font-weight:${isCur ? '700' : 'normal'}">
+                <td style="padding:6px;display:flex;align-items:center;gap:6px">
+                  ${isCur ? '<span style="color:#d97706">▶</span>' : ''}
+                  <b>${esc(st)}</b>
+                </td>
+                <td style="padding:6px;text-align:center;color:#0369a1;font-weight:800">${conf.c}%</td>
+                <td style="padding:6px;text-align:center;color:#b45309;font-weight:800">${conf.e}%</td>
+                <td style="padding:6px;color:#334155">${cText}</td>
+                <td style="padding:6px;text-align:center">
+                  ${isCur ? '<span class="badge gold" style="font-size:.7rem">Editing</span>' : `<button class="btn sm ghost" style="padding:1px 8px;font-size:.72rem" onclick="A.convModal('${esc(st)}')">Edit</button>`}
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- Section 4: Live Conversion Explainer for School Admins & Teachers -->
-    <div class="card" style="background:#f0f9ff;border:1.5px solid #7dd3fc">
-      <h4 style="margin:0 0 6px;color:#0369a1">4. How the Conversion Works</h4>
-      <div style="font-size:.82rem;line-height:1.45;color:#0f172a">
-        <div><b>Rule 1:</b> When a teacher enters a score <b>within the set total</b> (e.g. 24 out of 30), the system keeps the exact same score.</div>
-        <div style="margin-top:4px"><b>Rule 2:</b> When a teacher enters a score <b>over the set total</b> (e.g. 80 out of 100), the system automatically normalizes it to the set total: <code>(80 ÷ 100) × 30 = 24 / 30</code>.</div>
-        <div style="margin-top:4px"><b>Rule 3:</b> Entering 100 on a 30-mark assessment automatically normalizes to <b>30 / 30</b>.</div>
-        <div style="margin-top:4px"><b>Rule 4:</b> Terminal Mark = <code>Class Score Contribution + Exam Score Contribution = 100%</code>.</div>
+    <!-- Active Stream Rules Editor -->
+    <div style="background:#fff;border:2px solid #3b82f6;border-radius:8px;padding:14px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:1.5px solid #dbeafe;padding-bottom:10px;margin-bottom:12px">
+        <div>
+          <h3 style="margin:0;color:#1d4ed8;font-size:1.1rem;display:flex;align-items:center;gap:8px">
+            <span>⚙️ Editing Rules for:</span>
+            <span class="badge" style="background:#1d4ed8;color:#fff;font-size:.92rem;padding:3px 12px">${esc(curStream)}</span>
+          </h3>
+          <div class="small mut mt1" style="font-size:.78rem;color:#475569">
+            <b>Applies to classes:</b> ${esc(clsListStr)}
+          </div>
+        </div>
+        <div style="text-align:right">
+          <span class="badge" style="background:#eff6ff;color:#1e40af;font-size:.76rem;border:1px solid #bfdbfe">
+            Stream-Isolated Setting
+          </span>
+        </div>
+      </div>
+
+      <!-- Section 1: Percentage Weights for this Stream -->
+      <div class="card mb2" style="background:#f8fafc;border:1px solid #e2e8f0">
+        <h4 style="margin:0 0 8px;color:#0f172a">1. Terminal Report Weights for ${esc(curStream)} (Must equal 100%)</h4>
+        <div class="grid g2" style="gap:10px">
+          <div>
+            <label style="font-size:.82rem;font-weight:700">Class Score Contribution %:</label>
+            <input id="cfg-w-c" type="number" min="0" max="100" value="${stConfig.c}" oninput="A.checkConvModalWeights('${esc(curStream)}')">
+            <div class="small mut" style="font-size:.72rem">Standard: Pre-school 50%, Lower Primary 40%, Upper Primary 30%, JHS 30%</div>
+          </div>
+          <div>
+            <label style="font-size:.82rem;font-weight:700">Exam Score Contribution %:</label>
+            <input id="cfg-w-e" type="number" min="0" max="100" value="${stConfig.e}" oninput="A.checkConvModalWeights('${esc(curStream)}')">
+            <div class="small mut" style="font-size:.72rem">Automatically balances with Class Score to make 100%</div>
+          </div>
+        </div>
+
+        <div id="cfg-w-status" class="mt1" style="font-weight:800;font-size:.88rem">
+          <span class="ok b">✔️ Class (${stConfig.c}%) + Exam (${stConfig.e}%) = 100% for ${esc(curStream)}</span>
+        </div>
+      </div>
+
+      <!-- Section 2: Class Score Composition for this Stream -->
+      <div class="card mb2" style="background:#f8fafc;border:1px solid #e2e8f0">
+        <h4 style="margin:0 0 8px;color:#0f172a">2. What makes up the Class Score for ${esc(curStream)}?</h4>
+        <div class="small mut mb1">Choose which assessment component feeds into the terminal Class Score:</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="radio" name="cfg-cs-type" value="class_test" ${stConfig.classScoreType==='class_test'?'checked':''} onchange="A.updateConvModalUI()">
+            <b>Class Test only</b> — Class Score is derived from Class Tests
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="radio" name="cfg-cs-type" value="mid_term" ${stConfig.classScoreType==='mid_term'?'checked':''} onchange="A.updateConvModalUI()">
+            <b>Mid-Term Exam Score only</b> — Class Score is derived from Mid-Term Exam
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="radio" name="cfg-cs-type" value="monthly_exam" ${stConfig.classScoreType==='monthly_exam'?'checked':''} onchange="A.updateConvModalUI()">
+            <b>Monthly Exam</b> — Class Score is derived from Monthly Exams
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="radio" name="cfg-cs-type" value="weekly_test" ${stConfig.classScoreType==='weekly_test'?'checked':''} onchange="A.updateConvModalUI()">
+            <b>Weekly Test Score</b> — Class Score is derived from Weekly Tests
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="radio" name="cfg-cs-type" value="combined" ${stConfig.classScoreType==='combined'?'checked':''} onchange="A.updateConvModalUI()">
+            <b>Combination</b> — e.g. Class Test + Mid-Term Exam split the Class Score %
+          </label>
+        </div>
+
+        <div id="cfg-comb-row" style="display:${stConfig.classScoreType==='combined'?'grid':'none'};grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;padding:8px;background:#e0f2fe;border-radius:6px">
+          <div>
+            <label style="font-size:.78rem;font-weight:700;color:#0369a1">Class Test Share %:</label>
+            <input id="cfg-w-comb-ct" type="number" min="0" max="100" value="${stConfig.combinedClassTestWeight || Math.round(stConfig.c/2)}">
+          </div>
+          <div>
+            <label style="font-size:.78rem;font-weight:700;color:#0369a1">Mid-Term Share %:</label>
+            <input id="cfg-w-comb-mt" type="number" min="0" max="100" value="${stConfig.combinedMidTermWeight || (stConfig.c - Math.round(stConfig.c/2))}">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Total Marks for this Stream -->
+      <div class="card mb2" style="background:#f8fafc;border:1px solid #e2e8f0">
+        <h4 style="margin:0 0 8px;color:#0f172a">3. Total Marks for ${esc(curStream)} Assessments</h4>
+        <div class="small mut mb1">Set what assessments are marked out of in ${esc(curStream)} (e.g. 15, 20, 25, 30, 50, 100):</div>
+        <div class="grid g2" style="gap:10px">
+          <div>
+            <label style="font-size:.82rem;font-weight:700">Class Test Total Marks:</label>
+            <input id="cfg-tot-ct" type="number" min="1" max="500" value="${(stConfig.totals && stConfig.totals.class_test) || 30}">
+          </div>
+          <div>
+            <label style="font-size:.82rem;font-weight:700">Mid-Term Total Marks:</label>
+            <input id="cfg-tot-mt" type="number" min="1" max="500" value="${(stConfig.totals && stConfig.totals.mid_term) || 30}">
+          </div>
+          <div>
+            <label style="font-size:.82rem;font-weight:700">Monthly Exam Total Marks:</label>
+            <input id="cfg-tot-mo" type="number" min="1" max="500" value="${(stConfig.totals && stConfig.totals.monthly_exam) || 30}">
+          </div>
+          <div>
+            <label style="font-size:.82rem;font-weight:700">End of Term Exam Total Marks:</label>
+            <input id="cfg-tot-et" type="number" min="1" max="500" value="${(stConfig.totals && stConfig.totals.end_term) || 100}">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Live Conversion Preview for this Stream -->
+      <div class="card" style="background:#f0f9ff;border:1.5px solid #7dd3fc">
+        <h4 style="margin:0 0 6px;color:#0369a1">4. Live Conversion Preview for ${esc(curStream)}</h4>
+        <div style="font-size:.82rem;line-height:1.45;color:#0f172a">
+          <div><b>Rule 1:</b> When a teacher enters a score <b>within the set total</b>, it keeps the exact same score.</div>
+          <div style="margin-top:4px"><b>Rule 2:</b> When a teacher enters a score <b>over the set total</b> (e.g. 80 out of 100), the system normalizes it automatically: <code>(Score ÷ 100) × Total</code>.</div>
+          <div style="margin-top:4px"><b>Rule 3:</b> Terminal Mark = <code>Class Score Contribution (${stConfig.c}%) + Exam Score Contribution (${stConfig.e}%) = 100%</code>.</div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="m-foot">
-    <button class="btn ghost" onclick="A.closeModal()">Cancel</button>
-    <button class="btn gold" onclick="A.saveConvConfig()">💾 Save Configuration &amp; Rules</button>
+  <div class="m-foot" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <div>
+      <button class="btn ghost sm" onclick="A.saveConvConfig('${esc(curStream)}', true)" title="Duplicate this stream's conversion rules to all streams in the school">📋 Copy to All Streams</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn ghost" onclick="A.closeModal()">Close</button>
+      <button class="btn gold" onclick="A.saveConvConfig('${esc(curStream)}', false)">💾 Save Rules for ${esc(curStream)}</button>
+    </div>
   </div>`);
-
-  setTimeout(() => { if(typeof A.runLiveDemo === 'function') A.runLiveDemo('Primary'); }, 200);
 };
 
 A.updateConvModalUI = function(){
@@ -15392,22 +16663,20 @@ A.updateConvModalUI = function(){
   if(combRow) combRow.style.display = selType === 'combined' ? 'grid' : 'none';
 };
 
-A.checkConvModalWeights = function(){
+A.checkConvModalWeights = function(stream){
   const c = parseFloat($('#cfg-w-c').value || 0);
   const e = parseFloat($('#cfg-w-e').value || 0);
   const statEl = $('#cfg-w-status');
   if(!statEl) return;
   if(c + e === 100){
-    statEl.innerHTML = '<span class="ok b">✔️ Class (' + c + '%) + Exam (' + e + '%) = 100%</span>';
+    statEl.innerHTML = '<span class="ok b">✔️ Class (' + c + '%) + Exam (' + e + '%) = 100% for ' + esc(stream||'Stream') + '</span>';
   } else {
     statEl.innerHTML = '<span class="bad b">⚠️ Total = ' + (c + e) + '% (Must equal exactly 100%)</span>';
   }
 };
 
-A.saveConvConfig = function(){
+A.saveConvConfig = function(targetStream, applyAll){
   const s = mySchool(); if(!s) return;
-  const ac = getSchoolAssessmentConfig(s);
-  
   const selType = ($('input[name="cfg-cs-type"]:checked') || {}).value || 'class_test';
   const cW = parseFloat($('#cfg-w-c').value || 0);
   const eW = parseFloat($('#cfg-w-e').value || 0);
@@ -15416,30 +16685,48 @@ A.saveConvConfig = function(){
     return toast('Class Score % (' + cW + '%) + Exam Score % (' + eW + '%) must equal exactly 100%', 'bad');
   }
 
-  ac.classScoreType = selType;
-  ac.weights.classScoreWeight = cW;
-  ac.weights.examScoreWeight = eW;
+  const ctTot = Math.max(1, parseInt($('#cfg-tot-ct').value, 10) || 30);
+  const mtTot = Math.max(1, parseInt($('#cfg-tot-mt').value, 10) || 30);
+  const moTot = Math.max(1, parseInt($('#cfg-tot-mo').value, 10) || 30);
+  const etTot = Math.max(1, parseInt($('#cfg-tot-et').value, 10) || 100);
 
+  let combCt = Math.round(cW / 2);
+  let combMt = cW - combCt;
   if(selType === 'combined'){
-    ac.weights.combinedClassTestWeight = parseFloat($('#cfg-w-comb-ct').value || 15);
-    ac.weights.combinedMidTermWeight = parseFloat($('#cfg-w-comb-mt').value || 15);
+    combCt = parseFloat($('#cfg-w-comb-ct').value || Math.round(cW / 2));
+    combMt = parseFloat($('#cfg-w-comb-mt').value || (cW - combCt));
   }
 
-  ac.totals.class_test = Math.max(1, parseInt($('#cfg-tot-ct').value, 10) || 30);
-  ac.totals.mid_term = Math.max(1, parseInt($('#cfg-tot-mt').value, 10) || 30);
-  ac.totals.monthly_exam = Math.max(1, parseInt($('#cfg-tot-mo').value, 10) || 30);
-  ac.totals.end_term = Math.max(1, parseInt($('#cfg-tot-et').value, 10) || 100);
-
-  // Sync to stream conversion rules as well
   s.conversion = s.conversion || {};
-  STREAMS_ORDER.forEach(st => {
-    s.conversion[st] = { c: cW, e: eW };
+
+  const streamsToUpdate = applyAll ? STREAMS_ORDER.slice() : [targetStream];
+  if(applyAll && s.classes){
+    s.classes.forEach(c => {
+      if(c.stream && !streamsToUpdate.includes(c.stream)) streamsToUpdate.push(c.stream);
+    });
+  }
+
+  streamsToUpdate.forEach(st => {
+    s.conversion[st] = {
+      c: cW,
+      e: eW,
+      classScoreType: selType,
+      totals: {
+        class_test: ctTot,
+        mid_term: mtTot,
+        monthly_exam: moTot,
+        weekly_test: (s.conversion[st] && s.conversion[st].totals && s.conversion[st].totals.weekly_test) || 20,
+        end_term: etTot
+      },
+      combinedClassTestWeight: combCt,
+      combinedMidTermWeight: combMt
+    };
   });
 
   saveDB();
-  closeModal();
-  toast('Score configuration saved successfully — applied across the school', 'ok');
-  render();
+  toast(applyAll ? 'Score conversion rules copied and saved for ALL streams!' : `Score conversion rules saved for ${targetStream}!`, 'ok');
+  A.convModal(targetStream);
+  if(typeof render === 'function') render();
 };
 
 /* ---------- PRINTABLE SCORE SHEETS (Combined Class Assessment Score Sheet) ---------- */
@@ -17555,6 +18842,15 @@ function renderTermSet(){
   </div>
   <div class="notice ${termConfigured(s)?'ok mini':'bad mini'} mt2">${termConfigured(s)?'✔️ <b>'+esc(currentTermName(s))+'</b> duration is set: <b>'+curTermRange(s)+'</b>':'⚠️ <b>Please set your current Term duration - Start Date and End Date.</b> Set the dates for <b>'+esc(currentTermName(s))+'</b> below — results entry is blocked meanwhile.'}</div>
   </div>
+  <div class="card mb2" style="background:#f0f9ff;border:1.5px solid #7dd3fc">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div>
+        <h4 style="margin:0 0 4px;color:#0369a1;font-size:1rem">⚖️ Stream-Based Score Conversion Rules</h4>
+        <div class="small mut" style="color:#0f172a">Set Class Score % and Exam Score % weights, assessment composition, and total marks <b>separately according to streams</b> (Pre-school, Lower Primary, Upper Primary, JHS).</div>
+      </div>
+      <button class="btn gold" onclick="A.convModal()">⚙️ Configure Stream Conversion Rules</button>
+    </div>
+  </div>
   ${termSetupHTML(s)}`; }
 A.termSetSave=function(){ const s=mySchool();
   const ct=$('#ac-term').value, yr=$('#ac-year').value.trim();
@@ -18626,7 +19922,7 @@ A.evDel=async function(id){
 <script>
 /* ================= FINANCE: FEES · DEBT · CANTEEN · EXPENDITURE ================= */
 window.A = window.A || {};
-let FE={tab:'pay', cls:''};
+let FE={tab:'setup', cls:''};
 let FEE_Q='';   /* Round-60 */
 let FEE_STREAM='';   /* Round-337 (owner item 1): the class stream chosen at 💵 Record a fee payment */
 let FEE_CLASS='';    /* Round-339 (owner item 1): …and the CLASS under that stream — Stream ▸ Class ▸ Student */
@@ -18649,18 +19945,23 @@ function renderFees(){
 function feesBodyHTML(s, year, unlocked){
   return `
   <div class="tabs">
-    <div class="tab ${FE.tab==='dash'?'on':''}" onclick="A.feTab('dash')">${ic('chart')}Fees dashboard by level</div>   <!-- Round-326 -->
-    <div class="tab ${FE.tab==='pay'?'on':''}" onclick="A.feTab('pay')">${ic('banknote')}Record payment</div>
-    <div class="tab ${FE.tab==='struct'?'on':''}" onclick="A.feTab('struct')">${ic('book-open')}Fee structure per class</div>
-    <div class="tab ${FE.tab==='promo'?'on':''}" onclick="A.feTab('promo')">${ic('trending-up')}Promotion & next-class fees</div>
-    <div class="tab ${FE.tab==='schol'?'on':''}" onclick="A.feTab('schol')">${ic('users')}Scholarship fees</div>   <!-- Round-221 (owner): the School Administrator sets scholarship/protocol pupils' fees here -->
-    <div class="tab ${FE.tab==='termend'?'on':''}" onclick="A.feTab('termend')">${ic('receipt')}Term-end &amp; bills</div>
-    <div class="tab ${FE.tab==='rcpt'?'on':''}" onclick="A.feTab('rcpt')">${ic('receipt')}Receipts</div>
+    <div class="tab ${FE.tab==='setup'?'on':''}" onclick="A.feTab('setup')">⚙️ Module 1: Term Fee Setup</div>
+    <div class="tab ${FE.tab==='newadm'?'on':''}" onclick="A.feTab('newadm')">📋 Module 2: New Admission Sheet</div>
+    <div class="tab ${FE.tab==='pay'?'on':''}" onclick="A.feTab('pay')">💵 Module 3: Payment &amp; Receipt</div>
+    <div class="tab ${FE.tab==='rcpt'?'on':''}" onclick="A.feTab('rcpt')">🧾 Receipts Archive</div>
+    <div class="tab ${FE.tab==='dash'?'on':''}" onclick="A.feTab('dash')">${ic('chart')}Fees Dashboard</div>
+    <div class="tab ${FE.tab==='schol'?'on':''}" onclick="A.feTab('schol')">${ic('users')}Scholarship Fees</div>
+    <div class="tab ${FE.tab==='struct'?'on':''}" onclick="A.feTab('struct')">${ic('book-open')}Class Structures</div>
+    <div class="tab ${FE.tab==='promo'?'on':''}" onclick="A.feTab('promo')">${ic('trending-up')}Promotion Fees</div>
+    <div class="tab ${FE.tab==='termend'?'on':''}" onclick="A.feTab('termend')">${ic('receipt')}Term-End Bills</div>
   </div>
-  ${FE.tab==='dash'? dashTabHTML(s,year,unlocked) :
+  ${FE.tab==='setup'? termFeeSetupTabHTML(s,year,unlocked) :
+    FE.tab==='newadm'? newAdmissionTabHTML(s,year,unlocked) :
     FE.tab==='pay'? payTabHTML(s,year,unlocked) :
+    FE.tab==='dash'? dashTabHTML(s,year,unlocked) :
     FE.tab==='struct'? structTabHTML(s,year,unlocked) :
-    FE.tab==='promo'? promoTabHTML(s,year,unlocked) : FE.tab==='termend'? termEndTabHTML(s,year,unlocked) :
+    FE.tab==='promo'? promoTabHTML(s,year,unlocked) : 
+    FE.tab==='termend'? termEndTabHTML(s,year,unlocked) :
     FE.tab==='schol'? scholFeesTabHTML(s,year,unlocked) : receiptsTabHTML(s,year)}`;
 }
 A.feTab=t=>{FE.tab=t; render();};
@@ -18832,6 +20133,988 @@ A.scholFeeSave = function(){
   toast(`🤝 Fees saved for <b>${esc(st.firstName + ' ' + st.surname)}</b> — ${st.protocolFees.length} fee(s) ticked (${ghs(tot)})`, 'ok');
   render();
 };
+
+/* ==================== UNIFIED FEE MANAGEMENT SYSTEM ==================== */
+
+/* MODULE 1: FEE SETUP (Term-Based)
+   • Admin selects Academic Year + Term (Term 1, 2, 3)
+   • Select Stream (e.g. Preschool) > Set Amount for each Fee Type (School Fees, Books, PTA, etc.)
+   • System asks: Apply to all classes under this stream for this term?
+     ◦ YES = auto-copies to all classes under that stream
+     ◦ NO = set fee class by class
+   • This creates the Term Fee Structure */
+
+let FS_SETUP_YEAR = '';
+let FS_SETUP_TERM = '';
+let FS_SETUP_STREAM = '';
+let FS_SETUP_SCOPE = 'stream'; // 'stream' | 'class'
+let FS_SETUP_CLASS = '';
+let FS_SETUP_ITEMS = null;
+
+function getTermFeeStructure(school, classId, term, year){
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null);
+  if(!s || !classId) return { items: [], total: 0 };
+  const yr = String(year || yearSel());
+  const tm = String(term || (typeof currentTermName === 'function' ? currentTermName(s) : 'Term 1'));
+
+  // 1. Direct match in s.termFeeStructures[yr][tm][classId]
+  if(s.termFeeStructures && s.termFeeStructures[yr] && s.termFeeStructures[yr][tm] && s.termFeeStructures[yr][tm][classId]){
+    const st = s.termFeeStructures[yr][tm][classId];
+    if(st && st.items && st.items.length){
+      const tot = st.items.reduce((sum, it) => sum + (Number(it.amount) || 0), 0);
+      return { items: st.items, total: Math.round(tot * 10) / 10, source: 'term_structure' };
+    }
+  }
+
+  // 2. Stream template match
+  const cls = classOf(s, classId);
+  if(cls && s.streamFeeTemplates && s.streamFeeTemplates[yr] && s.streamFeeTemplates[yr][tm] && s.streamFeeTemplates[yr][tm][cls.stream]){
+    const tmpl = s.streamFeeTemplates[yr][tm][cls.stream];
+    if(tmpl && tmpl.length){
+      const tot = tmpl.reduce((sum, it) => sum + (Number(it.amount) || 0), 0);
+      return { items: tmpl, total: Math.round(tot * 10) / 10, source: 'stream_template' };
+    }
+  }
+
+  // 3. Check legacy feeStruct filtered by term
+  const fs = feeStruct(s, classId, yr);
+  if(fs && fs.items && fs.items.length){
+    const termItems = fs.items.filter(it => {
+      const itTerms = feeTermsOf(it, s);
+      return itTerms.includes(tm) || itTerms.length >= 3;
+    });
+    if(termItems.length){
+      const tot = termItems.reduce((sum, it) => sum + feeLineTotal(it), 0);
+      return { items: termItems.map(it => ({ name: it.name, amount: feeLineTotal(it) })), total: Math.round(tot * 10) / 10, source: 'legacy_struct' };
+    }
+    const tot = fs.items.reduce((sum, it) => sum + feeLineTotal(it), 0);
+    return { items: fs.items.map(it => ({ name: it.name, amount: feeLineTotal(it) })), total: Math.round(tot * 10) / 10, source: 'legacy_all' };
+  }
+
+  // 4. Fallback defaults by stream
+  const isPreschool = cls && cls.stream === 'Pre-school';
+  const isJHS = cls && cls.stream === 'JHS';
+  const defItems = [
+    { name: 'School Fees', amount: isPreschool ? 500 : (isJHS ? 700 : 600) },
+    { name: 'Books', amount: 200 },
+    { name: 'PTA', amount: 50 }
+  ];
+  const defTot = defItems.reduce((sum, it) => sum + it.amount, 0);
+  return { items: defItems, total: Math.round(defTot * 10) / 10, source: 'default' };
+}
+
+function defaultTermsForItem(name){
+  const nm = String(name || '').toLowerCase();
+  if(nm.includes('uniform') || nm.includes('admission') || nm.includes('form') || nm.includes('cloth') || nm.includes('badge')) return 'term';
+  return 'all'; // School fees, PTA, Maintenance, Feeding, etc. default to all terms
+}
+
+function termFeeSetupTabHTML(s, year, unlocked){
+  const yr = FS_SETUP_YEAR || year || yearSel();
+  FS_SETUP_YEAR = yr;
+  const terms = (s.terms || []).map(t => t.name).filter(Boolean);
+  const termList = terms.length ? terms : ['Term 1', 'Term 2', 'Term 3'];
+  const curTerm = FS_SETUP_TERM || currentTermName(s) || termList[0];
+  FS_SETUP_TERM = curTerm;
+  
+  const classes = sortClasses(s);
+  const streams = STREAMS_ORDER.filter(st => classes.some(c => c.stream === st));
+  const activeStreams = streams.length ? streams : STREAMS_ORDER.slice();
+  const curStream = (FS_SETUP_STREAM && activeStreams.includes(FS_SETUP_STREAM)) ? FS_SETUP_STREAM : activeStreams[0];
+  FS_SETUP_STREAM = curStream;
+  
+  const streamClasses = classes.filter(c => c.stream === curStream);
+  const curClsId = FS_SETUP_CLASS && streamClasses.some(c => c.id === FS_SETUP_CLASS) ? FS_SETUP_CLASS : (streamClasses[0]?.id || '');
+  FS_SETUP_CLASS = curClsId;
+
+  const hasSchoolFees = (s.hasSchoolFees !== false);
+
+  if(!FS_SETUP_ITEMS){
+    const targetClsId = (FS_SETUP_SCOPE === 'class' ? curClsId : (streamClasses[0]?.id || ''));
+    const loaded = getTermFeeStructure(s, targetClsId, curTerm, yr);
+    FS_SETUP_ITEMS = loaded.items.map(it => ({
+      name: it.name,
+      amount: it.amount,
+      applyTerms: it.applyTerms || defaultTermsForItem(it.name)
+    }));
+    if(!FS_SETUP_ITEMS.length){
+      FS_SETUP_ITEMS = [
+        { name: 'School Fees', amount: (hasSchoolFees ? (curStream === 'Pre-school' ? 500 : 600) : 0), applyTerms: 'all' },
+        { name: 'Books', amount: 200, applyTerms: 'term' },
+        { name: 'PTA', amount: 50, applyTerms: 'all' },
+        { name: 'Uniform', amount: 120, applyTerms: 'term' }
+      ];
+    }
+  }
+
+  const itemsTotal = FS_SETUP_ITEMS.reduce((sum, it) => sum + (parseFloat(it.amount) || 0), 0);
+
+  return `
+  <!-- MODULE 1: FEE SETUP (Term-Based) -->
+  <div class="card mb2" style="background:#fffdfa;border-left:5px solid #d97706">
+    <div class="flex between wrap" style="align-items:center;gap:.6rem;border-bottom:1.5px solid #fef3c7;padding-bottom:10px;margin-bottom:12px">
+      <div>
+        <h3 style="margin:0;color:#92400e;display:flex;align-items:center;gap:8px">
+          <span>⚙️ MODULE 1: FEE SETUP (Term-Based)</span>
+        </h3>
+        <div class="small mut mt1" style="color:#78350f">
+          Set up the <b>Term Fee Structure</b> by selecting Academic Year, Term, and Educational Stream. Configure tuition availability, per-item term frequency, and auto-copy across streams or classes.
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn ghost sm" onclick="A.feTab('newadm')" style="border-color:#d97706;color:#92400e">📋 Go to New Admission Sheet →</button>
+      </div>
+    </div>
+
+    <!-- Step 1: Selectors -->
+    <div class="grid g3" style="gap:12px;background:#f8fafc;padding:12px;border:1.5px solid #e2e8f0;border-radius:10px;margin-bottom:16px">
+      <div>
+        <label style="font-size:.82rem;font-weight:700">1. Academic Year *</label>
+        <select id="fs-set-year" style="width:100%;font-weight:700" onchange="A.fsSetYear(this.value)">
+          ${academicYearOptions(yr)}
+        </select>
+      </div>
+      <div>
+        <label style="font-size:.82rem;font-weight:700">2. Term *</label>
+        <select id="fs-set-term" style="width:100%;font-weight:700;color:#0369a1" onchange="A.fsSetTerm(this.value)">
+          ${termList.map(t => `<option value="${t}" ${curTerm === t ? 'selected' : ''}>${t}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label style="font-size:.82rem;font-weight:700">3. Select Stream *</label>
+        <select id="fs-set-stream" style="width:100%;font-weight:800;color:#92400e" onchange="A.fsSetStream(this.value)">
+          ${activeStreams.map(st => `<option value="${st}" ${curStream === st ? 'selected' : ''}>${st === 'Pre-school' ? '🧸' : (st === 'Lower Primary' ? '📘' : (st === 'Upper Primary' ? '📗' : '🎓'))} ${st}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+
+    <!-- Question 1: Is there school fees for this school? -->
+    <div style="background:#fffbeb;border:1.5px solid #fcd34d;border-radius:10px;padding:12px 14px;margin-bottom:14px">
+      <div style="font-weight:800;color:#92400e;margin-bottom:6px;font-size:.88rem">
+        ❓ Question 1: Is there school fees for this school?
+      </div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center">
+        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-weight:700;color:#0f172a">
+          <input type="radio" name="fs-has-schoolfees" value="yes" ${hasSchoolFees ? 'checked' : ''} onchange="A.fsToggleSchoolFees(true)">
+          <span>🔘 <b>YES</b> — School fees / tuition applies (standard tuition fees charged)</span>
+        </label>
+        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-weight:700;color:#0f172a">
+          <input type="radio" name="fs-has-schoolfees" value="no" ${!hasSchoolFees ? 'checked' : ''} onchange="A.fsToggleSchoolFees(false)">
+          <span>🔘 <b>NO</b> — Free tuition / No school fees (e.g. government supported; School fees = GH₵ 0.00)</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Question 2: Apply to all classes under this stream for this term? -->
+    <div style="background:#f0f9ff;border:1.5px solid #7dd3fc;border-radius:10px;padding:12px 14px;margin-bottom:16px">
+      <div style="font-weight:800;color:#0369a1;margin-bottom:6px;font-size:.88rem">
+        ❓ Question 2: Apply to all classes under this stream for this term?
+      </div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
+        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-weight:700;color:#0f172a">
+          <input type="radio" name="fs-scope" value="stream" ${FS_SETUP_SCOPE === 'stream' ? 'checked' : ''} onchange="A.fsSetScope('stream')">
+          <span>🔘 <b>YES</b> — Auto-copies to all classes under <u>${esc(curStream)}</u> for ${esc(curTerm)} (${streamClasses.map(c => c.name).join(', ') || 'all classes'})</span>
+        </label>
+        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-weight:700;color:#0f172a">
+          <input type="radio" name="fs-scope" value="class" ${FS_SETUP_SCOPE === 'class' ? 'checked' : ''} onchange="A.fsSetScope('class')">
+          <span>🔘 <b>NO</b> — Set fee class by class</span>
+        </label>
+      </div>
+
+      ${FS_SETUP_SCOPE === 'class' ? `
+        <div style="margin-top:10px;padding-top:8px;border-top:1px dashed #7dd3fc;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <label style="font-size:.82rem;font-weight:700;color:#0369a1">Choose Class under ${esc(curStream)}:</label>
+          <select id="fs-set-class" style="width:220px;font-weight:700" onchange="A.fsSetClass(this.value)">
+            ${streamClasses.map(c => `<option value="${c.id}" ${curClsId === c.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}
+          </select>
+        </div>
+      ` : ''}
+    </div>
+
+    <!-- Step 3: Fee Types & Amounts Table -->
+    <div style="background:#fff;border:1.5px solid #cbd5e1;border-radius:10px;padding:14px;margin-bottom:16px">
+      <div class="flex between wrap" style="align-items:center;margin-bottom:10px;gap:8px">
+        <div>
+          <h4 style="margin:0;color:#0f172a">💰 Set Amount &amp; Term Frequency — ${esc(curStream)} (${esc(curTerm)} · ${yr})</h4>
+          <div class="small mut">Set amount in GHS and configure whether each fee item applies to <b>ALL TERMS</b> (e.g. PTA, School Fees) or <b>ONLY THIS TERM</b> (e.g. Uniform).</div>
+        </div>
+        <button class="btn ghost sm" onclick="A.fsAddCustomItem()">＋ Add Fee Type</button>
+      </div>
+
+      <div class="table-wrap">
+        <table style="width:100%;font-size:.84rem">
+          <thead>
+            <tr style="background:#f1f5f9">
+              <th style="width:36px">#</th>
+              <th>Fee Type Name</th>
+              <th style="width:240px">Apply Frequency</th>
+              <th style="width:170px;text-align:right">Amount (GHS)</th>
+              <th style="width:60px;text-align:center">Action</th>
+            </tr>
+          </thead>
+          <tbody id="fs-setup-tbody">
+            ${FS_SETUP_ITEMS.map((it, idx) => `
+              <tr>
+                <td class="center mut" style="font-weight:700">${idx + 1}</td>
+                <td>
+                  <input type="text" class="fs-item-name" data-idx="${idx}" value="${esc(it.name)}" placeholder="Fee Type Name" style="width:100%;font-weight:700" oninput="A.fsItemNameChange(${idx}, this.value)">
+                </td>
+                <td>
+                  <select class="fs-item-terms" data-idx="${idx}" onchange="A.fsItemTermsChange(${idx}, this.value)" style="width:100%;font-size:.82rem;font-weight:700;padding:4px 6px;border-radius:6px;border:1px solid #cbd5e1;color:${it.applyTerms === 'all' ? '#0369a1' : '#b45309'}">
+                    <option value="all" ${it.applyTerms === 'all' ? 'selected' : ''}>🌐 ALL TERMS (Term 1, 2, 3)</option>
+                    <option value="term" ${it.applyTerms === 'term' ? 'selected' : ''}>📌 ONLY THIS TERM (${esc(curTerm)})</option>
+                  </select>
+                </td>
+                <td style="text-align:right">
+                  <div style="display:inline-flex;align-items:center;gap:4px;justify-content:flex-end">
+                    <span style="font-weight:700;color:#64748b">GH₵</span>
+                    <input type="number" step="0.5" min="0" class="fs-item-amt" data-idx="${idx}" value="${it.amount}" placeholder="0.00" style="width:120px;text-align:right;font-weight:800;color:#0f172a" oninput="A.fsItemAmtChange(${idx}, this.value)">
+                  </div>
+                </td>
+                <td class="center">
+                  <button type="button" class="btn sm ghost" style="padding:2px 8px;color:#dc2626" onclick="A.fsRemoveItem(${idx})" title="Remove item">🗑️</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+          <tfoot>
+            <tr style="background:#fef3c7;font-weight:900">
+              <td colspan="3" style="text-align:right;font-size:.95rem;color:#92400e">
+                TOTAL TERM FEE (${esc(curTerm)}):
+              </td>
+              <td style="text-align:right;font-size:1.15rem;color:#b45309">
+                <span id="fs-setup-total">${ghs(itemsTotal)}</span>
+              </td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="flex between wrap mt2" style="align-items:center;gap:10px">
+        <div class="small mut">
+          ${FS_SETUP_SCOPE === 'stream'
+            ? `✔️ Creates/updates Term Fee Structure for <b>all ${streamClasses.length} classes</b> under <b>${esc(curStream)}</b>.`
+            : `✔️ Creates/updates Term Fee Structure specifically for <b>${esc((classOf(s, curClsId)||{}).name||'selected class')}</b>.`}
+        </div>
+        <button class="btn gold" style="font-size:.95rem;padding:8px 20px" onclick="A.saveTermFeeSetup()">
+          💾 Save Term Fee Structure
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 4: Overview Matrix -->
+    <div class="card" style="background:#f8fafc;padding:12px 14px">
+      <div style="font-weight:800;color:#0f172a;font-size:.9rem;margin-bottom:8px">
+        📋 All Streams Fee Structures Overview — ${esc(curTerm)} (${yr})
+      </div>
+      <div class="table-wrap">
+        <table style="width:100%;font-size:.78rem">
+          <thead>
+            <tr style="background:#e2e8f0">
+              <th>Stream</th>
+              <th>Classes</th>
+              <th>Term</th>
+              <th>Fee Breakdown</th>
+              <th style="text-align:right">Total Term Fee</th>
+              <th style="text-align:center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${activeStreams.map(st => {
+              const stCls = classes.filter(c => c.stream === st);
+              const repClsId = stCls[0]?.id || '';
+              const stStruct = getTermFeeStructure(s, repClsId, curTerm, yr);
+              const isEditing = (st === curStream);
+              const bDown = stStruct.items.map(it => `${esc(it.name)}: ${ghs(it.amount)}`).join(', ');
+              return `<tr style="background:${isEditing ? '#fef3c7' : 'transparent'};font-weight:${isEditing ? '700' : 'normal'}">
+                <td><b>${esc(st)}</b></td>
+                <td class="small mut">${stCls.map(c => c.name).join(', ') || 'None'}</td>
+                <td><span class="badge info sm">${esc(curTerm)}</span></td>
+                <td>${bDown || '<i>Not set</i>'}</td>
+                <td style="text-align:right;font-weight:900;color:#0f172a">${ghs(stStruct.total)}</td>
+                <td style="text-align:center">
+                  <button class="btn sm ${isEditing ? 'gold' : 'ghost'}" style="padding:2px 8px;font-size:.72rem" onclick="A.fsSetStream('${esc(st)}')">
+                    ${isEditing ? 'Active' : '✏️ Edit'}
+                  </button>
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>`;
+}
+
+A.fsToggleSchoolFees = function(hasFees){
+  const s = mySchool(); if(!s) return;
+  s.hasSchoolFees = !!hasFees;
+  if(!hasFees){
+    if(FS_SETUP_ITEMS){
+      FS_SETUP_ITEMS.forEach(it => {
+        if((it.name || '').toLowerCase().includes('school fees')){
+          it.amount = 0;
+        }
+      });
+    }
+  } else {
+    if(FS_SETUP_ITEMS){
+      const sf = FS_SETUP_ITEMS.find(it => (it.name || '').toLowerCase().includes('school fees'));
+      if(sf && sf.amount === 0){
+        sf.amount = (FS_SETUP_STREAM === 'Pre-school' ? 500 : 600);
+      } else if(!sf){
+        FS_SETUP_ITEMS.unshift({ name: 'School Fees', amount: (FS_SETUP_STREAM === 'Pre-school' ? 500 : 600), applyTerms: 'all' });
+      }
+    }
+  }
+  saveDB();
+  toast(hasFees ? '✔️ School fees enabled' : '✔️ School fees set to GH₵ 0.00 (Free tuition)', 'ok');
+  render();
+};
+
+A.fsItemTermsChange = function(idx, val){
+  if(FS_SETUP_ITEMS && FS_SETUP_ITEMS[idx]){
+    FS_SETUP_ITEMS[idx].applyTerms = val;
+  }
+};
+
+A.fsSetYear = function(yr){
+  FS_SETUP_YEAR = yr;
+  FS_SETUP_ITEMS = null;
+  render();
+};
+A.fsSetTerm = function(tm){
+  FS_SETUP_TERM = tm;
+  FS_SETUP_ITEMS = null;
+  render();
+};
+A.fsSetStream = function(st){
+  FS_SETUP_STREAM = st;
+  FS_SETUP_ITEMS = null;
+  render();
+};
+A.fsSetScope = function(sc){
+  FS_SETUP_SCOPE = sc;
+  render();
+};
+A.fsSetClass = function(cid){
+  FS_SETUP_CLASS = cid;
+  FS_SETUP_ITEMS = null;
+  render();
+};
+A.fsAddCustomItem = function(){
+  if(!FS_SETUP_ITEMS) FS_SETUP_ITEMS = [];
+  FS_SETUP_ITEMS.push({ name: '', amount: 0, applyTerms: 'term' });
+  render();
+};
+A.fsRemoveItem = function(idx){
+  if(!FS_SETUP_ITEMS) return;
+  FS_SETUP_ITEMS.splice(idx, 1);
+  render();
+};
+A.fsItemNameChange = function(idx, val){
+  if(FS_SETUP_ITEMS && FS_SETUP_ITEMS[idx]) FS_SETUP_ITEMS[idx].name = val;
+};
+A.fsItemAmtChange = function(idx, val){
+  if(FS_SETUP_ITEMS && FS_SETUP_ITEMS[idx]) FS_SETUP_ITEMS[idx].amount = parseFloat(val) || 0;
+  const tot = (FS_SETUP_ITEMS || []).reduce((sum, it) => sum + (parseFloat(it.amount) || 0), 0);
+  const el = $('#fs-setup-total');
+  if(el) el.textContent = ghs(tot);
+};
+
+A.saveTermFeeSetup = function(){
+  const s = mySchool(); if(!s) return;
+  const yr = FS_SETUP_YEAR || yearSel();
+  const tm = FS_SETUP_TERM || currentTermName(s) || 'Term 1';
+  const st = FS_SETUP_STREAM || 'Pre-school';
+  
+  if(!FS_SETUP_ITEMS || !FS_SETUP_ITEMS.length){
+    return toast('Add at least one fee type', 'bad');
+  }
+
+  const cleanItems = FS_SETUP_ITEMS
+    .filter(it => it.name && it.name.trim())
+    .map(it => ({
+      name: it.name.trim(),
+      amount: Math.max(0, parseFloat(it.amount) || 0),
+      applyTerms: it.applyTerms || defaultTermsForItem(it.name)
+    }));
+
+  if(!cleanItems.length){
+    return toast('Please name at least one fee type', 'bad');
+  }
+
+  s.termFeeStructures = s.termFeeStructures || {};
+  s.termFeeStructures[yr] = s.termFeeStructures[yr] || {};
+
+  const termsList = ['Term 1', 'Term 2', 'Term 3'];
+  termsList.forEach(t => {
+    s.termFeeStructures[yr][t] = s.termFeeStructures[yr][t] || {};
+  });
+
+  s.streamFeeTemplates = s.streamFeeTemplates || {};
+  s.streamFeeTemplates[yr] = s.streamFeeTemplates[yr] || {};
+  termsList.forEach(t => {
+    s.streamFeeTemplates[yr][t] = s.streamFeeTemplates[yr][t] || {};
+  });
+
+  const classes = (s.classes || []).filter(c => c.stream === st);
+  const targetClasses = (FS_SETUP_SCOPE === 'class' && FS_SETUP_CLASS)
+    ? classes.filter(c => c.id === FS_SETUP_CLASS)
+    : classes;
+
+  if(!targetClasses.length && classes.length){
+    targetClasses.push(...classes);
+  }
+
+  // Items for this term
+  const thisTermItems = cleanItems.map(it => ({ name: it.name, amount: it.amount }));
+  const thisTermTotal = Math.round(thisTermItems.reduce((sum, it) => sum + it.amount, 0) * 10) / 10;
+
+  // Items for all terms (e.g. PTA, School Fees)
+  const allTermItems = cleanItems
+    .filter(it => it.applyTerms === 'all')
+    .map(it => ({ name: it.name, amount: it.amount }));
+  const allTermTotal = Math.round(allTermItems.reduce((sum, it) => sum + it.amount, 0) * 10) / 10;
+
+  termsList.forEach(t => {
+    const isCurrent = (t === tm);
+    const itms = isCurrent ? thisTermItems : allTermItems;
+    const tot = isCurrent ? thisTermTotal : allTermTotal;
+
+    s.streamFeeTemplates[yr][t][st] = itms;
+
+    targetClasses.forEach(c => {
+      s.termFeeStructures[yr][t][c.id] = {
+        stream: st,
+        className: c.name,
+        classId: c.id,
+        term: t,
+        year: yr,
+        items: itms,
+        total: tot,
+        updatedAt: Date.now()
+      };
+
+      const fKey = `${s.id}|${c.id}|${yr}`;
+      DB.feeStructures[fKey] = DB.feeStructures[fKey] || { id: uid('fs'), schoolId: s.id, classId: c.id, year: yr, items: [] };
+      const fs = DB.feeStructures[fKey];
+      itms.forEach(ci => {
+        let existing = fs.items.find(x => x.name.toLowerCase() === ci.name.toLowerCase());
+        if(existing){
+          existing.amount = ci.amount;
+          existing.terms = existing.terms || [];
+          if(!existing.terms.includes(t)) existing.terms.push(t);
+        } else {
+          fs.items.push({
+            name: ci.name,
+            amount: ci.amount,
+            terms: [t]
+          });
+        }
+      });
+    });
+  });
+
+  saveDB();
+  const allCount = cleanItems.filter(i => i.applyTerms === 'all').length;
+  const termOnlyCount = cleanItems.filter(i => i.applyTerms === 'term').length;
+  toast(`Term fee structure saved! ${allCount} item(s) applied across ALL TERMS (Term 1, 2, 3); ${termOnlyCount} item(s) applied ONLY to ${tm}.`, 'ok');
+  render();
+};
+
+
+/* MODULE 2: NEW ADMISSION FEE SHEET (One-Time)
+   • Separate setup: Fee Setup > New Admission
+   • Admin sets for each Stream: Admission Form, Uniform, Books, School Fees (Term 1), Water, etc.
+   • This creates a standalone printable sheet for new parents
+   • Example print:
+   NEW ADMISSION - PRESCHOOL - 2025/2026 
+   A. School Fees - 500 GHS
+   B. Books - 200 GHS
+   C. Uniform - 150 GHS
+   D. Admission - 50 GHS
+   TOTAL: 900 GHS */
+
+let ADM_SETUP_STREAM = '';
+let ADM_SETUP_YEAR = '';
+let ADM_SETUP_ITEMS = null;
+
+function getNewAdmissionFees(school, stream, year){
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null);
+  const st = stream || 'Pre-school';
+  const yr = year || yearSel();
+  if(s && s.newAdmissionFees && s.newAdmissionFees[yr] && s.newAdmissionFees[yr][st]){
+    return s.newAdmissionFees[yr][st];
+  }
+  return [
+    { name: 'School Fees', amount: (st === 'Pre-school' ? 500 : (st === 'JHS' ? 700 : 600)) },
+    { name: 'Books', amount: 200 },
+    { name: 'Uniform', amount: 150 },
+    { name: 'Admission', amount: 50 }
+  ];
+}
+
+function newAdmissionTabHTML(s, year, unlocked){
+  const yr = ADM_SETUP_YEAR || year || yearSel();
+  ADM_SETUP_YEAR = yr;
+  const classes = sortClasses(s);
+  const streams = STREAMS_ORDER.filter(st => classes.some(c => c.stream === st));
+  const activeStreams = streams.length ? streams : STREAMS_ORDER.slice();
+  const curStream = (ADM_SETUP_STREAM && activeStreams.includes(ADM_SETUP_STREAM)) ? ADM_SETUP_STREAM : activeStreams[0];
+  ADM_SETUP_STREAM = curStream;
+
+  if(!ADM_SETUP_ITEMS){
+    const loaded = getNewAdmissionFees(s, curStream, yr);
+    ADM_SETUP_ITEMS = loaded.map(it => ({ name: it.name, amount: it.amount }));
+  }
+
+  const totalAdm = ADM_SETUP_ITEMS.reduce((sum, it) => sum + (parseFloat(it.amount) || 0), 0);
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  return `
+  <!-- MODULE 2: NEW ADMISSION FEE SHEET (One-Time) -->
+  <div class="card mb2" style="background:#fffdfa;border-left:5px solid #0284c7">
+    <div class="flex between wrap" style="align-items:center;gap:.6rem;border-bottom:1.5px solid #e0f2fe;padding-bottom:10px;margin-bottom:12px">
+      <div>
+        <h3 style="margin:0;color:#0369a1;display:flex;align-items:center;gap:8px">
+          <span>📋 MODULE 2: NEW ADMISSION FEE SHEET (One-Time)</span>
+        </h3>
+        <div class="small mut mt1" style="color:#0f172a">
+          Configure one-time admission fee components (Admission Form, Uniform, Books, School Fees, Water, etc.) for each stream and generate a standalone printable sheet for parents.
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn ghost sm" onclick="A.feTab('setup')">⚙️ Back to Term Fee Setup</button>
+        <button class="btn gold sm" onclick="A.printNewAdmissionSheet('${esc(curStream)}','${yr}')">🖨 Print Admission Sheet for ${esc(curStream)}</button>
+      </div>
+    </div>
+
+    <!-- Stream Selection Pills -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;border-bottom:2px solid #e2e8f0;padding-bottom:10px">
+      ${activeStreams.map(st => {
+        const isCur = (st === curStream);
+        const fees = getNewAdmissionFees(s, st, yr);
+        const tot = fees.reduce((sum, it) => sum + (Number(it.amount) || 0), 0);
+        return `<button type="button" class="btn sm ${isCur ? 'gold' : 'ghost'}"
+          style="font-weight:${isCur ? '800' : '600'};border-radius:20px;padding:4px 14px;display:inline-flex;align-items:center;gap:6px"
+          onclick="A.admSetStream('${esc(st)}')">
+          <span>${st === 'Pre-school' ? '🧸' : (st === 'Lower Primary' ? '📘' : (st === 'Upper Primary' ? '📗' : '🎓'))} ${esc(st)}</span>
+          <span style="font-size:.72rem;background:${isCur ? '#0f172a' : '#e2e8f0'};color:${isCur ? '#fff' : '#475569'};padding:1px 6px;border-radius:10px">${ghs(tot)}</span>
+        </button>`;
+      }).join('')}
+    </div>
+
+    <div class="grid g2" style="gap:16px;align-items:flex-start">
+      <!-- Left: Editor Form -->
+      <div style="background:#fff;border:1.5px solid #cbd5e1;border-radius:10px;padding:14px">
+        <div class="flex between wrap" style="align-items:center;margin-bottom:10px;gap:8px">
+          <div>
+            <h4 style="margin:0;color:#0f172a">⚙️ Configure Items for ${esc(curStream)} (${yr})</h4>
+            <div class="small mut">Set Admission, Uniform, Books, School Fees, etc.</div>
+          </div>
+          <button class="btn ghost sm" onclick="A.admAddCustomItem()">＋ Add Item</button>
+        </div>
+
+        <div class="table-wrap">
+          <table style="width:100%;font-size:.84rem">
+            <thead>
+              <tr style="background:#f1f5f9">
+                <th style="width:36px">#</th>
+                <th>Admission Fee Item</th>
+                <th style="width:140px;text-align:right">Amount (GHS)</th>
+                <th style="width:50px;text-align:center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${ADM_SETUP_ITEMS.map((it, idx) => `
+                <tr>
+                  <td class="center b" style="color:#0369a1">${letters[idx] || (idx + 1)}.</td>
+                  <td>
+                    <input type="text" value="${esc(it.name)}" placeholder="Item name" style="width:100%;font-weight:700" oninput="A.admItemNameChange(${idx}, this.value)">
+                  </td>
+                  <td style="text-align:right">
+                    <input type="number" step="0.5" min="0" value="${it.amount}" placeholder="0.00" style="width:110px;text-align:right;font-weight:800;color:#0f172a" oninput="A.admItemAmtChange(${idx}, this.value)">
+                  </td>
+                  <td class="center">
+                    <button type="button" class="btn sm ghost" style="padding:2px 8px;color:#dc2626" onclick="A.admRemoveItem(${idx})">🗑️</button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+            <tfoot>
+              <tr style="background:#e0f2fe;font-weight:900">
+                <td colspan="2" style="text-align:right;font-size:.95rem;color:#0369a1">TOTAL ADMISSION FEE:</td>
+                <td style="text-align:right;font-size:1.15rem;color:#0284c7">
+                  <span id="adm-setup-total">${ghs(totalAdm)}</span>
+                </td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="flex between wrap mt2" style="gap:8px;align-items:center">
+          <button class="btn ghost sm" onclick="A.admCopyToAllStreams('${esc(curStream)}')" title="Apply this list of admission fees to all other streams in the school">📋 Copy to All Streams</button>
+          <button class="btn gold" onclick="A.saveNewAdmissionFees('${esc(curStream)}')">💾 Save Admission Fees</button>
+        </div>
+      </div>
+
+      <!-- Right: Live Print Preview -->
+      <div style="background:#fff;border:2px dashed #0284c7;border-radius:10px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,.05)">
+        <div class="flex between wrap" style="align-items:center;margin-bottom:12px;border-bottom:1px solid #e2e8f0;padding-bottom:8px">
+          <div style="font-weight:800;color:#0369a1;font-size:.88rem">📄 Standalone Sheet Preview for Parents:</div>
+          <button class="btn gold sm" onclick="A.printNewAdmissionSheet('${esc(curStream)}','${yr}')">🖨 Print This Sheet</button>
+        </div>
+
+        ${renderNewAdmissionSheetInner(s, curStream, yr, ADM_SETUP_ITEMS, totalAdm)}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderNewAdmissionSheetInner(s, stream, year, items, total){
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const logo = s.logo || logoDataURI();
+  return `
+  <div class="adm-sheet-inner" style="background:#fff;color:#0f172a;font-family:system-ui,-apple-system,sans-serif;padding:12px">
+    <div style="text-align:center;border-bottom:2px solid #0f172a;padding-bottom:10px;margin-bottom:12px">
+      <img src="${logo}" style="width:55px;height:55px;object-fit:contain;margin-bottom:4px">
+      <h3 style="margin:0;font-size:1.15rem;letter-spacing:.05em;color:#0f172a">${esc(s.name.toUpperCase())}</h3>
+      ${(s.address && s.address !== s.location) ? `<div style="font-size:.76rem;color:#475569">${esc(s.address)}</div>` : ''}
+      <div style="font-size:.76rem;color:#475569">${esc(s.location || 'Ghana')}${s.contact ? ' · ☎️ ' + esc(s.contact) : ''}${s.email ? ' · ✉️ ' + esc(s.email) : ''}</div>
+      <div style="margin-top:8px;display:inline-block;background:#0f172a;color:#fff;padding:3px 14px;border-radius:20px;font-weight:800;font-size:.84rem;letter-spacing:.03em">
+        NEW ADMISSION - ${esc(stream.toUpperCase())} - ${esc(year)}
+      </div>
+    </div>
+
+    <div style="font-size:.85rem;line-height:1.7;margin-bottom:14px">
+      ${items.map((it, idx) => `
+        <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #cbd5e1;padding:4px 0">
+          <span style="font-weight:700"><b>${letters[idx] || (idx + 1)}.</b> ${esc(it.name)}</span>
+          <span style="font-weight:800;color:#0f172a">${ghs(it.amount)}</span>
+        </div>
+      `).join('')}
+      <div style="display:flex;justify-content:space-between;border-top:2px solid #0f172a;border-bottom:2px solid #0f172a;padding:8px 0;margin-top:8px;font-weight:900;font-size:1.1rem">
+        <span>TOTAL:</span>
+        <span style="color:#0369a1">${ghs(total)}</span>
+      </div>
+    </div>
+
+    <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:6px;padding:8px 10px;font-size:.76rem;color:#334155;line-height:1.45;margin-bottom:14px">
+      <div><b>📌 Payment Information:</b> All payments must be made at the School Accounts Office or to the Official Mobile Money / Bank account. An official receipt is issued for every payment.</div>
+      <div style="margin-top:4px"><b>Uniform &amp; Books:</b> Issued at the store upon presentation of the official receipt.</div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:20px;font-size:.78rem">
+      <div style="text-align:center">
+        <div style="width:160px;border-bottom:1px solid #0f172a;margin-bottom:4px"></div>
+        <div><b>Administrator / Accounts</b></div>
+      </div>
+      <div style="text-align:center">
+        <div style="width:100px;height:45px;border:1.5px dashed #94a3b8;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:.7rem">
+          Official Stamp
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+A.admSetStream = function(st){
+  ADM_SETUP_STREAM = st;
+  ADM_SETUP_ITEMS = null;
+  render();
+};
+A.admAddCustomItem = function(){
+  if(!ADM_SETUP_ITEMS) ADM_SETUP_ITEMS = [];
+  ADM_SETUP_ITEMS.push({ name: '', amount: 0 });
+  render();
+};
+A.admRemoveItem = function(idx){
+  if(!ADM_SETUP_ITEMS) return;
+  ADM_SETUP_ITEMS.splice(idx, 1);
+  render();
+};
+A.admItemNameChange = function(idx, val){
+  if(ADM_SETUP_ITEMS && ADM_SETUP_ITEMS[idx]) ADM_SETUP_ITEMS[idx].name = val;
+};
+A.admItemAmtChange = function(idx, val){
+  if(ADM_SETUP_ITEMS && ADM_SETUP_ITEMS[idx]) ADM_SETUP_ITEMS[idx].amount = parseFloat(val) || 0;
+  const tot = (ADM_SETUP_ITEMS || []).reduce((sum, it) => sum + (parseFloat(it.amount) || 0), 0);
+  const el = $('#adm-setup-total');
+  if(el) el.textContent = ghs(tot);
+};
+A.saveNewAdmissionFees = function(targetStream){
+  const s = mySchool(); if(!s) return;
+  const yr = ADM_SETUP_YEAR || yearSel();
+  const st = targetStream || ADM_SETUP_STREAM || 'Pre-school';
+
+  if(!ADM_SETUP_ITEMS || !ADM_SETUP_ITEMS.length){
+    return toast('Add at least one item', 'bad');
+  }
+
+  const cleanItems = ADM_SETUP_ITEMS
+    .filter(it => it.name && it.name.trim())
+    .map(it => ({ name: it.name.trim(), amount: Math.max(0, parseFloat(it.amount) || 0) }));
+
+  if(!cleanItems.length){
+    return toast('Please name at least one admission fee item', 'bad');
+  }
+
+  s.newAdmissionFees = s.newAdmissionFees || {};
+  s.newAdmissionFees[yr] = s.newAdmissionFees[yr] || {};
+  s.newAdmissionFees[yr][st] = cleanItems;
+
+  saveDB();
+  toast(`New Admission Fee Sheet saved for ${st}!`, 'ok');
+  render();
+};
+A.admCopyToAllStreams = function(fromStream){
+  const s = mySchool(); if(!s) return;
+  const yr = ADM_SETUP_YEAR || yearSel();
+  if(!ADM_SETUP_ITEMS || !ADM_SETUP_ITEMS.length) return;
+  const cleanItems = ADM_SETUP_ITEMS.filter(it => it.name && it.name.trim()).map(it => ({ name: it.name.trim(), amount: Math.max(0, parseFloat(it.amount) || 0) }));
+  
+  s.newAdmissionFees = s.newAdmissionFees || {};
+  s.newAdmissionFees[yr] = s.newAdmissionFees[yr] || {};
+  STREAMS_ORDER.forEach(st => {
+    s.newAdmissionFees[yr][st] = cleanItems.map(it => ({ ...it }));
+  });
+  saveDB();
+  toast('New Admission Fee Sheet copied to ALL streams!', 'ok');
+  render();
+};
+
+A.printNewAdmissionSheet = function(stream, year){
+  const s = mySchool(); if(!s) return;
+  const yr = year || ADM_SETUP_YEAR || yearSel();
+  const st = stream || ADM_SETUP_STREAM || 'Pre-school';
+  const items = getNewAdmissionFees(s, st, yr);
+  const total = items.reduce((sum, it) => sum + (Number(it.amount) || 0), 0);
+
+  const html = `
+  <div class="new-adm-print-wrap" style="max-width:650px;margin:20px auto;background:#fff;padding:24px;border:1px solid #cbd5e1;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.08)">
+    ${renderNewAdmissionSheetInner(s, st, yr, items, total)}
+    <div style="text-align:center;margin-top:20px" class="no-print">
+      <button class="btn gold" style="padding:8px 24px;font-size:1rem" onclick="window.print()">🖨 Print Now</button>
+      <button class="btn ghost" style="padding:8px 18px" onclick="closeModal()">Close</button>
+    </div>
+  </div>`;
+
+  openModal(`${mHead('🖨 New Admission Fee Sheet — ' + esc(st))}<div class="m-body">${html}</div>`);
+};
+
+/* MODULE 3: PAYMENT & RECEIPT (With Arrears)
+   When paying:
+   1. Select Student > Select Term
+   2. System auto-shows: 
+     ◦ Arrears from previous term
+     ◦ Current term fees
+     ◦ Total Due = Arrears + Current
+     ◦ Previous amount paid
+   3. Enter Amount Paid (e.g. 700 GHS) > Split by Fee Type: 
+     ◦ School Fees - 500 GHS
+     ◦ Books - 200 GHS
+   4. Receipt prints:
+     Previous Paid: 700 GHS
+     Arrears (Term 1): 300 GHS
+     Current (Term 2): 800 GHS
+     Total Due: 1100 GHS
+     Current Payment: 700 GHS [Breakdown]
+     Balance: 400 GHS */
+
+let PAY_TERM = '';
+let PAY_SPLIT = {};
+
+/* ==================== ARREARS ENGINE: PAID ARREARS DISAPPEAR; UNPAID KEEP PULLING FORWARD ====================
+   - Paid arrears disappear: when any part of an arrears obligation is paid, it is cleared and removed from arrears.
+   - Unpaid arrears keep pulling forward:
+     • Term 1: pulls any unpaid carried debt from prior academic year(s).
+     • Term 2: pulls unpaid prior-year debt + unpaid Term 1 fees.
+     • Term 3: pulls unpaid prior-year debt + unpaid Term 1 fees + unpaid Term 2 fees.
+     • Promotion / Rollover: pulls net unpaid balance from the entire year into the new year.
+*/
+
+function getStudentArrearsStatus(student, targetTerm, year, school){
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null);
+  const yr = String(year || yearSel());
+  const tm = String(targetTerm || (typeof currentTermName === 'function' ? currentTermName(s) : 'Term 1'));
+
+  if(!student || isStopped(student)) {
+    return { arrears: 0, arrearsLabel: 'Arrears', initialCarried: 0, paidAgainstArrears: 0, rawArrearsEntering: 0, unpaidT1Fees: 0, unpaidT2Fees: 0 };
+  }
+
+  // 1. Initial carried debt entering this academic year
+  let carriedFromPastYears = carriedOf(student, yr);
+  carriedFromPastYears = Math.max(0, Math.round(carriedFromPastYears * 10) / 10);
+
+  // 2. All payments recorded for this student in this academic year
+  const allPays = (DB.payments || []).filter(p => p.studentId === student.id && String(p.year) === yr);
+
+  function getArrearsAllocation(p){
+    let arrAmt = 0;
+    if(p.splitBreakdown){
+      Object.entries(p.splitBreakdown).forEach(([k, v]) => {
+        if(k.toLowerCase().includes('arrear')){
+          arrAmt += (Number(v) || 0);
+        }
+      });
+    } else if(p.alloc && Array.isArray(p.alloc)){
+      p.alloc.forEach(a => {
+        if((a.name || '').toLowerCase().includes('arrear')){
+          arrAmt += (Number(a.amount) || 0);
+        }
+      });
+    }
+    return arrAmt;
+  }
+
+  // Fee structures billed per term
+  const t1Fees = (getTermFeeStructure(s, student.classId, 'Term 1', yr) || {}).total || 0;
+  const t2Fees = (getTermFeeStructure(s, student.classId, 'Term 2', yr) || {}).total || 0;
+  const t3Fees = (getTermFeeStructure(s, student.classId, 'Term 3', yr) || {}).total || 0;
+
+  // ----- TERM 1 FLOW -----
+  const t1Pays = allPays.filter(p => p.term === 'Term 1');
+  const t1TotalPaid = t1Pays.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+  const t1ArrearsExplicit = t1Pays.reduce((sum, p) => sum + getArrearsAllocation(p), 0);
+  const paidAgainstPastDebtInT1 = t1ArrearsExplicit > 0 ? t1ArrearsExplicit : Math.min(carriedFromPastYears, t1TotalPaid);
+  const unpaidPastDebtAfterT1 = Math.max(0, carriedFromPastYears - paidAgainstPastDebtInT1);
+
+  const t1PaidTowardsOwnFees = Math.max(0, t1TotalPaid - paidAgainstPastDebtInT1);
+  const unpaidT1Fees = Math.max(0, t1Fees - t1PaidTowardsOwnFees);
+
+  // ----- TERM 2 FLOW -----
+  const priorDebtEnteringT2 = Math.round((unpaidPastDebtAfterT1 + unpaidT1Fees) * 10) / 10;
+  const t2Pays = allPays.filter(p => p.term === 'Term 2');
+  const t2TotalPaid = t2Pays.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+  const t2ArrearsExplicit = t2Pays.reduce((sum, p) => sum + getArrearsAllocation(p), 0);
+  const paidAgainstArrearsInT2 = t2ArrearsExplicit > 0 ? t2ArrearsExplicit : Math.min(priorDebtEnteringT2, t2TotalPaid);
+  const unpaidArrearsAfterT2 = Math.max(0, priorDebtEnteringT2 - paidAgainstArrearsInT2);
+
+  const t2PaidTowardsOwnFees = Math.max(0, t2TotalPaid - paidAgainstArrearsInT2);
+  const unpaidT2Fees = Math.max(0, t2Fees - t2PaidTowardsOwnFees);
+
+  // ----- TERM 3 FLOW -----
+  const priorDebtEnteringT3 = Math.round((unpaidArrearsAfterT2 + unpaidT2Fees) * 10) / 10;
+  const t3Pays = allPays.filter(p => p.term === 'Term 3');
+  const t3TotalPaid = t3Pays.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+  const t3ArrearsExplicit = t3Pays.reduce((sum, p) => sum + getArrearsAllocation(p), 0);
+  const paidAgainstArrearsInT3 = t3ArrearsExplicit > 0 ? t3ArrearsExplicit : Math.min(priorDebtEnteringT3, t3TotalPaid);
+  const unpaidArrearsAfterT3 = Math.max(0, priorDebtEnteringT3 - paidAgainstArrearsInT3);
+
+  if(tm === 'Term 1'){
+    const liveUnpaidArrears = Math.max(0, Math.round((carriedFromPastYears - paidAgainstPastDebtInT1) * 10) / 10);
+    return {
+      arrears: liveUnpaidArrears,
+      rawArrearsEntering: carriedFromPastYears,
+      paidAgainstArrears: paidAgainstPastDebtInT1,
+      arrearsLabel: carriedFromPastYears > 0 ? 'Arrears (Previous Year)' : 'Arrears (Term 1)',
+      unpaidT1Fees,
+      unpaidT2Fees
+    };
+  } else if(tm === 'Term 2'){
+    const liveUnpaidArrears = Math.max(0, Math.round((priorDebtEnteringT2 - paidAgainstArrearsInT2) * 10) / 10);
+    let label = 'Arrears (Term 1)';
+    if(unpaidPastDebtAfterT1 > 0 && unpaidT1Fees > 0) label = 'Arrears (Prev Year + Term 1)';
+    else if(unpaidPastDebtAfterT1 > 0) label = 'Arrears (Previous Year)';
+    return {
+      arrears: liveUnpaidArrears,
+      rawArrearsEntering: priorDebtEnteringT2,
+      paidAgainstArrears: paidAgainstArrearsInT2,
+      arrearsLabel: label,
+      unpaidT1Fees,
+      unpaidT2Fees
+    };
+  } else {
+    // Term 3
+    const liveUnpaidArrears = Math.max(0, Math.round((priorDebtEnteringT3 - paidAgainstArrearsInT3) * 10) / 10);
+    let label = 'Arrears (Term 1 & 2)';
+    if(unpaidPastDebtAfterT1 > 0) label = 'Arrears (Prev Years + Terms 1 & 2)';
+    return {
+      arrears: liveUnpaidArrears,
+      rawArrearsEntering: priorDebtEnteringT3,
+      paidAgainstArrears: paidAgainstArrearsInT3,
+      arrearsLabel: label,
+      unpaidT1Fees,
+      unpaidT2Fees
+    };
+  }
+}
+
+function getStudentTermPaymentInfo(student, term, year, school){
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null);
+  const yr = String(year || yearSel());
+  const tm = String(term || (typeof currentTermName === 'function' ? currentTermName(s) : 'Term 1'));
+  
+  if(!student) return { currentTermFees: 0, arrears: 0, arrearsLabel: 'Arrears (Term 1)', totalDue: 0, previousPaid: 0, paidThisTerm: 0, items: [] };
+
+  const curStruct = getTermFeeStructure(s, student.classId, tm, yr);
+  const currentTermFees = curStruct.total;
+
+  const allPays = (DB.payments || []).filter(p => p.studentId === student.id && String(p.year) === yr);
+  const totalPreviousPaid = allPays.reduce((sum, p) => sum + Number(p.amount || 0), 0);
+  const paidThisTerm = allPays.filter(p => p.term === tm).reduce((sum, p) => sum + Number(p.amount || 0), 0);
+
+  // Compute live arrears using the rolling forward / disappearing engine
+  const arrStatus = getStudentArrearsStatus(student, tm, yr, s);
+  const arrears = arrStatus.arrears;
+  const arrearsLabel = arrStatus.arrearsLabel;
+
+  // Amount paid this term towards current fees (net of arrears)
+  const paidThisTermToFees = Math.max(0, paidThisTerm - arrStatus.paidAgainstArrears);
+
+  // Total Due = Live Unpaid Arrears + Current Term Fees
+  const totalDue = Math.round((arrears + currentTermFees) * 10) / 10;
+
+  // Current Balance = Total Due - Paid This Term towards Total Due
+  const currentBalance = Math.max(0, Math.round((totalDue - paidThisTermToFees) * 10) / 10);
+
+  return {
+    student,
+    term: tm,
+    year: yr,
+    currentTermFees,
+    arrears,
+    arrearsLabel,
+    totalDue,
+    previousPaid: totalPreviousPaid,
+    paidThisTerm,
+    paidThisTermToFees,
+    currentBalance,
+    rawArrearsEntering: arrStatus.rawArrearsEntering,
+    paidAgainstArrears: arrStatus.paidAgainstArrears,
+    items: curStruct.items
+  };
+}
+
+function renderPaymentBreakdownHTML(p){
+  if(p.splitBreakdown && Object.keys(p.splitBreakdown).length){
+    const parts = Object.entries(p.splitBreakdown)
+      .filter(([k, v]) => Number(v) > 0)
+      .map(([k, v]) => `${esc(k)} - ${ghs(v)}`);
+    if(parts.length){
+      return `<div style="font-size:.78rem;color:#0369a1;background:#e0f2fe;padding:4px 8px;border-radius:5px;margin:3px 0;font-weight:700">
+        Breakdown: ${parts.join(', ')}
+      </div>`;
+    }
+  }
+  if(p.alloc && p.alloc.length){
+    const parts = p.alloc.filter(a => Number(a.amount) > 0).map(a => `${esc(a.name)} - ${ghs(a.amount)}`);
+    if(parts.length){
+      return `<div style="font-size:.78rem;color:#0369a1;background:#e0f2fe;padding:4px 8px;border-radius:5px;margin:3px 0;font-weight:700">
+        Breakdown: ${parts.join(', ')}
+      </div>`;
+    }
+  }
+  if(p.feeType){
+    return `<div style="font-size:.78rem;color:#0369a1;background:#e0f2fe;padding:3px 8px;border-radius:5px;margin:3px 0;font-weight:700">
+      Breakdown: ${esc(p.feeType)} - ${ghs(p.amount)}
+    </div>`;
+  }
+  return '';
+}
 
 function payTabHTML(s, year, unlocked){
   /* ==================== Round-339 (owner: “FUSED FINAL LOGIC — FEES RECORD PAYMENT PORTAL”) ====================
@@ -19101,55 +21384,78 @@ A.payBookTick=function(){
   const sumEl=$('#pbk-sum');
   if(sumEl) sumEl.innerHTML = picked.length? ('Ticked '+picked.length+' book'+(picked.length===1?'':'s')+' → the amount reads <b>'+ghs(sum)+'</b> (you can still change it).') : '<span class="mut">Nothing ticked yet.</span>';
 };
-A.recordPayment=function(){
+A.recordPayment = function(){
   if(!needCash()) return;
-  const s=mySchool(); const year=yearSel();
-  const st=DB.students.find(x=>x.id===$('#pay-stu').value);
-  const amt=parseFloat($('#pay-amt').value);
-  const feeTypeIn=(($('#pay-type')||{}).value||'').trim();
-  if(!st) return toast('Pick a student','bad');
-  /* Round-326: the fee type may be TICKED (three or four of them), left to the amount's own sharing out, or
-     chosen in the dropdown — the old single-type rule still holds when the class has no fees at all. */
-  const allHeads=feeTypeRows(s, st, year).filter(function(r){ return !r.general; });
-  const ticked=$$('#pay-types .pyt-tick').filter(function(ck){ return ck.checked; }).map(function(ck){ return ck.dataset.name; });
-  if(!feeTypeIn && !ticked.length && !allHeads.length) return toast('This class has no fees set yet — add them with ➕ Add Fees first','bad');
-  if(!(amt>0)) return toast('Enter a valid amount','bad');
-  const plan=payAllocPlan(allHeads, ticked, feeTypeIn, amt);
-  /* Round-327: the payment is NAMED by the heading it covered — a payment for the books reads “Books”,
-     never a chain of the individual book titles. */
-  const labels=plan.labels||[];
-  const feeType=(labels.length>1 || (ticked.length>1 && labels.length>1))? labels.join(' + ')
-                : (ticked.length>1? plan.alloc.map(function(a){ return a.name; }).join(' + ') : (feeTypeIn || labels[0] || 'Fees'));
-  const rno=nextReceiptNo(s);
-  const books=[]; try{ $$('#pay-prev .pbk-tick').forEach(function(ck){ if(!ck.checked) return; const b=(window.__PAYBOOKS||[])[Number(ck.dataset.i)]; if(b) books.push({name:b.name, author:b.author||'', unit:Number(b.amount)||0, copies:Math.max(1,Math.round(Number(b.copies||1)||1)), price:feeLineTotal(b), st:'full'}); });
-    const tickSum=r1(books.reduce(function(a,x){ return a+x.price; },0));
-    books.forEach(function(x){ x.st = (amt>=tickSum)? 'full' : 'part'; }); }catch(e){}   /* Round-322 (order 5): the TICKED books ride the payment — ✓ full when the payment covers them */
-  try{   /* Round-327: books settled through the typed amount (or a ticked “Books” fee type) are recorded too,
-            so the 📚 tick list shows “already paid ✔” for exactly the books the money has cleared */
-    const clsP=classOf(s, st.classId), fsP=clsP? feeStruct(s, clsP.id, year):null;
-    const bksP=((fsP&&fsP.items)||[]).filter(function(i){ return i&&i.book; });
-    (plan.alloc||[]).forEach(function(a){
-      if(books.some(function(x){ return String(x.name)===String(a.name); })) return;
-      const bk=bksP.filter(function(i){ return String(i.name)===String(a.name); })[0]; if(!bk) return;
-      const price=feeLineTotal(bk);
-      books.push({name:bk.name, author:bk.author||'', unit:Number(bk.amount)||0,
-        copies:Math.max(1,Math.round(Number(bk.copies||1)||1)), price:price, st:(Number(a.amount)>=price? 'full':'part')}); });
-  }catch(e){}
-  const p={id:uid('pay'), schoolId:s.id, studentId:st.id, year, amount:amt, method:$('#pay-mth').value, feeType,
-    date:todayISO(), term:currentTermName(s), receiptNo:rno, by:me().name, ts:Date.now()};
-  if(books.length) p.books=books;
-  if(plan.alloc.length) p.alloc=plan.alloc;          /* Round-326: which fee each part of this payment paid */
-  if(plan.byHead&&plan.byHead.length) p.allocHeads=plan.byHead;   /* Round-327: the same money by heading (Books, School Fees…) */
+  const s = mySchool(); const year = yearSel();
+  const stEl = $('#pay-stu');
+  if(!stEl || !stEl.value) return toast('Select a student', 'bad');
+  const st = (DB.students || []).find(x => x.id === stEl.value);
+  if(!st) return toast('Student not found', 'bad');
+  const amt = parseFloat(($('#pay-amt')||{}).value);
+  if(!(amt > 0)) return toast('Enter a valid amount paid', 'bad');
+
+  const tm = PAY_TERM || currentTermName(s) || 'Term 1';
+  const info = window.__CURRENT_PAY_INFO || getStudentTermPaymentInfo(st, tm, year, s);
+
+  // Collect split breakdown
+  const splitMap = {};
+  let splitTotal = 0;
+  $$('.pay-split-input').forEach(inp => {
+    const v = parseFloat(inp.value) || 0;
+    if(v > 0){
+      splitMap[inp.dataset.name] = v;
+      splitTotal += v;
+    }
+  });
+
+  if(!Object.keys(splitMap).length){
+    splitMap['School Fees'] = amt;
+    splitTotal = amt;
+  }
+
+  const allocArray = Object.entries(splitMap).map(([name, amount]) => ({ name, amount }));
+  const feeType = Object.keys(splitMap).join(' + ');
+  const rno = nextReceiptNo(s);
+  const balAfter = Math.max(0, Math.round((info.totalDue - amt) * 10) / 10);
+
+  const p = {
+    id: uid('pay'),
+    schoolId: s.id,
+    studentId: st.id,
+    year,
+    term: tm,
+    amount: amt,
+    method: ($('#pay-mth')||{}).value || 'Cash',
+    feeType,
+    previousPaid: info.previousPaid,
+    arrears: info.arrears,
+    arrearsLabel: info.arrearsLabel,
+    currentTermFees: info.currentTermFees,
+    totalDue: info.totalDue,
+    balance: balAfter,
+    splitBreakdown: splitMap,
+    alloc: allocArray,
+    date: todayISO(),
+    receiptNo: rno,
+    by: me().name,
+    ts: Date.now()
+  };
+
   DB.payments.push(p);
-  const bal=balanceOf(st,year);
+
   // SMS notification to parent
   sendSMS(st.parentPhone,
      `HEREMS ${s.abbrev}: Payment of GHS ${amt.toFixed(2)} received for ${st.firstName} ${st.surname} (${st.sid}). `+
-    (bal>0? `Outstanding balance: GHS ${bal.toFixed(2)}.` : 'Your ward is NOT OWING. Thank you.')+` Receipt ${rno}.\nBy Management`);   /* Round-288 (owner item 4): every message signs off By Management — official letters excepted */
+     `Receipt ${rno}. Total Due: GHS ${info.totalDue.toFixed(2)}. `+
+     (balAfter > 0 ? `Outstanding balance: GHS ${balAfter.toFixed(2)}.` : 'Your ward is NOT OWING. Thank you.')+
+     `\nBy Management`);
+
   saveDB();
-  toast(`Payment saved — receipt <b>${rno}</b> + SMS queued to ${esc(st.parentPhone)}`,'ok');
-  render(); A.viewReceipt(p.id);
+  toast(`Payment saved — receipt <b>${rno}</b> + SMS queued to ${esc(st.parentPhone)}`, 'ok');
+  render();
+  A.viewReceipt(p.id);
 };
+
 function receiptsTabHTML(s, year){
   const all=DB.payments.filter(p=>p.schoolId===s.id&&p.year===year).slice().reverse();
   const dayN=RCPT_DATE? all.filter(p=>p.date===RCPT_DATE).length : 0;
@@ -19283,13 +21589,16 @@ function receiptHTML(p){
     <div class="rr"><span>Class:</span><b>${cls?esc(cls.name):'—'}</b>${cls?`<span class="small mut"> (${cls.stream})</span>`:''}</div>
     <div class="rr"><span>Academic year:</span><span>${p.year}</span></div>
     <hr style="border:none;border-top:1px dashed #999;margin:.4rem 0">
-    <div class="rr"><span>Amount paid:</span><b>${ghs(p.amount)}</b></div>
-    ${p.feeType?`<div class="rr"><span>Fee type:</span><b>${esc(p.feeType)}</b></div>`:''}
-    ${receiptCateredForHTML(p)}   <!-- Round-334: the ITEMS this money catered for, with their figures -->
-    ${(receiptBooksPaid(p)>0)?`<div class="rr"><span>Books:</span><b>${ghs(receiptBooksPaid(p))}</b></div>`:''}   <!-- Round-333: ONE books figure, no per-book list -->
+    <div style="background:#f8fafc;border:1.5px solid #0f172a;border-radius:8px;padding:8px 12px;margin:.4rem 0;font-size:.86rem;line-height:1.55">
+      <div class="rr"><span>Previous Paid:</span><b>${ghs(p.previousPaid !== undefined ? p.previousPaid : 0)}</b></div>
+      <div class="rr"><span>${esc(p.arrearsLabel || (p.term === 'Term 1' ? 'Arrears (Prev. Year)' : 'Arrears (Term 1)'))}:</span><b style="color:${(p.arrears || 0) > 0 ? '#b91c1c' : '#15803d'}">${ghs(p.arrears || 0)}</b></div>
+      <div class="rr"><span>Current (${esc(p.term || 'Term')}):</span><b>${ghs(p.currentTermFees !== undefined ? p.currentTermFees : p.amount)}</b></div>
+      <div class="rr" style="border-top:1px dashed #94a3b8;padding-top:3px;margin-top:3px"><span>Total Due:</span><b style="font-size:1.02rem;color:#0f172a">${ghs(p.totalDue !== undefined ? p.totalDue : (p.amount + bal))}</b></div>
+      <div class="rr" style="color:#0369a1;font-weight:800;border-top:1px dashed #94a3b8;padding-top:3px;margin-top:3px"><span>Current Payment:</span><b style="font-size:1.08rem">${ghs(p.amount)}</b></div>
+      ${renderPaymentBreakdownHTML(p)}
+      <div class="rr" style="border-top:2px solid #0f172a;padding-top:4px;margin-top:4px"><span style="font-weight:800;font-size:.92rem">Balance:</span><b style="font-size:1.15rem;color:${(p.balance !== undefined ? p.balance : bal) > 0 ? '#b91c1c' : '#15803d'}">${(p.balance !== undefined ? p.balance : bal) > 0 ? ghs(p.balance !== undefined ? p.balance : bal) : '0.00 GHS (NOT OWING ✔️)'}</b></div>
+    </div>
     <div class="rr"><span>Method:</span><span>${esc(p.method)}</span></div>
-    <div class="rr"><span>Balance:</span><b>${bal>0?ghs(bal):'NOT OWING'}</b></div>
-    ${booksBalanceAsOf(st,p)>0?`<div class="rr b bad"><span>Books balance carried forward:</span><b>${ghs(booksBalanceAsOf(st,p))}</b></div>`:''}   <!-- Round-267: annual Books fee remains visible on later-term receipts until cleared -->
     <hr style="border:none;border-top:1px dashed #999;margin:.4rem 0">
     <div class="rr"><span>Received by:</span><span>${esc(p.by)}</span></div>
     <div class="center small mt1">Powered by HEREMS_PLUS · ☎️ +233246258377</div>
