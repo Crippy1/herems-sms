@@ -2771,6 +2771,18 @@ td.grow, .box-grow{white-space:normal;overflow-wrap:anywhere;word-break:break-wo
 .age-col .badge,.badge.info{display:inline-flex;align-items:center;justify-content:center;max-width:100%;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
 .age-col .badge .twj,.badge.info .twj{flex:0 0 auto;width:1.05em!important;height:1.05em!important}
 
+
+.report-card .avatar.lg,
+.rc-band-light .avatar.lg {
+  width: 76px;
+  height: 84px;
+  border-radius: 8px;
+  object-fit: cover;
+  object-position: center 15%;
+  border: 2.5px solid var(--brand, #0284c7);
+  flex-shrink: 0;
+}
+
 /* ================= STUDENT BOARD — FULL-PAGE VIEW ================= */
 .stubord-wrap {
   width: 100%;
@@ -2809,6 +2821,7 @@ td.grow, .box-grow{white-space:normal;overflow-wrap:anywhere;word-break:break-wo
   height: 92px;
   border-radius: 50%;
   object-fit: cover;
+  object-position: center 15%;
   border: 3.5px solid #f59e0b;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   background: #334155;
@@ -3002,6 +3015,235 @@ td.grow, .box-grow{white-space:normal;overflow-wrap:anywhere;word-break:break-wo
   }
 }
 
+
+/* ===========================================================================
+   SMARTPHONE & MOBILE OPTIMIZATIONS FOR TERMINAL REPORT CARDS (ZERO CLIPPING)
+   =========================================================================== */
+.rc-table-wrap {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  margin: .35rem 0;
+}
+.rc-swipe-hint {
+  display: none;
+}
+.rc-summary-strip {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: space-around !important;
+  align-items: center !important;
+  gap: .4rem 1.2rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-top: .6rem !important;
+  padding: .45rem .6rem !important;
+  background: #f8fafc !important;
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #000000 !important;
+}
+
+@media screen and (max-width: 768px) {
+  /* Prevent horizontal card shifting on mobile */
+  #cr-body, #sr-body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+  }
+  .report-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+    padding: .65rem .6rem !important;
+    margin: 0 auto .8rem !important;
+    box-sizing: border-box !important;
+    border-width: 1.5px !important;
+  }
+  .report-card .sheet-body {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Sticky Subject Column on Mobile Screen */
+  .rc-table-wrap {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+  }
+  .rc-swipe-hint {
+    display: block;
+    text-align: center;
+    font-size: .68rem;
+    font-weight: 600;
+    color: #475569;
+    padding: 3px 0 6px;
+    letter-spacing: .02em;
+  }
+  .rc-table {
+    min-width: 530px !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+  }
+  .rc-table th, .rc-table td {
+    padding: 6px 7px !important;
+    font-size: .74rem !important;
+  }
+  .rc-table th:first-child,
+  .rc-table td:first-child {
+    position: sticky !important;
+    left: 0 !important;
+    z-index: 2 !important;
+    min-width: 110px !important;
+    max-width: 130px !important;
+    box-shadow: 3px 0 6px rgba(0, 0, 0, 0.09) !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.25 !important;
+    border-right: 2px solid #cbd5e1 !important;
+  }
+  .rc-table th:first-child {
+    z-index: 4 !important;
+  }
+  .rc-table td:first-child {
+    background: #ffffff !important;
+  }
+  .rc-table tr:nth-child(even) td:first-child {
+    background: #f8fafc !important;
+  }
+
+  /* Student Bio Grid on Mobile Screen */
+  .rc-band-light {
+    padding: .45rem .55rem !important;
+    gap: .5rem !important;
+    align-items: center !important;
+  }
+  .rc-idgrid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: .28rem .5rem !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .rc-idgrid .rc-idcell {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    min-width: 0 !important;
+    gap: 1px !important;
+  }
+  .rc-idgrid .rc-idk {
+    font-size: .67rem !important;
+    color: #64748b !important;
+    white-space: nowrap !important;
+    text-transform: uppercase !important;
+    letter-spacing: .02em !important;
+  }
+  .rc-idgrid .rc-idv {
+    font-size: .76rem !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Vacation Date Pill */
+  .rc-vac-wrap {
+    width: 100% !important;
+    padding: 0 2px !important;
+    box-sizing: border-box !important;
+  }
+  .rc-vac-pill {
+    white-space: normal !important;
+    text-align: center !important;
+    font-size: .72rem !important;
+    padding: .3rem .6rem !important;
+    line-height: 1.35 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    display: inline-block !important;
+  }
+
+  /* Summary KPI Bar on Mobile */
+  .rc-summary-strip {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: .4rem .6rem !important;
+    text-align: left !important;
+    padding: .45rem .6rem !important;
+  }
+  .rc-summary-strip > span {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1px !important;
+    min-width: 0 !important;
+  }
+  .rc-summary-strip > span .mut {
+    font-size: .67rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: .02em !important;
+  }
+  .rc-summary-strip > span b {
+    font-size: .95rem !important;
+  }
+
+  /* Remarks & Behavior */
+  .rc-behavior-box {
+    padding: .4rem .6rem !important;
+    font-size: .74rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .rc-com-box {
+    padding: .45rem .65rem !important;
+    font-size: .74rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    word-break: break-word !important;
+  }
+
+  /* Signatures */
+  .rc-sig-row {
+    padding: 0 4px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .rc-sig-col {
+    width: 48% !important;
+    max-width: 48% !important;
+    box-sizing: border-box !important;
+  }
+  .rc-sig-col .sig-img {
+    max-height: 28px !important;
+  }
+}
+
+@media print {
+  .rc-table-wrap {
+    overflow: visible !important;
+    border: none !important;
+  }
+  .rc-swipe-hint {
+    display: none !important;
+  }
+  .rc-table th:first-child,
+  .rc-table td:first-child {
+    position: static !important;
+    box-shadow: none !important;
+  }
+}
 </style>
 <style>
 /* ==========================================================================================
@@ -3316,7 +3558,7 @@ table.aud-dtable tbody tr,.table-wrap table.aud-dtable tbody tr:nth-child(even),
 .idcard-head b{display:block;font-size:8.2pt;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .idcard-head small{display:block;font-size:5.2pt;letter-spacing:.14em;opacity:.92}
 .idcard-body{display:flex;gap:2.2mm;padding:1.6mm 2.5mm;flex:1;align-items:center;position:relative;z-index:1;min-height:0}
-.idcard-photo{width:19mm;height:22.5mm;border-radius:5px;object-fit:cover;border:.4mm solid #cbd5e1;background:#eef2ff;flex:0 0 auto}
+.idcard-photo{width:19mm;height:22.5mm;border-radius:5px;object-fit:cover;object-position:center 15%;border:.4mm solid #cbd5e1;background:#eef2ff;flex:0 0 auto}
 .idcard-ph-fb{display:flex;align-items:center;justify-content:center;font-size:11pt;font-weight:800;color:#173b68}
 .idcard-fields{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:1mm 3mm;min-width:0;align-content:center}
 .idcard-fields .if{min-width:0}
@@ -4514,19 +4756,180 @@ const TERMS_ALL = ['Term 1','Term 2','Term 3'];
 
 /* Round-47: grades are A · B · C · D · E · F — boundaries adjustable per school by the School Administrator */
 const GB_WORDS={A:'Excellent',B:'Very Good',C:'Good',D:'Credit',E:'Pass',F:'Fail'};
-const GB_DEFAULT=[{l:'A',min:80},{l:'B',min:70},{l:'C',min:60},{l:'D',min:50},{l:'E',min:40},{l:'F',min:0}];
-function gradeBandsOf(s){ const b=s&&s.gradeBands; return (Array.isArray(b)&&b.length===6)? b : GB_DEFAULT; }
-function gradeBand(t, sch){
-  t=Number(t)||0; const s=sch||mySchool();
-  const bands=gradeBandsOf(s);
-  for(const b of bands){ if(t>=b.min) return [b.l, GB_WORDS[b.l]||'']; }
-  return ['F', GB_WORDS.F];
+const GB_DEFAULT=[{l:'A',min:80,remark:'Excellent'},{l:'B',min:70,remark:'Very Good'},{l:'C',min:60,remark:'Good'},{l:'D',min:50,remark:'Credit'},{l:'E',min:40,remark:'Pass'},{l:'F',min:0,remark:'Fail'}];
+const PRIMARY_GB_DEFAULT = [
+  {l:'A',min:80,remark:'Excellent'},
+  {l:'B',min:70,remark:'Very Good'},
+  {l:'C',min:60,remark:'Good'},
+  {l:'D',min:50,remark:'Credit'},
+  {l:'E',min:40,remark:'Pass'},
+  {l:'F',min:0,remark:'Fail'}
+];
+
+const JHS_NUM_DEFAULT = [
+  {g:1,min:80,remark:'Highest'},
+  {g:2,min:70,remark:'Higher'},
+  {g:3,min:65,remark:'High'},
+  {g:4,min:60,remark:'High Average'},
+  {g:5,min:55,remark:'Average'},
+  {g:6,min:50,remark:'Low Average'},
+  {g:7,min:45,remark:'Low'},
+  {g:8,min:40,remark:'Lower'},
+  {g:9,min:0,remark:'Lowest'}
+];
+
+const JHS_NUM_WORDS = {
+  '1':'Highest','2':'Higher','3':'High','4':'High Average','5':'Average','6':'Low Average','7':'Low','8':'Lower','9':'Lowest'
+};
+
+function primaryGradeBandsOf(s){
+  const b = s && (s.primaryGradeBands || s.gradeBands);
+  return (Array.isArray(b) && b.length === 6) ? b : PRIMARY_GB_DEFAULT;
 }
-/* one colour per grade — Green (A) → Teal (B) → Blue (C) → Violet (D) → Orange (E) → Deep red (F) */
-const GRADE_COLORS={A:'#15803d',B:'#0d9488',C:'#0369a1',D:'#6d28d9',E:'#ea580c',F:'#991b1b'};   /* Round-218 (owner): B is TEAL — the owner's current truth (R213 had made it amber; now reversed) · Round-233 (owner): C and D looked alike — C is a deeper blue now; measured distance C–D 12.3 → 25.8, weakest pair in the ladder is now A–B at 18.5 */
-function gradeColor(g){ const l=(typeof g==='number')? gradeBand(g)[0] : String(g||'').trim();
-  return GRADE_COLORS[l]||'#334155'; }
-function gradeChip(g){ return `<span class="badge" style="background:${gradeColor(g)};color:#fff">${g}</span>`; }
+
+function jhsNumberBandsOf(s){
+  const b = s && s.jhsNumberBands;
+  return (Array.isArray(b) && b.length === 9) ? b : JHS_NUM_DEFAULT;
+}
+
+function gradeBandsOf(s){
+  return primaryGradeBandsOf(s);
+}
+
+function numericGradeOfScore(t, sch){
+  t = Number(t) || 0;
+  const s = sch || (typeof mySchool === 'function' ? mySchool() : null);
+  const bands = jhsNumberBandsOf(s);
+  for(const b of bands){
+    if(t >= b.min) return Number(b.g);
+  }
+  return 9;
+}
+
+function gradeBand(t, sch, cls){
+  t = Number(t) || 0;
+  const s = sch || (typeof mySchool === 'function' ? mySchool() : null);
+  
+  // Requirement 4: JHS Level (Basic 7 - 9) Configurable: Number System (1 to 9) vs Letter System (A to F)
+  if(cls && isJHS(cls) && (s && s.jhsGradingSystem || 'number') === 'number'){
+    const nb = jhsNumberBandsOf(s);
+    for(const b of nb){
+      if(t >= b.min) return [String(b.g), b.remark || JHS_NUM_WORDS[String(b.g)] || ''];
+    }
+    return ['9', JHS_NUM_WORDS['9'] || 'Lowest'];
+  }
+
+  // Primary Level (Basic 1 - 6): Standardized on the Letter/Alphabet System (A through F)
+  const bands = primaryGradeBandsOf(s);
+  for(const b of bands){
+    if(t >= b.min) return [b.l, b.remark || GB_WORDS[b.l] || ''];
+  }
+  return ['F', GB_WORDS.F || 'Fail'];
+}
+
+/* One colour per grade — Letters (A-F) and Numbers (1-9) */
+const GRADE_COLORS={
+  A:'#15803d',B:'#0d9488',C:'#0369a1',D:'#6d28d9',E:'#ea580c',F:'#991b1b',
+  '1':'#15803d','2':'#0d9488','3':'#0369a1','4':'#0284c7','5':'#4f46e5','6':'#6d28d9','7':'#d97706','8':'#ea580c','9':'#991b1b'
+};
+
+function gradeColor(g){
+  const l = (typeof g === 'number') ? String(g) : String(g || '').trim();
+  return GRADE_COLORS[l] || '#334155';
+}
+
+function gradeChip(g){
+  return `<span class="badge" style="background:${gradeColor(g)};color:#fff">${g}</span>`;
+}
+
+/* 2. JHS Aggregate System (Basic 7 – Basic 9 / JHS 1 – JHS 3)
+   - 4 Mandatory Core Subjects: English Language, Mathematics, Science, Social Studies
+   - 2 Best Electives: Top 2 highest-graded elective subjects (lowest numeric grade number)
+   - Aggregate Score = sum(4 Core Grades) + sum(2 Best Elective Grades) */
+function calculateJhsBest6Aggregate(studentId, cls, term, year, school){
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null);
+  if(!s || !cls || !isJHS(cls)) return null;
+  const subs = studentSubjectsForClass(s, cls);
+
+  const subjectList = [];
+  subs.forEach(sub => {
+    const sc = getScore(studentId, sub, term, year);
+    if(sc){
+      const conv = convertScore(sc.c, sc.e, cls.stream);
+      if(conv && conv.total !== null && !isNaN(Number(conv.total))){
+        const tot = Number(conv.total);
+        const numGrade = numericGradeOfScore(tot, s);
+        subjectList.push({
+          sub,
+          total: tot,
+          grade: numGrade
+        });
+      }
+    }
+  });
+
+  if(!subjectList.length) return null;
+
+  // 4 Mandatory Core Subjects
+  const coreDefs = [
+    { key: 'english', label: 'English Language', match: str => /english/i.test(str) },
+    { key: 'maths', label: 'Mathematics', match: str => /math/i.test(str) },
+    { key: 'science', label: 'Integrated Science', match: str => /science/i.test(str) },
+    { key: 'social', label: 'Social Studies', match: str => /social/i.test(str) }
+  ];
+
+  const chosenCore = [];
+  const usedCoreSubs = new Set();
+
+  coreDefs.forEach(cd => {
+    const hit = subjectList.find(item => cd.match(item.sub) && !usedCoreSubs.has(item.sub));
+    if(hit){
+      chosenCore.push(hit);
+      usedCoreSubs.add(hit.sub);
+    }
+  });
+
+  // Elective subjects (all subjects not matched to core)
+  const electives = subjectList.filter(item => !usedCoreSubs.has(item.sub));
+
+  // Sort electives: best/highest-graded first (in numeric grades, 1 is best, 9 is worst; tie-break by total score)
+  electives.sort((a, b) => (a.grade - b.grade) || (b.total - a.total));
+  const chosenElectives = electives.slice(0, 2);
+
+  const allChosen = [...chosenCore, ...chosenElectives];
+  const aggTotal = allChosen.reduce((sum, item) => sum + item.grade, 0);
+
+  return {
+    total: aggTotal,
+    coreCount: chosenCore.length,
+    electiveCount: chosenElectives.length,
+    core: chosenCore,
+    electives: chosenElectives,
+    chosen: allChosen,
+    isComplete: chosenCore.length === 4 && chosenElectives.length === 2
+  };
+}
+
+/* 3. Administrator Controls — Aggregate Visibility Toggles
+   Options: 'all', 'bs7', 'bs8', 'bs9', 'none' */
+function shouldShowJhsAggregate(school, cls){
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null);
+  if(!cls || !isJHS(cls)) return false;
+  const vis = (s && s.jhsAggregateVisibility) || 'all';
+  if(vis === 'none' || vis === false) return false;
+  if(vis === 'all') return true;
+  
+  const cName = (cls.name || '').toLowerCase();
+  const isB7 = cName.includes('basic 7') || cName.includes('bs 7') || cName.includes('bs7') || cName.includes('jhs 1') || cName.includes('jhs1');
+  const isB8 = cName.includes('basic 8') || cName.includes('bs 8') || cName.includes('bs8') || cName.includes('jhs 2') || cName.includes('jhs2');
+  const isB9 = cName.includes('basic 9') || cName.includes('bs 9') || cName.includes('bs9') || cName.includes('jhs 3') || cName.includes('jhs3') || isBS9(cls);
+
+  if(vis === 'bs7') return isB7;
+  if(vis === 'bs8') return isB8;
+  if(vis === 'bs9') return isB9;
+  return false;
+}
+
 /* Round-167 (owner's order): the grade legend is COLOURFUL — one solid pill per grade with its letter + threshold
    together (A ≥80 · B ≥70 · C ≥60 · D ≥50 · E ≥40 · F <40), each grade in its own colour; mono stays print-safe black */
 function gradeLegendChips(sch, mono){ const bs=gradeBandsOf(sch||mySchool()); const fmin=(bs.find(x=>x.l==='E')||{min:0}).min;
@@ -4807,18 +5210,20 @@ function subAbbr(sub, best){
   if(best===true){   /* Best-Six & narrow headers — shorten */
     if(low.includes('english')) return 'English';
     if(low.includes('mathemat')) return 'Maths';
-    if(low.includes('science')) return 'Science';
+    if(low.includes('science')) return 'Sci';
     if(low.includes('social')) return 'Social';
-    if(low.includes('religious')) return 'RME';
+    if(low.includes('religious') || low === 'rme') return 'RME';
     if(low.includes('computing')) return 'Comp';
     if(low.includes('creative arts')) return 'CAD';
     if(low.includes('career technology')) return 'C-Tech';
-    if(low.includes('twi')) return 'TWI';
+    if(low.includes('twi')) return 'Twi';
     if(low.includes('our world')) return 'OWOP';
+    if(low.includes('french')) return 'French';
     return sub;
   }
-  /* report subject column — full names (only RME abbreviated) */
-  if(low.includes('religious')) return 'RME';
+  /* report subject column & general subjects list — full names: Religious & Moral Education instead of RME; Science instead of Integrated Science */
+  if(low.includes('religious') || low === 'rme') return 'Religious & Moral Education';
+  if(low.includes('integrated science') || low === 'science') return 'Science';
   return sub;
 }
 /* table heads: compact short form (RME · Twi · C-Tech · Comp · OWOP) · Round-46: Computing full outside Best-Six · otherwise 1-4 letter initials */
@@ -7067,22 +7472,55 @@ function getStreamAssessmentConfig(s, stream){
   return sc;
 }
 
-function getAssessmentTotalMarks(s, type, subject, stream){
+function getAssessmentTotalMarks(s, type, subject, stream, classId){
+  // SPEC 2: MOCK is always over 100%, fixed at 100%. No other value.
+  if(type === 'mock') return 100;
   if(type === 'mid') type = 'mid_term';
   if(type === 'monthly') type = 'monthly_exam';
   if(type === 'weekly') type = 'weekly_test';
   if(type === 'end') type = 'end_term';
   
+  if(!s) s = (typeof mySchool === 'function' ? mySchool() : null) || {};
+  
+  // SPEC 1: Main Exam (End of Term) - if Admin forced conversion is ON, strictly return forced total (100)
+  if(type === 'end_term' && s.forceExamConversion){
+    if(s.forcedExamConversion && s.forcedExamConversion.end_term) return Number(s.forcedExamConversion.end_term) || 100;
+    return 100;
+  }
+
+  const ac = getSchoolAssessmentConfig(s);
+  ac.customTotals = ac.customTotals || {};
+
+  // SPEC 3: Hierarchy for Class Test / Weekly / Monthly / Mid-Term:
+  // 1. Specific class + subject override (Teacher or Admin set for this class)
+  if(classId && subject && ac.customTotals[`${type}|${classId}|${subject}`] !== undefined){
+    return Number(ac.customTotals[`${type}|${classId}|${subject}`]) || (type === 'end_term' ? 100 : 30);
+  }
+
+  // 2. Stream-wide forced subject override (Admin Rule: forced to all streams for this subject)
+  if(stream && subject && ac.customTotals[`${type}|stream:${stream}|${subject}`] !== undefined){
+    return Number(ac.customTotals[`${type}|stream:${stream}|${subject}`]) || (type === 'end_term' ? 100 : 30);
+  }
+
+  // 3. School-wide forced subject override (Admin Rule: forced across school)
+  if(subject && ac.customTotals[`${type}|all:${subject}`] !== undefined){
+    return Number(ac.customTotals[`${type}|all:${subject}`]) || (type === 'end_term' ? 100 : 30);
+  }
+
+  // Legacy key: type|subject
+  if(subject && ac.customTotals[`${type}|${subject}`] !== undefined){
+    return Number(ac.customTotals[`${type}|${subject}`]) || (type === 'end_term' ? 100 : 30);
+  }
+
+  // 4. Stream default
   if(stream){
     const stConfig = getStreamAssessmentConfig(s, stream);
     if(stConfig.totals && stConfig.totals[type] !== undefined){
       return Number(stConfig.totals[type]) || (type === 'end_term' ? 100 : 30);
     }
   }
-  const ac = getSchoolAssessmentConfig(s);
-  if(subject && ac.customTotals && ac.customTotals[`${type}|${subject}`] !== undefined){
-    return Number(ac.customTotals[`${type}|${subject}`]) || 30;
-  }
+
+  // 5. School assessment config default
   return Number(ac.totals[type]) || (type === 'end_term' ? 100 : 30);
 }
 
@@ -7109,11 +7547,21 @@ function normalizeScoreToTotal(rawScore, setTotal, originalBase){
 }
 
 /* Calculates terminal marks strictly according to each stream's separate conversion rules: Class Score + Exam Score = Final Mark (out of 100) */
-function calculateTerminalMarks(sc, s, stream){
+function calculateTerminalMarks(sc, s, stream, subject, classId){
   if(!sc) return { c: '', e: '', total: '', grade: ['—','—'] };
-  const stConfig = getStreamAssessmentConfig(s, stream);
-  const csWeight = (stConfig.c !== undefined) ? Number(stConfig.c) : 30;
-  const esWeight = (stConfig.e !== undefined) ? Number(stConfig.e) : 70;
+  if(!s) s = (typeof mySchool === 'function' ? mySchool() : null) || {};
+  
+  // SPEC 1: Main Exam (End of Term)
+  // If School Administrator has FORCE CONVERSION ON, strictly enforce forced weights across all teachers, classes, and subjects!
+  let csWeight, esWeight;
+  if(s.forceExamConversion && s.forcedExamConversion){
+    csWeight = Number(s.forcedExamConversion.c) || 30;
+    esWeight = Number(s.forcedExamConversion.e) || 70;
+  } else {
+    const stConfig = getStreamAssessmentConfig(s, stream);
+    csWeight = (stConfig.c !== undefined) ? Number(stConfig.c) : 30;
+    esWeight = (stConfig.e !== undefined) ? Number(stConfig.e) : 70;
+  }
   
   let classScoreContrib = 0;
   let hasClassScore = false;
@@ -7180,8 +7628,19 @@ function calculateTerminalMarks(sc, s, stream){
 /* Returns stream-specific score conversion rules: { c, e } */
 function convRules(stream, school){
   const s = school || (typeof mySchool === 'function' ? mySchool() : null);
+  if(s && s.forceExamConversion && s.forcedExamConversion){
+    return {
+      c: Number(s.forcedExamConversion.c) || 30,
+      e: Number(s.forcedExamConversion.e) || 70,
+      forced: true
+    };
+  }
   const stConfig = getStreamAssessmentConfig(s, stream);
-  return { c: Number(stConfig.c) || 30, e: Number(stConfig.e) || 70 };
+  return {
+    c: Number(stConfig.c) || 30,
+    e: Number(stConfig.e) || 70,
+    forced: false
+  };
 }
 
 function convertScore(rawC, rawE, stream, school){
@@ -12447,7 +12906,22 @@ A.openPassportGuideModal = function(prefix, stId){
 
   openModal(mHead('📷 Passport Photo Specifications', true) + `
   <div class="m-body" id="pg-modal-body" style="padding:1rem">
-    <!-- Engaging Colorful Header Banner -->
+    <!-- 1. STUDENT PHOTO SPECIFICATION BANNER -->
+    <div style="background:#eff6ff;border:2px solid #3b82f6;border-radius:12px;padding:.9rem 1.1rem;margin-bottom:1rem;color:#1e3a8a;box-shadow:0 2px 8px rgba(59,130,246,0.12)">
+      <div style="display:flex;align-items:center;gap:.6rem">
+        <span style="font-size:1.6rem">👤</span>
+        <div>
+          <h4 style="margin:0;font-size:.95rem;font-weight:900;color:#1e40af">STUDENT PHOTO SPECIFICATION: Full Head + Upper Chest</h4>
+          <div style="font-size:.78rem;color:#2563eb;font-weight:700">Official framing rule for Student Board, ID Cards &amp; Terminal Reports</div>
+        </div>
+      </div>
+      <div style="margin-top:.6rem;padding:.55rem .75rem;background:#ffffff;border-radius:8px;border:1px solid #bfdbfe;font-size:.77rem;line-height:1.45;color:#1e293b">
+        • <b>Framing:</b> Photo must strictly show the <b>full head of student + a small portion of the chest</b>.<br>
+        • <b>Not Full Body:</b> Do NOT upload or take a full body picture. Just head + upper chest.<br>
+        • <b>Placement:</b> This photo will display directly on the <b>Student Board</b>, official <b>ID Card</b>, and <b>Terminal Report Cards</b>.
+      </div>
+    </div>
+<!-- Engaging Colorful Header Banner -->
     <div style="background:linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #065f46 100%);color:#ffffff;border-radius:12px;padding:1.15rem;margin-bottom:1rem;box-shadow:0 4px 16px rgba(0,0,0,0.18)">
       <div style="display:flex;align-items:center;gap:.75rem">
         <span style="font-size:2.2rem;filter:drop-shadow(0 2px 5px rgba(0,0,0,0.35))">📷</span>
@@ -13602,6 +14076,7 @@ function renderStuBoardPayment(st, s, cls, curTerm, yr){
   const termList = terms.length ? terms : ['Term 1', 'Term 2', 'Term 3'];
   const payInfo = getStudentTermPaymentInfo(st, curTerm, yr, s);
   const netBal = Math.max(0, Math.round((payInfo.totalDue - payInfo.paidThisTerm) * 10) / 10);
+  const totalDueMap = getTotalDueWithArrears(st, curTerm, yr, s);
 
   // All payments recorded for this student
   const studentPayments = (DB.payments || [])
@@ -13609,16 +14084,10 @@ function renderStuBoardPayment(st, s, cls, curTerm, yr){
     .slice()
     .sort((a, b) => (b.ts || 0) - (a.ts || 0));
 
-  // Term ledger breakdown
-  const t1Paid = studentPayments.filter(p => p.term === 'Term 1').reduce((a, p) => a + Number(p.amount || 0), 0);
-  const t2Paid = studentPayments.filter(p => p.term === 'Term 2').reduce((a, p) => a + Number(p.amount || 0), 0);
-  const t3Paid = studentPayments.filter(p => p.term === 'Term 3').reduce((a, p) => a + Number(p.amount || 0), 0);
-
-  const t1Info = getStudentTermPaymentInfo(st, 'Term 1', yr, s);
-  const t2Info = getStudentTermPaymentInfo(st, 'Term 2', yr, s);
-  const t3Info = getStudentTermPaymentInfo(st, 'Term 3', yr, s);
-
   window.__CURRENT_SB_PAY_INFO = payInfo;
+  window.__CURRENT_STU_BOARD_ID = st.id;
+
+  const creditBal = Number(st.credit_balance || 0);
 
   return `
   <div>
@@ -13644,7 +14113,19 @@ function renderStuBoardPayment(st, s, cls, curTerm, yr){
       </div>
     </div>
 
-    <!-- 5 KPI Summary Cards -->
+    ${creditBal > 0 ? `
+      <div class="notice ok mb2" style="background:#ecfdf5;border:1.5px solid #10b981;color:#065f46;border-radius:8px;padding:10px 14px">
+        <div class="flex between wrap" style="align-items:center">
+          <div>
+            <b style="font-size:1.02rem">✨ Student has Credit: ${ghs(creditBal)} (Advance for next term)</b>
+            <div class="small mt1">This credit was saved from overpayment and will automatically deduct from next term's fees.</div>
+          </div>
+          <span class="badge" style="background:#10b981;color:#fff;font-weight:800;font-size:.9rem">${ghs(creditBal)} ADVANCE</span>
+        </div>
+      </div>
+    ` : ''}
+
+    <!-- KPI Summary Cards -->
     <div class="stubord-kpi-grid">
       <div class="stubord-kpi-card" style="border-left:4px solid #64748b">
         <div class="stubord-kpi-title">1. Previous Paid (${yr})</div>
@@ -13667,7 +14148,7 @@ function renderStuBoardPayment(st, s, cls, curTerm, yr){
       <div class="stubord-kpi-card" style="border-left:4px solid #7c3aed;background:#faf5ff">
         <div class="stubord-kpi-title">4. Total Due (Arrears + Current)</div>
         <div class="stubord-kpi-val" style="color:#6d28d9">${ghs(payInfo.totalDue)}</div>
-        <div class="small mut mt1">${ghs(payInfo.arrears)} + ${ghs(payInfo.currentTermFees)}</div>
+        <div class="small mut mt1">${payInfo.creditAdvanceApplied > 0 ? `After ${ghs(payInfo.creditAdvanceApplied)} credit deduction` : `${ghs(payInfo.arrears)} + ${ghs(payInfo.currentTermFees)}`}</div>
       </div>
 
       <div class="stubord-kpi-card" style="border-left:4px solid ${netBal > 0 ? '#ef4444' : '#10b981'};background:${netBal > 0 ? '#fef2f2' : '#f0fdf4'}">
@@ -13677,32 +14158,41 @@ function renderStuBoardPayment(st, s, cls, curTerm, yr){
         </div>
         <div class="small mut mt1">${netBal > 0 ? 'Payment outstanding' : 'Fully settled ✔️'}</div>
       </div>
+
+      ${creditBal > 0 ? `
+        <div class="stubord-kpi-card" style="border-left:4px solid #10b981;background:#ecfdf5">
+          <div class="stubord-kpi-title" style="color:#047857">6. Advance Credit Balance</div>
+          <div class="stubord-kpi-val" style="color:#047857">${ghs(creditBal)}</div>
+          <div class="small mut mt1" style="color:#065f46">Advance for next term</div>
+        </div>
+      ` : ''}
     </div>
 
     <!-- Integrated Payment Form -->
-    <div class="card mb3" style="background:#fff;border:2px solid #3b82f6;border-radius:12px;padding:16px">
-      <div class="flex between wrap mb2" style="align-items:center;border-bottom:1.5px solid #dbeafe;padding-bottom:10px">
+    <div class="card mb3" style="background:#fff;border:1.5px solid #3b82f6;border-radius:10px;box-shadow:0 4px 12px rgba(59,130,246,0.08)">
+      <div class="flex between wrap" style="align-items:center;border-bottom:1.5px solid #dbeafe;padding-bottom:10px;margin-bottom:14px">
         <div>
-          <h3 style="margin:0;color:#1e40af;display:flex;align-items:center;gap:6px">
-            <span>💵 Record New Payment &amp; Issue Receipt</span>
-          </h3>
-          <div class="small mut">Record payment for <b>${esc(st.firstName)} ${esc(st.surname)}</b> (${esc(curTerm)} · ${yr}). Auto-splits across fee types and prints official receipt.</div>
+          <h4 style="margin:0;color:#1e40af;display:flex;align-items:center;gap:6px">
+            <span>💵 Record Fee Payment (FIFO Waterfall)</span>
+          </h4>
+          <div class="small mut mt1">
+            System automatically shares payment following the <b>Admin Priority Order</b>.
+          </div>
         </div>
-        <div class="badge gold" style="font-size:.85rem">Total Due: <b>${ghs(payInfo.totalDue)}</b></div>
+        <span class="badge" style="background:#dbeafe;color:#1e40af;font-weight:700">Receipt &amp; SMS Auto-Generated</span>
       </div>
 
+      <!-- Quick Fields -->
       <div class="grid g3 mb2" style="gap:12px">
         <div>
-          <label style="font-size:.82rem;font-weight:700">Payment Date *</label>
-          <input type="date" id="sb-pay-date" value="${todayISO()}" style="width:100%;font-weight:700">
+          <label style="font-size:.82rem;font-weight:700">Payment Date</label>
+          <input type="date" id="sb-pay-date" value="${todayISO()}" style="width:100%">
         </div>
         <div>
-          <label style="font-size:.82rem;font-weight:700">Payment Method *</label>
-          <select id="sb-pay-mth" style="width:100%;font-weight:700">
+          <label style="font-size:.82rem;font-weight:700">Payment Method</label>
+          <select id="sb-pay-mth" style="width:100%">
             <option>Cash</option>
-            <option>MTN MoMo</option>
-            <option>Telecel Cash</option>
-            <option>AT Money</option>
+            <option>Mobile Money</option>
             <option>Bank Deposit</option>
             <option>Cheque</option>
           </select>
@@ -13717,7 +14207,7 @@ function renderStuBoardPayment(st, s, cls, curTerm, yr){
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin-bottom:14px">
         <div class="flex between wrap" style="align-items:center;margin-bottom:8px">
           <div style="font-weight:700;font-size:.86rem;color:#0f172a">
-            Fee Type Split Allocation:
+            Fee Type Split Allocation (Admin Priority Sequence):
           </div>
           <button type="button" class="btn ghost sm" onclick="A.stuBoardAutoSplit()" style="border-color:#3b82f6;color:#1d4ed8;font-weight:700">
             ⚡ Auto-Split Amount
@@ -13729,33 +14219,40 @@ function renderStuBoardPayment(st, s, cls, curTerm, yr){
             <thead>
               <tr style="background:#e2e8f0">
                 <th>Fee Item Name</th>
-                <th style="width:140px;text-align:right">Billed Amount</th>
+                <th style="width:130px;text-align:right">Billed Amount</th>
+                <th style="width:150px;text-align:right">Currently Owing</th>
                 <th style="width:180px;text-align:right">Allocated Payment (GH₵)</th>
               </tr>
             </thead>
             <tbody id="sb-split-tbody">
-              ${payInfo.arrears > 0 ? `
+              ${payInfo.arrears > 0 ? (function(){
+                const arrOwed = totalDueMap[payInfo.arrearsLabel] !== undefined ? totalDueMap[payInfo.arrearsLabel] : payInfo.arrears;
+                return `
                 <tr style="background:#fffbeb">
                   <td><b>${esc(payInfo.arrearsLabel)}</b></td>
                   <td style="text-align:right;font-weight:700;color:#b45309">${ghs(payInfo.arrears)}</td>
+                  <td style="text-align:right;font-weight:700">${arrOwed > 0 ? `<b style="color:#b91c1c">${ghs(arrOwed)}</b>` : '<span class="badge ok">PAID ✔️</span>'}</td>
                   <td style="text-align:right">
                     <input type="number" step="0.5" min="0" class="sb-split-item" data-name="${esc(payInfo.arrearsLabel)}" value="0" style="width:120px;text-align:right;font-weight:700;color:#b45309" oninput="A.stuBoardCalcSplitSum()">
                   </td>
                 </tr>
-              ` : ''}
-              ${payInfo.items.map(it => `
+              `; })() : ''}
+              ${payInfo.items.map(it => {
+                const itemOwed = totalDueMap[it.name] !== undefined ? totalDueMap[it.name] : it.amount;
+                return `
                 <tr>
                   <td><b>${esc(it.name)}</b></td>
                   <td style="text-align:right;font-weight:700;color:#0f172a">${ghs(it.amount)}</td>
+                  <td style="text-align:right;font-weight:700">${itemOwed > 0 ? `<b style="color:#b91c1c">${ghs(itemOwed)}</b>` : '<span class="badge ok">PAID ✔️</span>'}</td>
                   <td style="text-align:right">
                     <input type="number" step="0.5" min="0" class="sb-split-item" data-name="${esc(it.name)}" value="0" style="width:120px;text-align:right;font-weight:700;color:#0f172a" oninput="A.stuBoardCalcSplitSum()">
                   </td>
                 </tr>
-              `).join('')}
+              `; }).join('')}
             </tbody>
             <tfoot>
               <tr style="background:#f1f5f9;font-weight:900">
-                <td colspan="2" style="text-align:right">Total Allocated:</td>
+                <td colspan="3" style="text-align:right">Total Allocated:</td>
                 <td style="text-align:right;font-size:1.05rem;color:#1e40af">
                   <span id="sb-split-sum">GH₵ 0.00</span>
                 </td>
@@ -13763,102 +14260,59 @@ function renderStuBoardPayment(st, s, cls, curTerm, yr){
             </tfoot>
           </table>
         </div>
+
+        <div id="sb-split-feedback" class="small mt1 mut">
+          Type an amount above or click <b>⚡ Auto-Split Amount</b> to distribute in Admin Priority Order.
+        </div>
       </div>
 
-      <div class="flex between wrap" style="align-items:center;gap:10px">
-        <div id="sb-split-feedback" class="small mut">
-          Enter the amount paid above or click <b>⚡ Auto-Split Amount</b>.
+      <div class="flex between wrap" style="align-items:center;gap:.6rem">
+        <div class="small mut">
+          Total Due: <b>${ghs(payInfo.totalDue)}</b> · Previous Paid: <b>${ghs(payInfo.previousPaid)}</b>
         </div>
-        <button class="btn gold" style="font-size:1rem;padding:8px 22px" onclick="A.stuBoardSavePayment('${st.id}')">
-          💾 Save Payment &amp; Print Official Receipt
+        <button class="btn gold" style="font-weight:800;padding:8px 22px" onclick="A.stuBoardSavePayment('${st.id}')">
+          💾 Save Payment &amp; Issue Receipt
         </button>
       </div>
     </div>
 
-    <!-- Term by Term Ledger Table -->
-    <div class="card mb3" style="background:#f8fafc">
-      <div style="font-weight:800;color:#0f172a;margin-bottom:8px;font-size:.9rem">
-        📋 Term-by-Term Ledger Summary (${yr})
-      </div>
-      <div class="table-wrap">
-        <table style="width:100%;font-size:.84rem">
-          <thead>
-            <tr style="background:#e2e8f0">
-              <th>Academic Term</th>
-              <th style="text-align:right">Term Fees Billed</th>
-              <th style="text-align:right">Arrears Brought In</th>
-              <th style="text-align:right">Total Due</th>
-              <th style="text-align:right">Amount Paid</th>
-              <th style="text-align:right">Outstanding Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>Term 1</b></td>
-              <td style="text-align:right">${ghs(t1Info.currentTermFees)}</td>
-              <td style="text-align:right">${ghs(t1Info.arrears)}</td>
-              <td style="text-align:right;font-weight:700">${ghs(t1Info.totalDue)}</td>
-              <td style="text-align:right;font-weight:700;color:#16a34a">${ghs(t1Paid)}</td>
-              <td style="text-align:right;font-weight:800;color:${(t1Info.totalDue - t1Paid) > 0 ? '#dc2626' : '#16a34a'}">
-                ${(t1Info.totalDue - t1Paid) > 0 ? ghs(t1Info.totalDue - t1Paid) : '✔️ Cleared'}
-              </td>
-            </tr>
-            <tr>
-              <td><b>Term 2</b></td>
-              <td style="text-align:right">${ghs(t2Info.currentTermFees)}</td>
-              <td style="text-align:right">${ghs(t2Info.arrears)}</td>
-              <td style="text-align:right;font-weight:700">${ghs(t2Info.totalDue)}</td>
-              <td style="text-align:right;font-weight:700;color:#16a34a">${ghs(t2Paid)}</td>
-              <td style="text-align:right;font-weight:800;color:${(t2Info.totalDue - t2Paid) > 0 ? '#dc2626' : '#16a34a'}">
-                ${(t2Info.totalDue - t2Paid) > 0 ? ghs(t2Info.totalDue - t2Paid) : '✔️ Cleared'}
-              </td>
-            </tr>
-            <tr>
-              <td><b>Term 3</b></td>
-              <td style="text-align:right">${ghs(t3Info.currentTermFees)}</td>
-              <td style="text-align:right">${ghs(t3Info.arrears)}</td>
-              <td style="text-align:right;font-weight:700">${ghs(t3Info.totalDue)}</td>
-              <td style="text-align:right;font-weight:700;color:#16a34a">${ghs(t3Paid)}</td>
-              <td style="text-align:right;font-weight:800;color:${(t3Info.totalDue - t3Paid) > 0 ? '#dc2626' : '#16a34a'}">
-                ${(t3Info.totalDue - t3Paid) > 0 ? ghs(t3Info.totalDue - t3Paid) : '✔️ Cleared'}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Complete Payment History Table -->
+    <!-- Payment History / Ledger for this Student -->
     <div class="card">
-      <div style="font-weight:800;color:#0f172a;margin-bottom:8px;font-size:.9rem">
-        🧾 Complete Payment History &amp; Receipts (${yr})
+      <div class="flex between wrap" style="align-items:center;margin-bottom:12px">
+        <h4 style="margin:0;color:#0f172a">📜 Payment History (${yr})</h4>
+        <span class="small mut">${studentPayments.length} payment(s) recorded</span>
       </div>
+
       <div class="table-wrap">
         <table style="width:100%;font-size:.82rem">
           <thead>
-            <tr style="background:#e2e8f0">
-              <th>Receipt No</th>
+            <tr style="background:#f1f5f9">
+              <th>Receipt #</th>
               <th>Date</th>
               <th>Term</th>
+              <th>Method</th>
               <th style="text-align:right">Amount Paid</th>
               <th>Fee Breakdown</th>
-              <th>Payment Method</th>
-              <th>Received By</th>
-              <th style="text-align:center">Action</th>
+              <th style="text-align:right">Balance After</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             ${studentPayments.map(p => `
               <tr>
-                <td><b style="color:#0369a1">${esc(p.receiptNo || '—')}</b></td>
-                <td>${fmtD(p.date)}</td>
-                <td><span class="badge info sm">${esc(p.term || 'Term 1')}</span></td>
-                <td style="text-align:right;font-weight:900;color:#16a34a">${ghs(p.amount)}</td>
-                <td class="small">${renderPaymentBreakdownHTML(p)}</td>
-                <td>${esc(p.method || 'Cash')}</td>
-                <td class="small mut">${esc(p.by || 'Admin')}</td>
-                <td style="text-align:center">
-                  <button class="btn sm ghost" onclick="A.viewReceipt('${p.id}')">🖨 Receipt</button>
+                <td><b>${esc(p.receiptNo)}</b></td>
+                <td>${esc(p.date)}</td>
+                <td><span class="badge sm">${esc(p.term)}</span></td>
+                <td>${esc(p.method)}</td>
+                <td style="text-align:right;font-weight:800;color:#15803d">${ghs(p.amount)}</td>
+                <td style="font-size:.76rem">
+                  ${renderPaymentBreakdownHTML(p)}
+                </td>
+                <td style="text-align:right;font-weight:700;color:${(p.balance || 0) > 0 ? '#b91c1c' : '#15803d'}">
+                  ${(p.balance || 0) > 0 ? ghs(p.balance) : '0.00 ✔️'}
+                </td>
+                <td>
+                  <button class="btn ghost sm" onclick="A.viewReceipt('${p.id}')">🖨 Receipt</button>
                 </td>
               </tr>
             `).join('') || `<tr><td colspan="8" class="center mut" style="padding:1.5rem">No payments recorded for this academic year yet.</td></tr>`}
@@ -13869,7 +14323,6 @@ function renderStuBoardPayment(st, s, cls, curTerm, yr){
   </div>
   `;
 }
-
 A.stuBoardPayInit = function(){
   A.stuBoardCalcSplitSum();
 };
@@ -13890,54 +14343,42 @@ A.stuBoardAutoSplit = function(){
   const total = parseFloat(amtInput.value) || 0;
   if(total <= 0) return toast('Enter amount paid first', 'bad');
 
-  let remaining = total;
-  const items = $$('.sb-split-item');
+  const s = mySchool();
+  const yr = STU_BOARD_YEAR || yearSel();
+  const tm = STU_BOARD_TERM || currentTermName(s) || 'Term 1';
+  const info = window.__CURRENT_SB_PAY_INFO || {};
+  const st = info.student || (DB.students || []).find(x => x.id === (window.__CURRENT_STU_BOARD_ID || ''));
 
-  // 1. First priority: Arrears (if exists)
-  items.forEach(inp => {
-    const isArrears = (inp.dataset.name || '').toLowerCase().includes('arrears');
-    if(isArrears && remaining > 0){
-      const info = window.__CURRENT_SB_PAY_INFO || {};
-      const due = Number(info.arrears || 0);
-      const alloc = Math.min(remaining, due);
-      inp.value = alloc > 0 ? alloc : 0;
-      remaining -= alloc;
+  const waterfall = allocatePaymentWaterfall(total, st, tm, yr, s);
+  const fb = $('#sb-split-feedback');
+
+  if(waterfall.rejected){
+    $$('.sb-split-item').forEach(inp => { inp.value = '0'; });
+    const sumEl = $('#sb-split-sum');
+    if(sumEl) sumEl.textContent = ghs(0);
+    if(fb){
+      fb.innerHTML = `<span style="color:#dc2626;font-weight:800">⛔ ${esc(waterfall.error)}</span>`;
     }
-  });
-
-  // 2. Next: School Fees
-  items.forEach(inp => {
-    const isSF = (inp.dataset.name || '').toLowerCase().includes('school fees');
-    if(isSF && remaining > 0){
-      const info = window.__CURRENT_SB_PAY_INFO || {};
-      const itemObj = (info.items || []).find(x => (x.name || '').toLowerCase().includes('school fees'));
-      const due = itemObj ? Number(itemObj.amount || 0) : remaining;
-      const alloc = Math.min(remaining, due);
-      inp.value = alloc > 0 ? alloc : 0;
-      remaining -= alloc;
-    }
-  });
-
-  // 3. Other fee items
-  items.forEach(inp => {
-    const nm = (inp.dataset.name || '').toLowerCase();
-    if(!nm.includes('arrears') && !nm.includes('school fees') && remaining > 0){
-      const info = window.__CURRENT_SB_PAY_INFO || {};
-      const itemObj = (info.items || []).find(x => (x.name || '').toLowerCase() === nm);
-      const due = itemObj ? Number(itemObj.amount || 0) : remaining;
-      const alloc = Math.min(remaining, due);
-      inp.value = alloc > 0 ? alloc : 0;
-      remaining -= alloc;
-    }
-  });
-
-  // 4. Any leftover remaining assigned to first fee item
-  if(remaining > 0 && items.length > 0){
-    const first = items[0];
-    first.value = (parseFloat(first.value) || 0) + remaining;
+    toast(waterfall.error, 'bad');
+    return;
   }
 
+  const items = $$('.sb-split-item');
+  items.forEach(inp => {
+    const k = inp.dataset.name;
+    const allocVal = waterfall.allocMap[k] !== undefined ? waterfall.allocMap[k] : 0;
+    inp.value = allocVal;
+  });
+
   A.stuBoardCalcSplitSum();
+
+  if(fb){
+    if(waterfall.credit > 0){
+      fb.innerHTML = `<span style="color:#16a34a;font-weight:800">✨ Overpayment: GH₵ ${waterfall.credit.toFixed(2)} will be credited as Advance for next term.</span>`;
+    } else {
+      fb.innerHTML = `<span style="color:#16a34a;font-weight:700">✔️ Split total matches allocation (${ghs(total)}). Balance after payment: ${ghs(waterfall.balanceAfter)}</span>`;
+    }
+  }
 };
 
 A.stuBoardCalcSplitSum = function(){
@@ -13952,15 +14393,13 @@ A.stuBoardCalcSplitSum = function(){
   const amtInput = $('#sb-pay-amt');
   const targetAmt = amtInput ? (parseFloat(amtInput.value) || 0) : 0;
   const fb = $('#sb-split-feedback');
-  if(fb){
-    if(targetAmt > 0 && Math.abs(sum - targetAmt) < 0.01){
+  if(fb && targetAmt > 0){
+    if(Math.abs(sum - targetAmt) < 0.01){
       fb.innerHTML = `<span style="color:#16a34a;font-weight:700">✔️ Split total matches amount paid (${ghs(sum)})</span>`;
-    } else if(targetAmt > 0 && sum < targetAmt){
+    } else if(sum < targetAmt){
       fb.innerHTML = `<span style="color:#d97706;font-weight:700">⚠️ Remaining unallocated: ${ghs(targetAmt - sum)}</span>`;
-    } else if(targetAmt > 0 && sum > targetAmt){
+    } else if(sum > targetAmt){
       fb.innerHTML = `<span style="color:#dc2626;font-weight:700">❌ Split exceeds amount paid by ${ghs(sum - targetAmt)}</span>`;
-    } else {
-      fb.innerHTML = `Enter amount paid above or click <b>⚡ Auto-Split Amount</b>.`;
     }
   }
 };
@@ -13976,6 +14415,12 @@ A.stuBoardSavePayment = function(stId){
   const amt = parseFloat(($('#sb-pay-amt') || {}).value);
   if(!(amt > 0)) return toast('Please enter a valid amount paid', 'bad');
 
+  // Check allocation waterfall & overpayment rule
+  const waterfall = allocatePaymentWaterfall(amt, st, tm, yr, s);
+  if(waterfall.rejected){
+    return toast(`⛔ Overpayment Rejected: Max payable is GH₵ ${waterfall.maxPayable.toFixed(2)}. Overpayment as credit is turned OFF in Admin Settings.`, 'bad');
+  }
+
   const info = window.__CURRENT_SB_PAY_INFO || getStudentTermPaymentInfo(st, tm, yr, s);
 
   // Collect split breakdown
@@ -13988,13 +14433,18 @@ A.stuBoardSavePayment = function(stId){
   });
 
   if(!Object.keys(splitMap).length){
-    splitMap['School Fees'] = amt;
+    Object.assign(splitMap, waterfall.allocMap);
+  }
+
+  // Handle overpayment / credit
+  if(waterfall.credit > 0){
+    st.credit_balance = Math.round(((st.credit_balance || 0) + waterfall.credit) * 10) / 10;
   }
 
   const allocArray = Object.entries(splitMap).map(([name, amount]) => ({ name, amount }));
-  const feeType = Object.keys(splitMap).join(' + ');
+  const feeType = Object.keys(splitMap).join(' + ') || 'School Fees';
   const rno = nextReceiptNo(s);
-  const balAfter = Math.max(0, Math.round((info.totalDue - amt) * 10) / 10);
+  const balAfter = waterfall.balanceAfter;
 
   const p = {
     id: uid('pay'),
@@ -14003,13 +14453,14 @@ A.stuBoardSavePayment = function(stId){
     year: yr,
     term: tm,
     amount: amt,
+    credit: waterfall.credit || 0,
     method: ($('#sb-pay-mth') || {}).value || 'Cash',
     feeType,
     previousPaid: info.previousPaid,
     arrears: info.arrears,
     arrearsLabel: info.arrearsLabel,
     currentTermFees: info.currentTermFees,
-    totalDue: info.totalDue,
+    totalDue: waterfall.totalOwed,
     balance: balAfter,
     splitBreakdown: splitMap,
     alloc: allocArray,
@@ -14023,11 +14474,16 @@ A.stuBoardSavePayment = function(stId){
 
   // Send SMS confirmation to parent
   if(st.parentPhone){
-    sendSMS(st.parentPhone,
-      `HEREMS ${s.abbrev}: Payment of GHS ${amt.toFixed(2)} received for ${st.firstName} ${st.surname} (${st.sid}). ` +
-      `Receipt #${rno}. Total Due: GHS ${info.totalDue.toFixed(2)}. ` +
-      (balAfter > 0 ? `Outstanding balance: GHS ${balAfter.toFixed(2)}.` : `All fees CLEARED ✔️. Thank you.`) +
-      `\nBy Management`);
+    let smsMsg = `HEREMS ${s.abbrev}: Payment of GHS ${amt.toFixed(2)} received for ${st.firstName} ${st.surname} (${st.sid}). Receipt #${rno}. Total Due: GHS ${waterfall.totalOwed.toFixed(2)}. `;
+    if(waterfall.credit > 0){
+      smsMsg += `Fees CLEARED. Advance Credit for next term: GHS ${waterfall.credit.toFixed(2)}.`;
+    } else if(balAfter > 0){
+      smsMsg += `Outstanding balance: GHS ${balAfter.toFixed(2)}.`;
+    } else {
+      smsMsg += `All fees CLEARED ✔️. Thank you.`;
+    }
+    smsMsg += `\nBy Management`;
+    sendSMS(st.parentPhone, smsMsg);
   }
 
   saveDB();
@@ -15642,7 +16098,12 @@ A.ppCam=function(stId){
   const hasCam=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
   openModal(`${mHead('📸 Take passport photo — live camera', true)}<div class="m-body center">
     <div id="pp-cam-box">
-      ${hasCam? `<video id="pp-cam-v" autoplay playsinline style="width:100%;max-width:340px;border-radius:12px;background:#000;min-height:180px"></video>
+      ${hasCam? `<div style="position:relative;display:inline-block;width:100%;max-width:340px;margin:0 auto">
+        <video id="pp-cam-v" autoplay playsinline style="width:100%;border-radius:12px;background:#000;min-height:220px;object-fit:cover;display:block"></video>
+        <div style="position:absolute;top:6%;left:20%;width:60%;height:82%;border:2.5px dashed #f59e0b;border-radius:50% 50% 40% 40%;pointer-events:none;display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;box-shadow:0 0 0 9999px rgba(0,0,0,0.22)">
+          <span style="background:rgba(0,0,0,0.8);color:#fff;font-size:11px;padding:3px 8px;border-radius:5px;font-weight:800;letter-spacing:.3px">👤 Fit Head &amp; Upper Chest (Not Full Body)</span>
+        </div>
+      </div>
         <div class="small mut mt1">Camera starting… align the student's face in the frame, then press <b>Capture</b>.</div>`
       : `<div class="notice warn mini mb2">⚠️ This browser can't open a live camera view. Use the button below — your phone will open its camera directly.</div>
          <label class="btn gold" data-tip="Open the system camera">📸 Open camera<input type="file" accept="image/*,.heic,.heif" capture="user" hidden onchange="A.ppFile('${stId}',this);A.ppCamClose()"></label>`}
@@ -15924,9 +16385,38 @@ A.scExamTypeChange = function(newType){
   }
 };
 
-A.promptTotalMarks = function(type, subject){
+A.promptTotalMarks = function(type, subject, classId){
   const s = mySchool(); if(!s) return;
-  const ac = getSchoolAssessmentConfig(s);
+  const u = me();
+  const isAdmin = (u.role === 'schooladmin' || u.role === 'superadmin');
+  const isTeacher = (u.role === 'teacher');
+  const cid = classId || SC.cls;
+  const cls = (s.classes || []).find(c => c.id === cid);
+  const sub = subject || SC.sub || '';
+
+  // SPEC 1: Main Exam (End of Term Exam) - Admin only
+  if(type === 'end' || type === 'end_term'){
+    if(isTeacher){
+      toast('🔒 EXAM conversion can ONLY be set by the School Administrator. Teachers cannot edit.', 'gold');
+    }
+    return A.convModal(cls ? cls.stream : '');
+  }
+
+  // SPEC 2: Mock Exam - Fixed at 100%
+  if(type === 'mock'){
+    toast('🎯 MOCK Exam is fixed at 100% (WAEC / BECE Standard). It cannot be altered.', 'gold');
+    return;
+  }
+
+  // SPEC 3: Class Test / Weekly Test / Monthly Test / Mid-Term
+  // TEACHER RULE: A teacher can ONLY set conversion for HIS OWN SUBJECT
+  if(isTeacher && cls){
+    const scope = teacherScope(u);
+    if(!scope.can(cls.id, sub)){
+      return toast(`⛔ Teacher Rule: You can ONLY set conversion for your own subject (${sub}) in ${cls.name}.`, 'bad');
+    }
+  }
+
   const typeNames = {
     class_test: 'Class Test',
     mid: 'Mid-Term Exam',
@@ -15934,21 +16424,26 @@ A.promptTotalMarks = function(type, subject){
     monthly: 'Monthly Exam',
     monthly_exam: 'Monthly Exam',
     weekly: 'Weekly Test',
-    weekly_test: 'Weekly Test',
-    end: 'End of Term Exam',
-    end_term: 'End of Term Exam'
+    weekly_test: 'Weekly Test'
   };
   const tName = typeNames[type] || 'Assessment';
-  const curTotal = getAssessmentTotalMarks(s, type, subject);
-  
-  openModal(`${mHead('🎯 Set Total Marks — ' + esc(tName))}
+  const curTotal = getAssessmentTotalMarks(s, type, sub, cls ? cls.stream : '', cls ? cls.id : '');
+  const ac = getSchoolAssessmentConfig(s);
+
+  openModal(`${mHead('🎯 Set Total Marks & Conversion — ' + esc(tName))}
   <div class="m-body">
-    <div class="notice info mini mb2">
-      Set the <b>Total Marks</b> for <b>${esc(tName)}</b>. Assessments are not fixed out of 50 — they can be <b>15, 20, 25, 30, 40, 50, 100</b>, etc.
-    </div>
+    ${isTeacher ? `
+      <div class="notice ok mini mb2" style="background:#f0fdf4;border-color:#86efac;color:#166534">
+        👨‍🏫 <b>Teacher Scope:</b> You are setting conversion for your own assigned subject: <b>${esc(sub)}</b> in <b>${esc(cls ? cls.name : '')}</b>.
+      </div>
+    ` : `
+      <div class="notice info mini mb2">
+        🛡️ <b>Administrator Scope:</b> Set conversion for <b>${esc(sub)}</b> (${esc(cls ? cls.name : '')}) or <b>FORCE it to ALL STREAMS</b>.
+      </div>
+    `}
     
     <div style="text-align:center;padding:12px;background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:10px;margin-bottom:14px">
-      <label style="font-size:.86rem;font-weight:700;color:#0f172a;margin-bottom:6px">Total Marks for ${esc(tName)}:</label>
+      <label style="font-size:.86rem;font-weight:700;color:#0f172a;margin-bottom:6px">Total Marks for ${esc(tName)} (${esc(sub)}):</label>
       <input id="ptm-input" type="number" min="1" max="500" value="${curTotal}" style="font-size:1.6rem;font-weight:900;text-align:center;width:130px;margin:4px auto;display:block;border:2px solid #0284c7;color:#0369a1;border-radius:8px;padding:6px">
       <div class="small mut mt1">Type any custom number or tap a quick chip below:</div>
       <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:8px">
@@ -15957,13 +16452,31 @@ A.promptTotalMarks = function(type, subject){
     </div>
     
     <div style="margin-bottom:12px">
-      <label style="font-size:.84rem;font-weight:700;margin-bottom:4px">Apply this total to:</label>
-      <label style="display:flex;align-items:center;gap:6px;margin:4px 0;cursor:pointer">
-        <input type="radio" name="ptm-scope" value="all" checked> <b>All Subjects in this assessment</b> (e.g. all subjects marked out of this total)
-      </label>
-      ${subject ? `<label style="display:flex;align-items:center;gap:6px;margin:4px 0;cursor:pointer">
-        <input type="radio" name="ptm-scope" value="subject"> <b>Only ${esc(subject)}</b> (other subjects keep their default)
-      </label>` : ''}
+      <label style="font-size:.84rem;font-weight:700;margin-bottom:4px">Target Application Scope:</label>
+      ${isTeacher ? `
+        <label style="display:flex;align-items:center;gap:6px;margin:4px 0;cursor:pointer">
+          <input type="radio" name="ptm-scope" value="subject_class" checked> 
+          <b>Only for ${esc(sub)} in ${esc(cls ? cls.name : 'this class')}</b> (Your assigned subject)
+        </label>
+        <div class="small mut" style="margin-left:22px">Teacher Rule: You can only set conversion for your own subject.</div>
+      ` : `
+        <label style="display:flex;align-items:center;gap:6px;margin:4px 0;cursor:pointer">
+          <input type="radio" name="ptm-scope" value="subject_class"> 
+          <b>Only for ${esc(sub)} in ${esc(cls ? cls.name : 'this class')}</b>
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;margin:4px 0;cursor:pointer">
+          <input type="radio" name="ptm-scope" value="force_stream" checked> 
+          <b>⚡ FORCE ${esc(sub)} to ALL ${esc(cls ? cls.stream : 'Stream')} STREAMS</b> (e.g. all ${cls?cls.name.split(' ')[0]:''} streams)
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;margin:4px 0;cursor:pointer">
+          <input type="radio" name="ptm-scope" value="force_school"> 
+          <b>⚡ FORCE ${esc(sub)} to ALL CLASSES &amp; STREAMS in school</b>
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;margin:4px 0;cursor:pointer">
+          <input type="radio" name="ptm-scope" value="all_subjects_class"> 
+          <b>All Subjects in ${esc(cls ? cls.name : 'this class')} for ${esc(tName)}</b>
+        </label>
+      `}
     </div>
 
     ${(type === 'monthly' || type === 'monthly_exam') ? `
@@ -15979,69 +16492,128 @@ A.promptTotalMarks = function(type, subject){
       💡 <b>Conversion Convention:</b>
       <ul style="margin:4px 0 0 16px;padding:0">
         <li>Scores <b>≤ set total</b> (e.g. 24 ≤ 30) keep the exact same mark.</li>
-        <li>Scores <b>> set total</b> (e.g. 80 out of 100) automatically normalize to the set total: <code>(80 ÷ 100) × 30 = 24</code>.</li>
+        <li>Scores <b>> set total</b> (e.g. 80 out of 100) automatically normalize to the set total: <code>(80 ÷ 100) × Total</code>.</li>
       </ul>
     </div>
   </div>
   <div class="m-foot">
     <button class="btn ghost" onclick="A.closeModal()">Cancel</button>
-    <button class="btn gold" onclick="A.saveTotalMarks('${type}','${esc(subject||'')}')">💾 Save Total Marks</button>
+    <button class="btn gold" onclick="A.saveTotalMarks('${type}','${esc(sub)}','${cls ? cls.id : ''}')">💾 Save Total Marks</button>
   </div>`);
 };
 
-A.saveTotalMarks = function(type, subject){
+A.saveTotalMarks = function(type, subject, classId){
   const s = mySchool(); if(!s) return;
-  const ac = getSchoolAssessmentConfig(s);
+  const u = me();
+  const isAdmin = (u.role === 'schooladmin' || u.role === 'superadmin');
+  const isTeacher = (u.role === 'teacher');
+  const cid = classId || SC.cls;
+  const cls = (s.classes || []).find(c => c.id === cid);
+  const sub = subject || SC.sub || '';
+
+  if(type === 'end' || type === 'end_term'){
+    return toast('⛔ EXAM conversion can only be set by the School Administrator.', 'bad');
+  }
+  if(type === 'mock'){
+    return toast('🎯 MOCK Exam is fixed at 100%. No other value permitted.', 'bad');
+  }
+
+  // Teacher validation
+  if(isTeacher && cls){
+    const scope = teacherScope(u);
+    if(!scope.can(cls.id, sub)){
+      return toast(`⛔ You can only set conversion for your own subject in ${cls.name}.`, 'bad');
+    }
+  }
+
   const inputEl = $('#ptm-input');
   if(!inputEl) return;
   const val = Math.max(1, parseInt(inputEl.value, 10) || 30);
-  
+
   if(type === 'mid') type = 'mid_term';
   if(type === 'monthly') type = 'monthly_exam';
   if(type === 'weekly') type = 'weekly_test';
-  if(type === 'end') type = 'end_term';
 
-  const scope = ($('input[name="ptm-scope"]:checked') || {}).value || 'all';
-  if(scope === 'subject' && subject){
-    ac.customTotals = ac.customTotals || {};
-    ac.customTotals[`${type}|${subject}`] = val;
-  } else {
-    ac.totals[type] = val;
-    if(ac.customTotals && subject) delete ac.customTotals[`${type}|${subject}`];
+  const ac = getSchoolAssessmentConfig(s);
+  ac.customTotals = ac.customTotals || {};
+
+  const scope = ($('input[name="ptm-scope"]:checked') || {}).value || 'subject_class';
+
+  let msg = '';
+  if(isTeacher || scope === 'subject_class'){
+    // Class + Subject specific
+    ac.customTotals[`${type}|${cls.id}|${sub}`] = val;
+    msg = `Total marks set to ${val} for ${sub} in ${cls.name} ✅`;
+  } else if(scope === 'force_stream'){
+    // Admin rule: FORCE to ALL STREAMS for this subject
+    ac.customTotals[`${type}|stream:${cls.stream}|${sub}`] = val;
+    (s.classes || []).filter(c => c.stream === cls.stream).forEach(c => {
+      ac.customTotals[`${type}|${c.id}|${sub}`] = val;
+    });
+    msg = `⚡ FORCED ${sub} total to ${val} marks across ALL ${cls.stream} STREAMS! ✅`;
+  } else if(scope === 'force_school'){
+    // Admin rule: FORCE to ALL CLASSES & STREAMS
+    ac.customTotals[`${type}|all:${sub}`] = val;
+    (s.classes || []).forEach(c => {
+      ac.customTotals[`${type}|${c.id}|${sub}`] = val;
+    });
+    msg = `⚡ FORCED ${sub} total to ${val} marks across ALL CLASSES & STREAMS in school! ✅`;
+  } else if(scope === 'all_subjects_class'){
+    const stConfig = getStreamAssessmentConfig(s, cls.stream);
+    stConfig.totals = stConfig.totals || {};
+    stConfig.totals[type] = val;
+    msg = `Total marks set to ${val} for all subjects in ${cls.name} ✅`;
   }
 
   const mEl = $('#ptm-month');
   if(mEl && mEl.value) ac.monthlyExamMonth = mEl.value;
 
-  const cls = (s.classes || []).find(c => c.id === SC.cls);
-  if(cls && cls.stream && scope !== 'subject'){
-    const stConfig = getStreamAssessmentConfig(s, cls.stream);
-    stConfig.totals = stConfig.totals || {};
-    stConfig.totals[type] = val;
-  }
-
   saveDB();
   closeModal();
-  toast(`Total marks set to ${val} for ${type.replace(/_/g,' ')}` + (scope==='subject'?` (${subject})`:' (All subjects)'), 'ok');
+  toast(msg, 'ok');
   render();
 };
 
-A.setQuickTotal = function(type, val, subject){
+A.setQuickTotal = function(type, val, subject, classId){
   const s = mySchool(); if(!s) return;
-  const ac = getSchoolAssessmentConfig(s);
+  const u = me();
+  const isAdmin = (u.role === 'schooladmin' || u.role === 'superadmin');
+  const isTeacher = (u.role === 'teacher');
+  const cid = classId || SC.cls;
+  const cls = (s.classes || []).find(c => c.id === cid);
+  const sub = subject || SC.sub || '';
+
+  if(type === 'end' || type === 'end_term'){
+    return toast('⛔ EXAM conversion can only be set by the School Administrator.', 'bad');
+  }
+  if(type === 'mock'){
+    return toast('🎯 MOCK Exam is fixed at 100%. No other value permitted.', 'bad');
+  }
+  if(isTeacher && cls){
+    const scope = teacherScope(u);
+    if(!scope.can(cls.id, sub)){
+      return toast(`⛔ You can only set conversion for your own subject (${sub}) in ${cls.name}.`, 'bad');
+    }
+  }
+
   if(type === 'mid') type = 'mid_term';
   if(type === 'monthly') type = 'monthly_exam';
   if(type === 'weekly') type = 'weekly_test';
-  if(type === 'end') type = 'end_term';
-  ac.totals[type] = Number(val);
-  const cls = (s.classes || []).find(c => c.id === SC.cls);
-  if(cls && cls.stream){
-    const stConfig = getStreamAssessmentConfig(s, cls.stream);
-    stConfig.totals = stConfig.totals || {};
-    stConfig.totals[type] = Number(val);
+
+  const ac = getSchoolAssessmentConfig(s);
+  ac.customTotals = ac.customTotals || {};
+
+  if(isTeacher){
+    ac.customTotals[`${type}|${cls.id}|${sub}`] = val;
+    toast(`Total marks set to ${val} for ${sub} in ${cls.name} ✅`, 'ok');
+  } else {
+    // Admin quick set: applies to subject in stream
+    ac.customTotals[`${type}|${cls.id}|${sub}`] = val;
+    ac.customTotals[`${type}|stream:${cls.stream}|${sub}`] = val;
+    toast(`Total marks set to ${val} for ${sub} (${cls.name}) ✅`, 'ok');
   }
+
   saveDB();
-  toast(`Set total marks to ${val} for ${type.replace(/_/g,' ')}` + (cls ? ` (${cls.stream})` : ''), 'ok');
   render();
 };
 
@@ -16071,7 +16643,7 @@ function renderScores(){
   const stream = cls ? cls.stream : '';
   const w = convRules(stream);
   const curType = SC.examType || 'end';
-  const curTotal = getAssessmentTotalMarks(s, curType, SC.sub, stream);
+  const curTotal = getAssessmentTotalMarks(s, curType, SC.sub, stream, cls ? cls.id : '');
 
   const examField = `<div><label>Assessment / Exam Type</label>
     <select style="width:230px;font-weight:700;color:#0f172a" onchange="A.scExamTypeChange(this.value)">
@@ -16126,13 +16698,24 @@ A.scSet=(k,v)=>{SC[k]=v; render();};
 
 function renderTotalMarksBar(s, cls, type, sub, curTotal, ac){
   if(type === 'mock' || !cls) return '';
+  const u = me();
+  const isAdmin = (u.role === 'schooladmin' || u.role === 'superadmin');
+  const isTeacher = (u.role === 'teacher');
+  const canEditThisSubject = isAdmin || (isTeacher && cls && teacherScope(u).can(cls.id, sub));
+
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const curMonth = ac.monthlyExamMonth || months[new Date().getMonth()] || 'September';
   const stConfig = getStreamAssessmentConfig(s, cls.stream);
   
   if(type === 'end'){
-    const csW = stConfig.c !== undefined ? stConfig.c : 30;
-    const esW = stConfig.e !== undefined ? stConfig.e : 70;
+    let csW, esW;
+    if(s.forceExamConversion && s.forcedExamConversion){
+      csW = Number(s.forcedExamConversion.c) || 30;
+      esW = Number(s.forcedExamConversion.e) || 70;
+    } else {
+      csW = stConfig.c !== undefined ? stConfig.c : 30;
+      esW = stConfig.e !== undefined ? stConfig.e : 70;
+    }
     const compLabel = {
       class_test: 'Class Test only',
       mid_term: 'Mid-Term Exam only',
@@ -16143,9 +16726,15 @@ function renderTotalMarksBar(s, cls, type, sub, curTotal, ac){
 
     return `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 14px;background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 12px;margin-top:10px">
       <div style="font-size:.84rem;color:#0f172a">
-        🎓 <b>Terminal Exam Mode (${esc(cls.stream)}):</b> Class Score (<b>${csW}%</b> via ${compLabel}) + Exam Score (<b>${esW}%</b>) = <b>100%</b>.
+        🎓 <b>Terminal Exam Conversion (${esc(cls.stream)}):</b> Class Score (<b>${csW}%</b> via ${compLabel}) + Exam Score (<b>${esW}%</b>) = <b>100%</b>.
+        ${s.forceExamConversion ? '<span class="badge sm gold ml1" style="font-size:.72rem;padding:2px 8px">⚡ FORCED TO ALL CLASSES &amp; SUBJECTS</span>' : ''}
       </div>
-      <button class="btn sm ghost" onclick="A.convModal('${esc(cls.stream)}')">⚙️ Stream Rules (${esc(cls.stream)})</button>
+      <div>
+        ${isAdmin ? 
+          `<button class="btn sm gold" onclick="A.convModal('${esc(cls.stream)}')">⚙️ Set Exam Conversion (Admin)</button>` : 
+          `<button class="btn sm ghost" onclick="A.convModal('${esc(cls.stream)}')">👁️ View Exam Conversion (Admin Set)</button>`
+        }
+      </div>
     </div>`;
   }
 
@@ -16169,14 +16758,19 @@ function renderTotalMarksBar(s, cls, type, sub, curTotal, ac){
       ` : ''}
       <div style="font-size:.84rem;color:#0f172a">
         <b>Set Total:</b> <span style="font-size:1.15rem;font-weight:900;color:#0284c7;background:#fff;padding:2px 10px;border-radius:6px;border:1.5px solid #0284c7">${curTotal}</span> marks
+        ${!canEditThisSubject ? '<span class="badge sm ghost ml1" style="color:#64748b">🔒 Read-Only (Other Teacher)</span>' : ''}
       </div>
+      ${canEditThisSubject ? `
       <div style="display:inline-flex;align-items:center;gap:4px">
         <span class="small mut" style="font-size:.76rem">Quick set:</span>
-        ${[15, 20, 25, 30, 40, 50, 100].map(v => `<button type="button" class="btn sm" style="padding:1px 6px;font-size:.74rem;min-height:22px;border-radius:4px;background:${curTotal===v?'#0284c7':'#fff'};color:${curTotal===v?'#fff':'#0369a1'};border:1px solid #7dd3fc" onclick="A.setQuickTotal('${type}',${v},'${esc(sub)}')">${v}</button>`).join('')}
-      </div>
+        ${[15, 20, 25, 30, 40, 50, 100].map(v => `<button type="button" class="btn sm" style="padding:1px 6px;font-size:.74rem;min-height:22px;border-radius:4px;background:${curTotal===v?'#0284c7':'#fff'};color:${curTotal===v?'#fff':'#0369a1'};border:1px solid #7dd3fc" onclick="A.setQuickTotal('${type}',${v},'${esc(sub)}','${cls.id}')">${v}</button>`).join('')}
+      </div>` : ''}
     </div>
     <div style="display:flex;align-items:center;gap:8px">
-      <button class="btn sm" style="background:#0284c7;color:#fff;border:none" onclick="A.promptTotalMarks('${type}','${esc(sub)}')">🎯 Set Total Marks…</button>
+      ${canEditThisSubject ? 
+        `<button class="btn sm" style="background:#0284c7;color:#fff;border:none" onclick="A.promptTotalMarks('${type}','${esc(sub)}','${cls.id}')">🎯 Set Total Marks…</button>` : 
+        `<button class="btn sm ghost" disabled title="Only the assigned subject teacher or School Admin can edit this subject">🔒 Read-Only for ${esc(sub)}</button>`
+      }
     </div>
   </div>`;
 }
@@ -16189,7 +16783,7 @@ function scoreEntryHTML(cls, year){
   const ac = getSchoolAssessmentConfig(s);
   const pre = SC.sub.replace(/[^A-Za-z0-9]/g,'');
   const curType = SC.examType || 'end';
-  const setTotal = getAssessmentTotalMarks(s, curType, SC.sub);
+  const setTotal = getAssessmentTotalMarks(s, curType, SC.sub, cls ? cls.stream : '', cls ? cls.id : '');
 
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const curMonth = ac.monthlyExamMonth || months[new Date().getMonth()] || 'September';
@@ -16536,6 +17130,9 @@ A.runLiveDemo = function(stream){
 /* ---------- STREAM-BASED SCORE CONVERSION CONFIGURATION MODAL ---------- */
 A.convModal = function(targetStream){
   const s = mySchool(); if(!s) return;
+  const u = me();
+  const isAdmin = (u.role === 'schooladmin' || u.role === 'superadmin');
+  const isTeacher = (u.role === 'teacher');
   
   // Available streams: standard streams plus any other active streams in school
   const streams = STREAMS_ORDER.slice();
@@ -16548,26 +17145,47 @@ A.convModal = function(targetStream){
   const curStream = (targetStream && streams.includes(targetStream)) ? targetStream : streams[0];
   const stConfig = getStreamAssessmentConfig(s, curStream);
   
+  // Effective weights for curStream
+  let effectiveC = stConfig.c !== undefined ? stConfig.c : 30;
+  let effectiveE = stConfig.e !== undefined ? stConfig.e : 70;
+  if(s.forceExamConversion && s.forcedExamConversion){
+    effectiveC = Number(s.forcedExamConversion.c) || effectiveC;
+    effectiveE = Number(s.forcedExamConversion.e) || effectiveE;
+  }
+  
   // Classes in this stream
   const streamClasses = (s.classes || []).filter(c => c.stream === curStream).map(c => c.name);
   const clsListStr = streamClasses.length ? streamClasses.join(', ') : 'No classes assigned yet';
 
-  openModal(`${mHead('⚖️ Stream-Based Score Conversion Configuration')}
+  openModal(`${mHead(isAdmin ? '⚖️ Stream-Based Score Conversion Configuration' : '👁️ Main Exam Conversion Rules — View Only')}
   <div class="m-body">
-    <div class="notice info mini mb2">
-      <b>Stream-Specific Rules:</b> Score conversion rules for terminal reports and continuous assessment are set <b>separately according to educational stream</b> (Pre-school, Lower Primary, Upper Primary, JHS) rather than generally or by individual class.
-    </div>
+    ${isTeacher ? `
+      <div class="notice ok mini mb2" style="background:#fef3c7;border-color:#f59e0b;color:#92400e">
+        🔒 <b>Admin-Controlled Policy (Spec 1):</b> Main Exam conversion can <b>ONLY be set by the School Administrator</b>. Teachers cannot edit EXAM conversion; you have read-only view of the active weights.
+      </div>
+      ${s.forceExamConversion ? `
+        <div class="badge gold mb2" style="display:inline-block;padding:5px 12px;font-size:.82rem;font-weight:700">
+          ⚡ Force Conversion is ON: Applied to ALL teachers, classes &amp; subjects in school (${effectiveC}% Class / ${effectiveE}% Exam)
+        </div>
+      ` : ''}
+    ` : `
+      <div class="notice info mini mb2">
+        <b>Stream-Specific Rules:</b> Score conversion rules for terminal reports and continuous assessment are set <b>by the School Administrator</b> according to educational stream (Pre-school, Lower Primary, Upper Primary, JHS).
+      </div>
+    `}
 
     <!-- Stream Selection Tabs -->
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;border-bottom:2px solid #e2e8f0;padding-bottom:10px">
       ${streams.map(st => {
         const conf = getStreamAssessmentConfig(s, st);
         const isCur = (st === curStream);
+        const cVal = (s.forceExamConversion && s.forcedExamConversion) ? s.forcedExamConversion.c : conf.c;
+        const eVal = (s.forceExamConversion && s.forcedExamConversion) ? s.forcedExamConversion.e : conf.e;
         return `<button type="button" class="btn sm ${isCur ? 'gold' : 'ghost'}" 
           style="font-weight:${isCur ? '800' : '600'};border-radius:20px;padding:4px 14px;display:inline-flex;align-items:center;gap:6px"
           onclick="A.convModal('${esc(st)}')">
           <span>${st === 'Pre-school' ? '🧸' : (st === 'Lower Primary' ? '📘' : (st === 'Upper Primary' ? '📗' : '🎓'))} ${esc(st)}</span>
-          <span style="font-size:.72rem;background:${isCur ? '#0f172a' : '#e2e8f0'};color:${isCur ? '#fff' : '#475569'};padding:1px 6px;border-radius:10px">${conf.c}% / ${conf.e}%</span>
+          <span style="font-size:.72rem;background:${isCur ? '#0f172a' : '#e2e8f0'};color:${isCur ? '#fff' : '#475569'};padding:1px 6px;border-radius:10px">${cVal}% / ${eVal}%</span>
         </button>`;
       }).join('')}
     </div>
@@ -16576,7 +17194,7 @@ A.convModal = function(targetStream){
     <div class="card mb2" style="background:#f8fafc;padding:10px 14px">
       <div style="font-weight:800;color:#0f172a;margin-bottom:8px;font-size:.86rem;display:flex;align-items:center;justify-content:space-between">
         <span>📋 Current Stream Rules Overview:</span>
-        <span class="small mut" style="font-size:.74rem">Click any stream tab or row to configure</span>
+        <span class="small mut" style="font-size:.74rem">${isAdmin ? 'Click any stream tab or row to configure' : 'Viewing active conversion rules'}</span>
       </div>
       <div class="table-wrap" style="max-height:160px;overflow-y:auto">
         <table style="width:100%;font-size:.78rem;border-collapse:collapse">
@@ -16586,30 +17204,32 @@ A.convModal = function(targetStream){
               <th style="padding:6px;text-align:center">Class Score %</th>
               <th style="padding:6px;text-align:center">Exam Score %</th>
               <th style="padding:6px;text-align:left">Class Score Composition</th>
-              <th style="padding:6px;text-align:center">Action</th>
+              <th style="padding:6px;text-align:center">Status</th>
             </tr>
           </thead>
           <tbody>
             ${streams.map(st => {
               const conf = getStreamAssessmentConfig(s, st);
               const isCur = (st === curStream);
+              const cVal = (s.forceExamConversion && s.forcedExamConversion) ? s.forcedExamConversion.c : conf.c;
+              const eVal = (s.forceExamConversion && s.forcedExamConversion) ? s.forcedExamConversion.e : conf.e;
               const cText = {
                 class_test: `Class Test only (/${conf.totals?.class_test || 30})`,
                 mid_term: `Mid-Term only (/${conf.totals?.mid_term || 30})`,
                 monthly_exam: `Monthly Exam (/${conf.totals?.monthly_exam || 30})`,
                 weekly_test: `Weekly Test (/${conf.totals?.weekly_test || 20})`,
-                combined: `CT ${conf.combinedClassTestWeight || Math.round(conf.c/2)}% + MT ${conf.combinedMidTermWeight || (conf.c-Math.round(conf.c/2))}%`
+                combined: `CT ${conf.combinedClassTestWeight || Math.round(cVal/2)}% + MT ${conf.combinedMidTermWeight || (cVal-Math.round(cVal/2))}%`
               }[conf.classScoreType] || 'Class Test only';
               return `<tr style="background:${isCur ? '#fef3c7' : 'transparent'};border-bottom:1px solid #e2e8f0;font-weight:${isCur ? '700' : 'normal'}">
                 <td style="padding:6px;display:flex;align-items:center;gap:6px">
                   ${isCur ? '<span style="color:#d97706">▶</span>' : ''}
                   <b>${esc(st)}</b>
                 </td>
-                <td style="padding:6px;text-align:center;color:#0369a1;font-weight:800">${conf.c}%</td>
-                <td style="padding:6px;text-align:center;color:#b45309;font-weight:800">${conf.e}%</td>
+                <td style="padding:6px;text-align:center;color:#0369a1;font-weight:800">${cVal}%</td>
+                <td style="padding:6px;text-align:center;color:#b45309;font-weight:800">${eVal}%</td>
                 <td style="padding:6px;color:#334155">${cText}</td>
                 <td style="padding:6px;text-align:center">
-                  ${isCur ? '<span class="badge gold" style="font-size:.7rem">Editing</span>' : `<button class="btn sm ghost" style="padding:1px 8px;font-size:.72rem" onclick="A.convModal('${esc(st)}')">Edit</button>`}
+                  ${isAdmin ? (isCur ? '<span class="badge gold" style="font-size:.7rem">Editing</span>' : `<button class="btn sm ghost" style="padding:1px 8px;font-size:.72rem" onclick="A.convModal('${esc(st)}')">Edit</button>`) : (s.forceExamConversion ? '<span class="badge sm gold">⚡ FORCED</span>' : '<span class="badge sm ok">Active</span>')}
                 </td>
               </tr>`;
             }).join('')}
@@ -16618,12 +17238,12 @@ A.convModal = function(targetStream){
       </div>
     </div>
 
-    <!-- Active Stream Rules Editor -->
-    <div style="background:#fff;border:2px solid #3b82f6;border-radius:8px;padding:14px;margin-bottom:14px">
+    <!-- Active Stream Rules Editor / Viewer -->
+    <div style="background:#fff;border:2px solid ${isAdmin ? '#3b82f6' : '#cbd5e1'};border-radius:8px;padding:14px;margin-bottom:14px">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:1.5px solid #dbeafe;padding-bottom:10px;margin-bottom:12px">
         <div>
           <h3 style="margin:0;color:#1d4ed8;font-size:1.1rem;display:flex;align-items:center;gap:8px">
-            <span>⚙️ Editing Rules for:</span>
+            <span>${isAdmin ? '⚙️ Configuring Rules for:' : '👁️ Rules for:'}</span>
             <span class="badge" style="background:#1d4ed8;color:#fff;font-size:.92rem;padding:3px 12px">${esc(curStream)}</span>
           </h3>
           <div class="small mut mt1" style="font-size:.78rem;color:#475569">
@@ -16631,9 +17251,10 @@ A.convModal = function(targetStream){
           </div>
         </div>
         <div style="text-align:right">
-          <span class="badge" style="background:#eff6ff;color:#1e40af;font-size:.76rem;border:1px solid #bfdbfe">
-            Stream-Isolated Setting
-          </span>
+          ${s.forceExamConversion ? 
+            `<span class="badge" style="background:#fef3c7;color:#92400e;font-size:.76rem;border:1px solid #f59e0b">⚡ Forced to all classes &amp; subjects</span>` : 
+            `<span class="badge" style="background:#eff6ff;color:#1e40af;font-size:.76rem;border:1px solid #bfdbfe">Stream-Isolated Setting</span>`
+          }
         </div>
       </div>
 
@@ -16643,44 +17264,56 @@ A.convModal = function(targetStream){
         <div class="grid g2" style="gap:10px">
           <div>
             <label style="font-size:.82rem;font-weight:700">Class Score Contribution %:</label>
-            <input id="cfg-w-c" type="number" min="0" max="100" value="${stConfig.c}" oninput="A.checkConvModalWeights('${esc(curStream)}')">
+            <input id="cfg-w-c" type="number" min="0" max="100" value="${effectiveC}" ${isAdmin ? `oninput="A.checkConvModalWeights('${esc(curStream)}')"` : 'disabled'} style="font-weight:800;color:#0369a1">
             <div class="small mut" style="font-size:.72rem">Standard: Pre-school 50%, Lower Primary 40%, Upper Primary 30%, JHS 30%</div>
           </div>
           <div>
             <label style="font-size:.82rem;font-weight:700">Exam Score Contribution %:</label>
-            <input id="cfg-w-e" type="number" min="0" max="100" value="${stConfig.e}" oninput="A.checkConvModalWeights('${esc(curStream)}')">
+            <input id="cfg-w-e" type="number" min="0" max="100" value="${effectiveE}" ${isAdmin ? `oninput="A.checkConvModalWeights('${esc(curStream)}')"` : 'disabled'} style="font-weight:800;color:#b45309">
             <div class="small mut" style="font-size:.72rem">Automatically balances with Class Score to make 100%</div>
           </div>
         </div>
 
         <div id="cfg-w-status" class="mt1" style="font-weight:800;font-size:.88rem">
-          <span class="ok b">✔️ Class (${stConfig.c}%) + Exam (${stConfig.e}%) = 100% for ${esc(curStream)}</span>
+          <span class="ok b">✔️ Class (${effectiveC}%) + Exam (${effectiveE}%) = 100% for ${esc(curStream)}</span>
         </div>
+
+        ${isAdmin ? `
+          <div style="background:#eff6ff;border:1.5px solid #3b82f6;border-radius:8px;padding:10px 14px;margin-top:12px">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:0">
+              <input type="checkbox" id="cfg-force-exam" ${s.forceExamConversion?'checked':''}>
+              <span style="font-weight:800;color:#1d4ed8;font-size:.92rem">⚡ FORCE CONVERSION TO ALL TEACHERS, CLASSES &amp; SUBJECTS</span>
+            </label>
+            <div class="small mut mt1" style="font-size:.76rem;color:#1e40af">
+              <b>Force Rule:</b> If checked, this conversion (Class ${effectiveC}% / Exam ${effectiveE}%) is strictly enforced for <b>ALL teachers, ALL classes, and ALL subjects</b> in the school. Individual teachers cannot change it.
+            </div>
+          </div>
+        ` : ''}
       </div>
 
       <!-- Section 2: Class Score Composition for this Stream -->
       <div class="card mb2" style="background:#f8fafc;border:1px solid #e2e8f0">
         <h4 style="margin:0 0 8px;color:#0f172a">2. What makes up the Class Score for ${esc(curStream)}?</h4>
-        <div class="small mut mb1">Choose which assessment component feeds into the terminal Class Score:</div>
+        <div class="small mut mb1">Assessment component feeding into the terminal Class Score:</div>
         <div style="display:flex;flex-direction:column;gap:6px">
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-            <input type="radio" name="cfg-cs-type" value="class_test" ${stConfig.classScoreType==='class_test'?'checked':''} onchange="A.updateConvModalUI()">
+            <input type="radio" name="cfg-cs-type" value="class_test" ${stConfig.classScoreType==='class_test'?'checked':''} ${isAdmin?'onchange="A.updateConvModalUI()"':'disabled'}>
             <b>Class Test only</b> — Class Score is derived from Class Tests
           </label>
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-            <input type="radio" name="cfg-cs-type" value="mid_term" ${stConfig.classScoreType==='mid_term'?'checked':''} onchange="A.updateConvModalUI()">
+            <input type="radio" name="cfg-cs-type" value="mid_term" ${stConfig.classScoreType==='mid_term'?'checked':''} ${isAdmin?'onchange="A.updateConvModalUI()"':'disabled'}>
             <b>Mid-Term Exam Score only</b> — Class Score is derived from Mid-Term Exam
           </label>
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-            <input type="radio" name="cfg-cs-type" value="monthly_exam" ${stConfig.classScoreType==='monthly_exam'?'checked':''} onchange="A.updateConvModalUI()">
+            <input type="radio" name="cfg-cs-type" value="monthly_exam" ${stConfig.classScoreType==='monthly_exam'?'checked':''} ${isAdmin?'onchange="A.updateConvModalUI()"':'disabled'}>
             <b>Monthly Exam</b> — Class Score is derived from Monthly Exams
           </label>
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-            <input type="radio" name="cfg-cs-type" value="weekly_test" ${stConfig.classScoreType==='weekly_test'?'checked':''} onchange="A.updateConvModalUI()">
+            <input type="radio" name="cfg-cs-type" value="weekly_test" ${stConfig.classScoreType==='weekly_test'?'checked':''} ${isAdmin?'onchange="A.updateConvModalUI()"':'disabled'}>
             <b>Weekly Test Score</b> — Class Score is derived from Weekly Tests
           </label>
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-            <input type="radio" name="cfg-cs-type" value="combined" ${stConfig.classScoreType==='combined'?'checked':''} onchange="A.updateConvModalUI()">
+            <input type="radio" name="cfg-cs-type" value="combined" ${stConfig.classScoreType==='combined'?'checked':''} ${isAdmin?'onchange="A.updateConvModalUI()"':'disabled'}>
             <b>Combination</b> — e.g. Class Test + Mid-Term Exam split the Class Score %
           </label>
         </div>
@@ -16688,11 +17321,11 @@ A.convModal = function(targetStream){
         <div id="cfg-comb-row" style="display:${stConfig.classScoreType==='combined'?'grid':'none'};grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;padding:8px;background:#e0f2fe;border-radius:6px">
           <div>
             <label style="font-size:.78rem;font-weight:700;color:#0369a1">Class Test Share %:</label>
-            <input id="cfg-w-comb-ct" type="number" min="0" max="100" value="${stConfig.combinedClassTestWeight || Math.round(stConfig.c/2)}">
+            <input id="cfg-w-comb-ct" type="number" min="0" max="100" value="${stConfig.combinedClassTestWeight || Math.round(effectiveC/2)}" ${isAdmin?'':'disabled'}>
           </div>
           <div>
             <label style="font-size:.78rem;font-weight:700;color:#0369a1">Mid-Term Share %:</label>
-            <input id="cfg-w-comb-mt" type="number" min="0" max="100" value="${stConfig.combinedMidTermWeight || (stConfig.c - Math.round(stConfig.c/2))}">
+            <input id="cfg-w-comb-mt" type="number" min="0" max="100" value="${stConfig.combinedMidTermWeight || (effectiveC - Math.round(effectiveC/2))}" ${isAdmin?'':'disabled'}>
           </div>
         </div>
       </div>
@@ -16700,23 +17333,23 @@ A.convModal = function(targetStream){
       <!-- Section 3: Total Marks for this Stream -->
       <div class="card mb2" style="background:#f8fafc;border:1px solid #e2e8f0">
         <h4 style="margin:0 0 8px;color:#0f172a">3. Total Marks for ${esc(curStream)} Assessments</h4>
-        <div class="small mut mb1">Set what assessments are marked out of in ${esc(curStream)} (e.g. 15, 20, 25, 30, 50, 100):</div>
+        <div class="small mut mb1">Standard assessment marks baseline for ${esc(curStream)}:</div>
         <div class="grid g2" style="gap:10px">
           <div>
             <label style="font-size:.82rem;font-weight:700">Class Test Total Marks:</label>
-            <input id="cfg-tot-ct" type="number" min="1" max="500" value="${(stConfig.totals && stConfig.totals.class_test) || 30}">
+            <input id="cfg-tot-ct" type="number" min="1" max="500" value="${(stConfig.totals && stConfig.totals.class_test) || 30}" ${isAdmin?'':'disabled'}>
           </div>
           <div>
             <label style="font-size:.82rem;font-weight:700">Mid-Term Total Marks:</label>
-            <input id="cfg-tot-mt" type="number" min="1" max="500" value="${(stConfig.totals && stConfig.totals.mid_term) || 30}">
+            <input id="cfg-tot-mt" type="number" min="1" max="500" value="${(stConfig.totals && stConfig.totals.mid_term) || 30}" ${isAdmin?'':'disabled'}>
           </div>
           <div>
             <label style="font-size:.82rem;font-weight:700">Monthly Exam Total Marks:</label>
-            <input id="cfg-tot-mo" type="number" min="1" max="500" value="${(stConfig.totals && stConfig.totals.monthly_exam) || 30}">
+            <input id="cfg-tot-mo" type="number" min="1" max="500" value="${(stConfig.totals && stConfig.totals.monthly_exam) || 30}" ${isAdmin?'':'disabled'}>
           </div>
           <div>
-            <label style="font-size:.82rem;font-weight:700">End of Term Exam Total Marks:</label>
-            <input id="cfg-tot-et" type="number" min="1" max="500" value="${(stConfig.totals && stConfig.totals.end_term) || 100}">
+            <label style="font-size:.82rem;font-weight:700">End of Term Exam Total Marks (Main Exam):</label>
+            <input id="cfg-tot-et" type="number" min="1" max="500" value="${(stConfig.totals && stConfig.totals.end_term) || 100}" ${isAdmin?'':'disabled'}>
           </div>
         </div>
       </div>
@@ -16727,19 +17360,26 @@ A.convModal = function(targetStream){
         <div style="font-size:.82rem;line-height:1.45;color:#0f172a">
           <div><b>Rule 1:</b> When a teacher enters a score <b>within the set total</b>, it keeps the exact same score.</div>
           <div style="margin-top:4px"><b>Rule 2:</b> When a teacher enters a score <b>over the set total</b> (e.g. 80 out of 100), the system normalizes it automatically: <code>(Score ÷ 100) × Total</code>.</div>
-          <div style="margin-top:4px"><b>Rule 3:</b> Terminal Mark = <code>Class Score Contribution (${stConfig.c}%) + Exam Score Contribution (${stConfig.e}%) = 100%</code>.</div>
+          <div style="margin-top:4px"><b>Rule 3:</b> Terminal Mark = <code>Class Score Contribution (${effectiveC}%) + Exam Score Contribution (${effectiveE}%) = 100%</code>.</div>
         </div>
       </div>
     </div>
   </div>
   <div class="m-foot" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-    <div>
-      <button class="btn ghost sm" onclick="A.saveConvConfig('${esc(curStream)}', true)" title="Duplicate this stream's conversion rules to all streams in the school">📋 Copy to All Streams</button>
-    </div>
-    <div style="display:flex;gap:8px">
-      <button class="btn ghost" onclick="A.closeModal()">Close</button>
-      <button class="btn gold" onclick="A.saveConvConfig('${esc(curStream)}', false)">💾 Save Rules for ${esc(curStream)}</button>
-    </div>
+    ${isAdmin ? `
+      <div>
+        <button class="btn ghost sm" onclick="A.saveConvConfig('${esc(curStream)}', true)" title="Duplicate this stream's conversion rules to all streams in the school">📋 Copy to All Streams</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn ghost" onclick="A.closeModal()">Close</button>
+        <button class="btn gold" onclick="A.saveConvConfig('${esc(curStream)}', false)">💾 Save Rules for ${esc(curStream)}</button>
+      </div>
+    ` : `
+      <div class="small mut">🔒 Main Exam conversion can only be modified by School Administrator</div>
+      <div>
+        <button class="btn" onclick="A.closeModal()">Done Viewing</button>
+      </div>
+    `}
   </div>`);
 };
 
@@ -16763,6 +17403,11 @@ A.checkConvModalWeights = function(stream){
 
 A.saveConvConfig = function(targetStream, applyAll){
   const s = mySchool(); if(!s) return;
+  const u = me();
+  if(u.role !== 'schooladmin' && u.role !== 'superadmin'){
+    return toast('⛔ EXAM conversion can ONLY be set by the School Administrator. Teachers cannot edit.', 'bad');
+  }
+
   const selType = ($('input[name="cfg-cs-type"]:checked') || {}).value || 'class_test';
   const cW = parseFloat($('#cfg-w-c').value || 0);
   const eW = parseFloat($('#cfg-w-e').value || 0);
@@ -16776,6 +17421,13 @@ A.saveConvConfig = function(targetStream, applyAll){
   const moTot = Math.max(1, parseInt($('#cfg-tot-mo').value, 10) || 30);
   const etTot = Math.max(1, parseInt($('#cfg-tot-et').value, 10) || 100);
 
+  const forceExamEl = $('#cfg-force-exam');
+  const isForced = forceExamEl ? forceExamEl.checked : (applyAll || false);
+  s.forceExamConversion = isForced;
+  if(isForced){
+    s.forcedExamConversion = { c: cW, e: eW, end_term: etTot };
+  }
+
   let combCt = Math.round(cW / 2);
   let combMt = cW - combCt;
   if(selType === 'combined'){
@@ -16785,8 +17437,8 @@ A.saveConvConfig = function(targetStream, applyAll){
 
   s.conversion = s.conversion || {};
 
-  const streamsToUpdate = applyAll ? STREAMS_ORDER.slice() : [targetStream];
-  if(applyAll && s.classes){
+  const streamsToUpdate = (isForced || applyAll) ? STREAMS_ORDER.slice() : [targetStream];
+  if((isForced || applyAll) && s.classes){
     s.classes.forEach(c => {
       if(c.stream && !streamsToUpdate.includes(c.stream)) streamsToUpdate.push(c.stream);
     });
@@ -16810,7 +17462,7 @@ A.saveConvConfig = function(targetStream, applyAll){
   });
 
   saveDB();
-  toast(applyAll ? 'Score conversion rules copied and saved for ALL streams!' : `Score conversion rules saved for ${targetStream}!`, 'ok');
+  toast(isForced ? '⚡ EXAM conversion FORCED to ALL teachers, classes, and subjects in the school!' : (applyAll ? 'Score conversion rules copied to all streams!' : `Score conversion rules saved for ${targetStream}!`), 'ok');
   A.convModal(targetStream);
   if(typeof render === 'function') render();
 };
@@ -20530,6 +21182,7 @@ function termFeeSetupTabHTML(s, year, unlocked){
         </table>
       </div>
     </div>
+    <div class="mt3">${renderFeePriorityListHTML(s)}</div>
   </div>`;
 }
 
@@ -21129,12 +21782,299 @@ function getStudentArrearsStatus(student, targetTerm, year, school){
   }
 }
 
+/* ===========================================================================
+   FEE ALLOCATION LOGIC (FIFO WATERFALL + ARREARS + ADMIN PRIORITY ORDER)
+   =========================================================================== */
+
+/* 1. PRIORITY ORDER = Determined by School Admin */
+function getAdminPriorityOrder(school){
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null) || {};
+  let order = [];
+  if(s.feePriorityOrder && Array.isArray(s.feePriorityOrder) && s.feePriorityOrder.length){
+    order = s.feePriorityOrder.slice();
+  } else if(DB && DB.settings && Array.isArray(DB.settings.feePriorityOrder) && DB.settings.feePriorityOrder.length){
+    order = DB.settings.feePriorityOrder.slice();
+  }
+  
+  // Standard fee types in priority order default: School Fees > Books > PTA > Exams
+  const defaults = ['School Fees', 'Books', 'PTA', 'Exams', 'Uniform', 'Feeding', 'Tuition', 'ICT'];
+  defaults.forEach(d => {
+    if(!order.some(o => o.trim().toLowerCase() === d.trim().toLowerCase())){
+      order.push(d);
+    }
+  });
+  return order;
+}
+
+/* 2. CREDIT / OVERPAYMENT = Only if Admin Wishes (YES / NO) */
+function getAdminCreditSetting(school){
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null) || {};
+  if(s.allowOverpaymentCredit !== undefined){
+    return (s.allowOverpaymentCredit === true || s.allowOverpaymentCredit === 'YES') ? 'YES' : 'NO';
+  }
+  if(DB && DB.settings && DB.settings.allowOverpaymentCredit !== undefined){
+    return (DB.settings.allowOverpaymentCredit === true || DB.settings.allowOverpaymentCredit === 'YES') ? 'YES' : 'NO';
+  }
+  return 'NO'; // Default is NO as specified
+}
+
+/* 3. TOTAL DUE = Unpaid Arrears + Current Term Fees (itemized per fee type) */
+function getTotalDueWithArrears(student, term, year, school){
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null) || {};
+  const yr = String(year || yearSel());
+  const tm = String(term || (typeof currentTermName === 'function' ? currentTermName(s) : 'Term 1'));
+  
+  if(!student) return {};
+
+  const info = getStudentTermPaymentInfo(student, tm, yr, s);
+  const items = info.items || [];
+  const arrears = Number(info.arrears || 0);
+  const arrearsLabel = info.arrearsLabel || 'Arrears';
+
+  // Get all payments made by this student in this term
+  const termPays = (DB.payments || []).filter(p => p.studentId === student.id && String(p.year) === yr && p.term === tm);
+
+  // Map of amounts already paid per fee type this term
+  const paidPerType = {};
+  termPays.forEach(p => {
+    if(p.splitBreakdown && typeof p.splitBreakdown === 'object'){
+      Object.entries(p.splitBreakdown).forEach(([k, v]) => {
+        const normKey = k.trim().toLowerCase();
+        paidPerType[normKey] = (paidPerType[normKey] || 0) + Number(v || 0);
+      });
+    } else if(p.alloc && Array.isArray(p.alloc)){
+      p.alloc.forEach(a => {
+        const normKey = (a.name || '').trim().toLowerCase();
+        paidPerType[normKey] = (paidPerType[normKey] || 0) + Number(a.amount || 0);
+      });
+    } else if(p.feeType && Number(p.amount) > 0){
+      const normKey = (p.feeType || '').trim().toLowerCase();
+      paidPerType[normKey] = (paidPerType[normKey] || 0) + Number(p.amount || 0);
+    }
+  });
+
+  const dueList = {};
+
+  // 1. Unpaid arrears pulling forward (if any)
+  if(arrears > 0){
+    const paidArr = termPays.reduce((sum, p) => {
+      let arrAlloc = 0;
+      if(p.splitBreakdown){
+        Object.entries(p.splitBreakdown).forEach(([k, v]) => {
+          if(k.toLowerCase().includes('arrears') || k.toLowerCase().includes('carried')) arrAlloc += Number(v || 0);
+        });
+      }
+      return sum + arrAlloc;
+    }, 0);
+    const owedArrears = Math.max(0, Math.round((arrears - paidArr) * 10) / 10);
+    if(owedArrears > 0){
+      dueList[arrearsLabel] = owedArrears;
+    }
+  }
+
+  // 2. Current term fee items
+  items.forEach(it => {
+    const rawName = it.name.trim();
+    const normKey = rawName.toLowerCase();
+    const billed = Number(it.amount) || 0;
+    const paid = paidPerType[normKey] || 0;
+    const owed = Math.max(0, Math.round((billed - paid) * 10) / 10);
+    dueList[rawName] = owed;
+  });
+
+  return dueList;
+}
+
+/* 4. FIFO WATERFALL ALLOCATION ENGINE */
+function allocatePaymentWaterfall(amountPaid, student, term, year, school){
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null) || {};
+  const priority = getAdminPriorityOrder(s);
+  const allowCredit = getAdminCreditSetting(s); // 'YES' or 'NO'
+  
+  const totalDueList = getTotalDueWithArrears(student, term, year, s);
+  let remaining = Math.round((Number(amountPaid) || 0) * 10) / 10;
+  
+  const allocMap = {};
+  const owingMap = {};
+  let totalOwed = 0;
+
+  // Calculate total owed
+  Object.keys(totalDueList).forEach(k => {
+    const o = Math.max(0, Number(totalDueList[k]) || 0);
+    totalOwed += o;
+    owingMap[k] = o;
+  });
+  totalOwed = Math.round(totalOwed * 10) / 10;
+
+  // SPEC 2: OVERPAYMENT / CREDIT RULE
+  // If NO: System rejects overpayment. Shows "Max payable is X GHS"
+  if(remaining > totalOwed && allowCredit !== 'YES'){
+    return {
+      rejected: true,
+      maxPayable: totalOwed,
+      allowCredit: 'NO',
+      error: `Max payable is GH₵ ${totalOwed.toFixed(2)}. Overpayment as credit is turned OFF in Admin Settings.`
+    };
+  }
+
+  // Arrange keys strictly in Admin Priority Order
+  const orderedKeys = [];
+  
+  // Arrears first if exists
+  Object.keys(owingMap).forEach(k => {
+    if((k.toLowerCase().includes('arrears') || k.toLowerCase().includes('carried')) && !orderedKeys.includes(k)){
+      orderedKeys.push(k);
+    }
+  });
+
+  // Priority order matching
+  priority.forEach(pName => {
+    const match = Object.keys(owingMap).find(k => k.trim().toLowerCase() === pName.trim().toLowerCase());
+    if(match && !orderedKeys.includes(match)){
+      orderedKeys.push(match);
+    }
+  });
+
+  // Any other items not in priority order
+  Object.keys(owingMap).forEach(k => {
+    if(!orderedKeys.includes(k)){
+      orderedKeys.push(k);
+    }
+  });
+
+  // SPEC: FIFO Waterfall Payment
+  orderedKeys.forEach(feeType => {
+    const owed = owingMap[feeType] || 0;
+    if(owed <= 0 || remaining <= 0){
+      allocMap[feeType] = 0;
+      return;
+    }
+
+    if(remaining >= owed){
+      allocMap[feeType] = owed;
+      remaining = Math.round((remaining - owed) * 10) / 10;
+    } else {
+      allocMap[feeType] = remaining;
+      remaining = 0;
+    }
+  });
+
+  // SPEC 2: Overpayment saved as credit_balance if allowCredit === 'YES'
+  const credit = (remaining > 0 && allowCredit === 'YES') ? remaining : 0;
+  const balanceAfter = Math.max(0, Math.round((totalOwed - (amountPaid - credit)) * 10) / 10);
+
+  return {
+    rejected: false,
+    totalOwed,
+    amountPaid,
+    allocMap,
+    credit,
+    balanceAfter,
+    orderedKeys,
+    allowCredit,
+    owingMap
+  };
+}
+
+A.moveFeePriority = function(idx, dir){
+  const s = mySchool(); if(!s) return;
+  const priority = getAdminPriorityOrder(s);
+  const targetIdx = idx + dir;
+  if(targetIdx < 0 || targetIdx >= priority.length) return;
+  const temp = priority[idx];
+  priority[idx] = priority[targetIdx];
+  priority[targetIdx] = temp;
+  s.feePriorityOrder = priority;
+  if(!DB.settings) DB.settings = {};
+  DB.settings.feePriorityOrder = priority;
+  saveDB();
+  toast(`Priority updated: ${priority.join(' ➔ ')}`, 'ok');
+  render();
+};
+
+A.setFeeCreditToggle = function(val){
+  const s = mySchool(); if(!s) return;
+  s.allowOverpaymentCredit = (val === 'YES');
+  if(!DB.settings) DB.settings = {};
+  DB.settings.allowOverpaymentCredit = (val === 'YES');
+  saveDB();
+  toast(val === 'YES' ? 'Overpayment will be saved as Credit for next term ✅' : 'Overpayment will be rejected (Max payable enforced) ✅', 'ok');
+  render();
+};
+
+A.saveFeeAllocationSettings = function(){
+  const s = mySchool(); if(!s) return;
+  saveDB();
+  toast('Fee Allocation Priority & Credit Settings saved successfully! ✅', 'ok');
+  render();
+};
+
+function renderFeePriorityListHTML(s){
+  const priority = getAdminPriorityOrder(s);
+  const allowCredit = getAdminCreditSetting(s);
+  
+  return `
+  <div class="card mb2" style="background:#f8fafc;border:1.5px solid #0284c7;border-radius:12px;padding:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:1.5px solid #e0f2fe;padding-bottom:8px;margin-bottom:12px">
+      <div>
+        <h4 style="margin:0;color:#0369a1;font-size:1.05rem">⚡ Fee Allocation Priority Order &amp; Overpayment Policy</h4>
+        <div class="small mut mt1">Arrange fee types in order of priority. Payments are ALWAYS shared automatically following this sequence.</div>
+      </div>
+      <span class="badge" style="background:#0284c7;color:#fff;font-weight:700">FIFO Waterfall Engine</span>
+    </div>
+
+    <!-- Live Waterfall Banner -->
+    <div style="background:#e0f2fe;border:1px solid #7dd3fc;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:.84rem;color:#0369a1;font-weight:700">
+      🎯 Active Priority Order: <span style="color:#0f172a">${priority.join(' ➔ ')}</span>
+    </div>
+
+    <!-- Reorder List -->
+    <div id="fee-priority-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px">
+      ${priority.map((item, idx) => `
+        <div class="fee-prio-item" data-idx="${idx}" style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:1.5px solid #cbd5e1;border-radius:8px;padding:8px 12px;transition:all .15s">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:1.1rem;color:#94a3b8">☰</span>
+            <span style="font-size:.85rem;font-weight:900;color:#0284c7;background:#e0f2fe;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center">${idx + 1}</span>
+            <b style="font-size:.92rem;color:#0f172a">${esc(item)}</b>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px">
+            <button type="button" class="btn sm ghost" style="padding:2px 8px;font-size:.76rem" onclick="A.moveFeePriority(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>▲ Up</button>
+            <button type="button" class="btn sm ghost" style="padding:2px 8px;font-size:.76rem" onclick="A.moveFeePriority(${idx}, 1)" ${idx === priority.length - 1 ? 'disabled' : ''}>▼ Down</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Credit / Overpayment Setting Toggle -->
+    <div style="background:#fff;border:1.5px solid #cbd5e1;border-radius:8px;padding:12px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div>
+          <b style="font-size:.9rem;color:#0f172a">Allow Overpayment as Credit for Next Term?</b>
+          <div class="small mut mt1" style="font-size:.78rem;max-width:520px">
+            <b>YES:</b> Excess amount is saved as <code>credit_balance</code> and automatically deducts from next term's fees.<br>
+            <b>NO:</b> System strictly rejects overpayment and shows <code>Max payable is X GHS</code>.
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <button type="button" class="btn sm ${allowCredit === 'YES' ? 'gold' : 'ghost'}" style="font-weight:800;padding:4px 14px;border-radius:20px" onclick="A.setFeeCreditToggle('YES')">YES (Allow Credit)</button>
+          <button type="button" class="btn sm ${allowCredit === 'NO' ? 'gold' : 'ghost'}" style="font-weight:800;padding:4px 14px;border-radius:20px" onclick="A.setFeeCreditToggle('NO')">NO (Reject Overpayment)</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end">
+      <button class="btn gold" onclick="A.saveFeeAllocationSettings()">💾 Save Fee Allocation &amp; Priority Settings</button>
+    </div>
+  </div>
+  `;
+}
+
 function getStudentTermPaymentInfo(student, term, year, school){
   const s = school || (typeof mySchool === 'function' ? mySchool() : null);
   const yr = String(year || yearSel());
   const tm = String(term || (typeof currentTermName === 'function' ? currentTermName(s) : 'Term 1'));
   
-  if(!student) return { currentTermFees: 0, arrears: 0, arrearsLabel: 'Arrears (Term 1)', totalDue: 0, previousPaid: 0, paidThisTerm: 0, items: [] };
+  if(!student) return { currentTermFees: 0, arrears: 0, arrearsLabel: 'Arrears (Term 1)', totalDue: 0, previousPaid: 0, paidThisTerm: 0, items: [], creditBalance: 0, creditAdvanceApplied: 0 };
 
   const curStruct = getTermFeeStructure(s, student.classId, tm, yr);
   const currentTermFees = curStruct.total;
@@ -21152,7 +22092,12 @@ function getStudentTermPaymentInfo(student, term, year, school){
   const paidThisTermToFees = Math.max(0, paidThisTerm - arrStatus.paidAgainstArrears);
 
   // Total Due = Live Unpaid Arrears + Current Term Fees
-  const totalDue = Math.round((arrears + currentTermFees) * 10) / 10;
+  const rawTotalDue = Math.round((arrears + currentTermFees) * 10) / 10;
+
+  // Auto-deduct advance credit_balance from previous term if student has credit
+  const creditBalance = Number(student.credit_balance || 0);
+  const creditAdvanceApplied = Math.min(creditBalance, rawTotalDue);
+  const totalDue = Math.max(0, Math.round((rawTotalDue - creditAdvanceApplied) * 10) / 10);
 
   // Current Balance = Total Due - Paid This Term towards Total Due
   const currentBalance = Math.max(0, Math.round((totalDue - paidThisTermToFees) * 10) / 10);
@@ -21164,6 +22109,9 @@ function getStudentTermPaymentInfo(student, term, year, school){
     currentTermFees,
     arrears,
     arrearsLabel,
+    rawTotalDue,
+    creditAdvanceApplied,
+    creditBalance,
     totalDue,
     previousPaid: totalPreviousPaid,
     paidThisTerm,
@@ -21176,30 +22124,44 @@ function getStudentTermPaymentInfo(student, term, year, school){
 }
 
 function renderPaymentBreakdownHTML(p){
+  const parts = [];
   if(p.splitBreakdown && Object.keys(p.splitBreakdown).length){
-    const parts = Object.entries(p.splitBreakdown)
-      .filter(([k, v]) => Number(v) > 0)
-      .map(([k, v]) => `${esc(k)} - ${ghs(v)}`);
-    if(parts.length){
-      return `<div style="font-size:.78rem;color:#0369a1;background:#e0f2fe;padding:4px 8px;border-radius:5px;margin:3px 0;font-weight:700">
-        Breakdown: ${parts.join(', ')}
-      </div>`;
-    }
+    Object.entries(p.splitBreakdown).forEach(([k, v]) => {
+      const amt = Number(v) || 0;
+      if(amt > 0){
+        parts.push({ name: k, amount: amt });
+      }
+    });
+  } else if(p.alloc && Array.isArray(p.alloc)){
+    p.alloc.forEach(a => {
+      const amt = Number(a.amount) || 0;
+      if(amt > 0){
+        parts.push({ name: a.name, amount: amt });
+      }
+    });
+  } else if(p.feeType && Number(p.amount) > 0){
+    parts.push({ name: p.feeType, amount: Number(p.amount) });
   }
-  if(p.alloc && p.alloc.length){
-    const parts = p.alloc.filter(a => Number(a.amount) > 0).map(a => `${esc(a.name)} - ${ghs(a.amount)}`);
-    if(parts.length){
-      return `<div style="font-size:.78rem;color:#0369a1;background:#e0f2fe;padding:4px 8px;border-radius:5px;margin:3px 0;font-weight:700">
-        Breakdown: ${parts.join(', ')}
-      </div>`;
-    }
-  }
-  if(p.feeType){
-    return `<div style="font-size:.78rem;color:#0369a1;background:#e0f2fe;padding:3px 8px;border-radius:5px;margin:3px 0;font-weight:700">
-      Breakdown: ${esc(p.feeType)} - ${ghs(p.amount)}
-    </div>`;
-  }
-  return '';
+
+  if(!parts.length && !(p.credit > 0)) return '';
+
+  return `
+    <div style="background:#e0f2fe;border:1px solid #bae6fd;border-radius:6px;padding:6px 10px;margin:5px 0;font-size:.8rem;line-height:1.45">
+      <div style="font-weight:800;color:#0369a1;margin-bottom:3px;border-bottom:1px solid #bae6fd;padding-bottom:2px">Fee Allocation Breakdown:</div>
+      ${parts.map(pt => `
+        <div class="rr" style="color:#0f172a">
+          <span>${esc(pt.name)}:</span>
+          <b>${ghs(pt.amount)} <span style="font-size:.74rem;color:#0369a1;background:#bae6fd;padding:1px 5px;border-radius:3px">PAID</span></b>
+        </div>
+      `).join('')}
+      ${(p.credit > 0) ? `
+        <div class="rr" style="color:#15803d;font-weight:800;border-top:1px dashed #86efac;margin-top:3px;padding-top:2px">
+          <span>✨ Advance Credit for Next Term:</span>
+          <b>+ ${ghs(p.credit)}</b>
+        </div>
+      ` : ''}
+    </div>
+  `;
 }
 
 function payTabHTML(s, year, unlocked){
@@ -21481,28 +22443,22 @@ A.recordPayment = function(){
   if(!(amt > 0)) return toast('Enter a valid amount paid', 'bad');
 
   const tm = PAY_TERM || currentTermName(s) || 'Term 1';
-  const info = window.__CURRENT_PAY_INFO || getStudentTermPaymentInfo(st, tm, year, s);
-
-  // Collect split breakdown
-  const splitMap = {};
-  let splitTotal = 0;
-  $$('.pay-split-input').forEach(inp => {
-    const v = parseFloat(inp.value) || 0;
-    if(v > 0){
-      splitMap[inp.dataset.name] = v;
-      splitTotal += v;
-    }
-  });
-
-  if(!Object.keys(splitMap).length){
-    splitMap['School Fees'] = amt;
-    splitTotal = amt;
+  const waterfall = allocatePaymentWaterfall(amt, st, tm, year, s);
+  if(waterfall.rejected){
+    return toast(`⛔ Overpayment Rejected: Max payable is GH₵ ${waterfall.maxPayable.toFixed(2)}. Overpayment as credit is turned OFF in Admin Settings.`, 'bad');
   }
 
+  const info = window.__CURRENT_PAY_INFO || getStudentTermPaymentInfo(st, tm, year, s);
+  const splitMap = Object.assign({}, waterfall.allocMap);
   const allocArray = Object.entries(splitMap).map(([name, amount]) => ({ name, amount }));
-  const feeType = Object.keys(splitMap).join(' + ');
+  const feeType = Object.keys(splitMap).filter(k => splitMap[k] > 0).join(' + ') || 'School Fees';
   const rno = nextReceiptNo(s);
-  const balAfter = Math.max(0, Math.round((info.totalDue - amt) * 10) / 10);
+  const balAfter = waterfall.balanceAfter;
+
+  // Handle overpayment / credit
+  if(waterfall.credit > 0){
+    st.credit_balance = Math.round(((st.credit_balance || 0) + waterfall.credit) * 10) / 10;
+  }
 
   const p = {
     id: uid('pay'),
@@ -21511,13 +22467,14 @@ A.recordPayment = function(){
     year,
     term: tm,
     amount: amt,
+    credit: waterfall.credit || 0,
     method: ($('#pay-mth')||{}).value || 'Cash',
     feeType,
     previousPaid: info.previousPaid,
     arrears: info.arrears,
     arrearsLabel: info.arrearsLabel,
     currentTermFees: info.currentTermFees,
-    totalDue: info.totalDue,
+    totalDue: waterfall.totalOwed,
     balance: balAfter,
     splitBreakdown: splitMap,
     alloc: allocArray,
@@ -21530,12 +22487,17 @@ A.recordPayment = function(){
   DB.payments.push(p);
 
   // SMS notification to parent
-  sendSMS(st.parentPhone,
-     `HEREMS ${s.abbrev}: Payment of GHS ${amt.toFixed(2)} received for ${st.firstName} ${st.surname} (${st.sid}). `+
-     `Receipt ${rno}. Total Due: GHS ${info.totalDue.toFixed(2)}. `+
-     (balAfter > 0 ? `Outstanding balance: GHS ${balAfter.toFixed(2)}.` : 'Your ward is NOT OWING. Thank you.')+
-     `\nBy Management`);
+  let smsMsg = `HEREMS ${s.abbrev}: Payment of GHS ${amt.toFixed(2)} received for ${st.firstName} ${st.surname} (${st.sid}). Receipt ${rno}. Total Due: GHS ${waterfall.totalOwed.toFixed(2)}. `;
+  if(waterfall.credit > 0){
+    smsMsg += `Fees CLEARED. Advance Credit for next term: GHS ${waterfall.credit.toFixed(2)}.`;
+  } else if(balAfter > 0){
+    smsMsg += `Outstanding balance: GHS ${balAfter.toFixed(2)}.`;
+  } else {
+    smsMsg += `Your ward is NOT OWING. Thank you.`;
+  }
+  smsMsg += `\nBy Management`;
 
+  sendSMS(st.parentPhone, smsMsg);
   saveDB();
   toast(`Payment saved — receipt <b>${rno}</b> + SMS queued to ${esc(st.parentPhone)}`, 'ok');
   render();
@@ -22905,11 +23867,32 @@ function payAllocs(p){   /* what each payment paid for — the new list, or the 
 }
 function paidByType(pays){ const m={}; (pays||[]).forEach(function(p){ payAllocs(p).forEach(function(a){ m[a.name]=r1((m[a.name]||0)+a.amount); }); }); return m; }
 function payAllocPlan(heads, ticked, chosen, amt){   /* the typed amount shares itself out over the class's fees */
+  const s = mySchool();
   const all=(heads||[]).filter(function(h){ return h && !h.general; });
   const list=(ticked&&ticked.length)? all.filter(function(h){ return ticked.indexOf(String(h.name))>=0; })
             : (chosen? all.filter(function(h){ return String(h.name)===String(chosen); }) : all.slice());
   const use=list.length? list : all.slice();
+  
+  // SPEC 1: Order by School Admin Priority Order
+  const priority = getAdminPriorityOrder(s);
+  const allowCredit = getAdminCreditSetting(s);
+  use.sort(function(a, b){
+    const ia = priority.findIndex(p => p.trim().toLowerCase() === String(a.name).trim().toLowerCase());
+    const ib = priority.findIndex(p => p.trim().toLowerCase() === String(b.name).trim().toLowerCase());
+    return (ia < 0 ? 999 : ia) - (ib < 0 ? 999 : ib);
+  });
+
   const owed=r1(use.reduce(function(a,h){ return a+Math.max(0, Number(h.owing)||0); },0));
+  
+  // SPEC 2: Check overpayment rejection if credit is disallowed
+  let rejected = false;
+  let credit = 0;
+  if(Number(amt) > owed && allowCredit !== 'YES'){
+    rejected = true;
+  } else if(Number(amt) > owed && allowCredit === 'YES'){
+    credit = r1(Number(amt) - owed);
+  }
+
   /* Round-327: inside the Books line, the books TICKED in the 📚 card are paid first (then the rest) */
   const picks=(function(){ try{ return $$('#pay-prev .pbk-tick').filter(function(ck){ return ck.checked; })
       .map(function(ck){ const b=(window.__PAYBOOKS||[])[Number(ck.dataset.i)]; return b? String(b.name):''; }).filter(Boolean); }
@@ -22927,37 +23910,19 @@ function payAllocPlan(heads, ticked, chosen, amt){   /* the typed amount shares 
         return (ia<0?99:ia)-(ib<0?99:ib); });
       const memberOwed=r1(members.reduce(function(a,m){ return a+Math.max(0, Number(m.owing)||0); },0));
       members.forEach(function(m){ take(m.name, Number(m.owing)||0); });
-      take(String(h.name), r1(Math.max(0,(Number(h.owing)||0)-memberOwed)));   /* a plain “Books” balance keeps its own part */
+      take(String(h.name), r1(Math.max(0,(Number(h.owing)||0)-memberOwed)));
       return; }
     take(String(h.name), Number(h.owing)||0); });
-  if(left>0){ if(alloc.length) alloc[alloc.length-1].amount=r1(alloc[alloc.length-1].amount+left);
-              else alloc.push({name:String(chosen||'Fees'), amount:r1(Number(amt)||0)});
-              left=0; }
-  /* the same money told by HEADING, so a payment that cleared three books still reads “Books 60.00” */
+  
   const headOf=function(nm){ const h=use.filter(function(x){ return String(x.name)===String(nm)
       || (x.isBooks && x.books && x.books.some(function(b){ return String(b.name)===String(nm); })); })[0];
     return h? String(h.name) : String(nm); };
   const byHead=[];
-  alloc.forEach(function(a){ const hn=headOf(a.name); const e=byHead.filter(function(x){ return x.name===hn; })[0];
-    if(e) e.amount=r1(e.amount+a.amount); else byHead.push({name:hn, amount:a.amount}); });
-  const labels=[]; byHead.forEach(function(x){ if(labels.indexOf(x.name)<0) labels.push(x.name); });
-  return {alloc:alloc, byHead:byHead, labels:labels, owed:owed, extra:r1(Math.max(0, r1(Number(amt)||0)-owed))};
+  alloc.forEach(function(a){ const hn=headOf(a.name); const ex=byHead.filter(function(x){ return x.name===hn; })[0];
+    if(ex) ex.amount=r1(ex.amount+a.amount); else byHead.push({name:hn, amount:a.amount}); });
+  return { alloc:byHead, raw:alloc, extra:left, owed:owed, rejected:rejected, maxPayable:owed, credit:credit };
 }
-function payHeadsHTML(rows){   /* the fees SET FOR THIS PUPIL'S CLASS, with a tick each */
-  const heads=(rows||[]).filter(function(r){ return !r.general; });
-  if(!heads.length) return '';
-  const tick=window.__PAYTICKS||{};
-  return '<div class="card mt1" id="pay-types" style="border-left:4px solid #1d4ed8;padding:.6rem .8rem">'
-   +'<b>💵 Fee types set for this class</b>'
-   +'<div class="small mut mb1">Tick the fee type(s) this payment covers — <b>three or four at once</b> if the parent is paying several. Leave them all unticked and just type the amount: it shares itself out over these fees, top to bottom.</div>'
-   +heads.map(function(r){ return '<div class="flex between" style="gap:.5rem;padding:.18rem 0;flex-wrap:wrap"><span style="display:flex;gap:.4rem;align-items:center;cursor:pointer">'
-       +'<input type="checkbox" class="pyt-tick" data-name="'+esc(r.name)+'"'+(tick[r.name]?' checked':'')+' onchange="A.payTypeTick(this)"> '+esc(r.name)+'</span>'
-       +'<span><b>'+ghs(r.billed)+'</b> <span class="mut small">'+(r.owing>0? ('owing '+ghs(r.owing)) : 'cleared ✔️')+'</span></span></div>'; }).join('')
-   +'</div>';
-}
-A.payTypeTick=function(el){ window.__PAYTICKS=window.__PAYTICKS||{};
-  if(el&&el.checked) window.__PAYTICKS[el.dataset.name]=1; else if(el) delete window.__PAYTICKS[el.dataset.name];
-  A.payAlloc(); };
+
 A.payAlloc=function(){   /* Round-326: where the typed amount goes, shown as it is typed */
   const s=mySchool(), year=yearSel();
   const stEl=$('#pay-stu'); const st=stEl? DB.students.find(function(x){ return x.id===stEl.value; }):null;
@@ -22967,16 +23932,22 @@ A.payAlloc=function(){   /* Round-326: where the typed amount goes, shown as it 
   const ticked=$$('#pay-types .pyt-tick').filter(function(ck){ return ck.checked; }).map(function(ck){ return ck.dataset.name; });
   const chosen=(($('#pay-type')||{}).value||'').trim();
   if(!heads.length){ window.__PAYPLAN=null; box.innerHTML='<div class="small mut">This class has no fees set yet — set them with ➕ Add Fees, then Save All To Classes.</div>'; return; }
-  if(!(amt>0)){ window.__PAYPLAN=null; box.innerHTML='<div class="small mut">Type an amount and it is shared out over the fee types set for this class'+(ticked.length? (' — now: '+esc(ticked.join(' · '))):'')+'.</div>'; return; }
+  if(!(amt>0)){ window.__PAYPLAN=null; box.innerHTML='<div class="small mut">Type an amount and it is shared out over the fee types set for this class in Admin Priority Order'+(ticked.length? (' — now: '+esc(ticked.join(' · '))):'')+'.</div>'; return; }
   const plan=payAllocPlan(heads, ticked, chosen, amt); window.__PAYPLAN=plan;
-  box.innerHTML='<div class="notice mini info"><b>Where this '+ghs(amt)+' goes</b><div class="small mt1">'
+  
+  if(plan.rejected){
+    box.innerHTML=`<div class="notice mini bad" style="background:#fef2f2;border:1.5px solid #ef4444;color:#b91c1c">
+      <b>⛔ Overpayment Rejected:</b> Max payable is <b>${ghs(plan.maxPayable)}</b>. Overpayment as credit for next term is turned OFF in Admin Settings.
+    </div>`;
+    return;
+  }
+
+  box.innerHTML='<div class="notice mini info"><b>Where this '+ghs(amt)+' goes (Admin Priority Order)</b><div class="small mt1">'
    +plan.alloc.map(function(a){ return '<div class="flex between"><span>'+esc(a.name)+'</span><span><b>'+ghs(a.amount)+'</b></span></div>'; }).join('')
-   +(plan.extra>0? '<div class="small mut mt1">'+ghs(plan.extra)+' is more than this class still owes — that part rides the last fee above (the pupil shows a credit).</div>':'')
+   +(plan.credit>0? '<div class="notice mini ok mt1" style="background:#ecfdf5;border:1px solid #10b981;color:#065f46"><b>✨ Credit Advance:</b> '+ghs(plan.credit)+' will be credited to student for next term.</div>':'')
    +'</div></div>';
 };
 
-/* Round-322 (owner order 4): a 💾 SAVE inside the book itself — set ONE book (its type, its class, its price
-   per one and copies), save it right there, and the row keeps its total price. */
 A.fsSaveBook=function(btn){
   const tr=btn? btn.closest('tr'):null; if(!tr) return;
   const bk=tr.querySelector('.fs-book');
@@ -25944,6 +26915,11 @@ function renderReports(){
       <select style="width:130px" onchange="RP.term=this.value;render()">
         ${cls?termsForClass(cls).map(t=>`<option ${RP.term===t?'selected':''}>${t}</option>`).join(''):''}
       </select>
+    </div>
+    <div style="display:flex;align-items:flex-end">
+      <button class="btn ghost sm" style="border-color:#0284c7;color:#0369a1;font-weight:700;margin-top:20px" onclick="A.openGradingSettingsModal()" title="Edit Grade Boundaries, JHS Scale & Aggregate Visibility">
+        🎚 Grading &amp; Aggregate Settings
+      </button>
       ${cls&&isBasic9(cls)?'<div class="small mut" style="font-size:.72rem;color:#64748b;margin-top:2px;white-space:nowrap;line-height:1.2">Basic 9 reports: Terms 1 &amp; 2 only</div>':''}
     </div>
     ${advancedOK?`<div><label style="margin:0 0 .35rem;font-size:.84rem;font-weight:650">Options &amp; template</label>
@@ -26359,6 +27335,9 @@ function reportCardHTML(s, cls, st, term, year){
         ${(function(){
         const isCand = isBS9(cls) || !!(st.indexNo);
         const candIdx = studentIndexNo(st, s);
+        const showAggInHeader = shouldShowJhsAggregate(s, cls);
+        const jhsAgg = showAggInHeader ? calculateJhsBest6Aggregate(st.id, cls, term, year, s) : null;
+
         const rows = [
           ['Name:', (esc(st.firstName)+' '+esc(st.otherName||'')+' '+esc(st.surname)).replace(/\s+/g,' ').trim()],
           ['Student ID:', esc(st.sid)],
@@ -26366,6 +27345,8 @@ function reportCardHTML(s, cls, st, term, year){
           ['Class:', esc(cls.name)],
           ['Stream:', esc(cls.stream)],
           ...(pupilShowsHouse(s,st)?[['House:', h?esc(h.name):'—']]:[]),
+          // Requirement 2: Header Placement directly under House
+          ...(showAggInHeader ? [['Aggregate:', `<b style="color:#0369a1;font-size:1.05rem">${jhsAgg ? jhsAgg.total : '—'}</b>`]] : []),
           ['Gender:', (st.gender==='M'?'Male':'Female')],
           ...(s.showPosition!==false?[['Overall Position:', pos? pos+' / '+aggs.length : '—']]:[])
         ];
@@ -26373,7 +27354,8 @@ function reportCardHTML(s, cls, st, term, year){
       })()}
       </div>   <!-- Round-232 (owner, item 4): ONE uniform label/value grid — every value lines up down the card, centred; Print-safe (no flex guessing). -->
     </div>
-    <div class="center mb2" style="background:${T.c1}10;border-radius:10px;padding:.35rem"><span class="badge" style="background:${T.c2};color:#fff;font-size:.76rem;padding:.3rem .9rem;display:inline-flex;align-items:center">${rcVacationIconSVG(mono)}<span>${vac? `Vacation: <b>${vac}</b> · ` : ''}Next term begins: <b>${nextStart? fmtD(nextStart) : 'to be announced'}</b></span></span></div>
+    <div class="center mb2 rc-vac-wrap" style="background:${T.c1}10;border-radius:10px;padding:.35rem"><span class="badge rc-vac-pill" style="background:${T.c2};color:#fff;font-size:.76rem;padding:.3rem .9rem;display:inline-flex;align-items:center">${rcVacationIconSVG(mono)}<span>${vac? `Vacation: <b>${vac}</b> · ` : ''}Next term begins: <b>${nextStart? fmtD(nextStart) : 'to be announced'}</b></span></span></div>
+    <div class="rc-table-wrap">
     <table class="rc-table" style="width:100%"><thead>
       <tr style="background:${T.c1}"><th style="color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background:${T.c1}">Subject</th>
       <th class="center" style="color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background:${T.c1}">Class ${w.c}%<br>(converted)</th>
@@ -26386,17 +27368,38 @@ function reportCardHTML(s, cls, st, term, year){
         const subPosInfo = (subPositions[r.sub] && subPositions[r.sub][st.id]) || null;
         const subPosStr = subPosInfo ? ordinal(subPosInfo.rank) : "—";
         if(!r.conv) return `<tr style="background:${i%2?T.c1+'08':'#fff'};color:#000000!important"><td style="color:#000000!important;-webkit-text-fill-color:#000000!important">${esc(subAbbr(r.sub))}</td><td colspan="6" class="center mut" style="color:#475569!important;-webkit-text-fill-color:#475569!important">—</td></tr>`;
-        const g=gradeBand(r.conv.total);
+        const g=gradeBand(r.conv.total, s, cls);
         return `<tr style="background:${i%2?T.c1+'08':'#fff'};color:#000000!important"><td style="color:#000000!important;-webkit-text-fill-color:#000000!important">${esc(subAbbr(r.sub))}</td><td class="center" style="color:#000000!important;-webkit-text-fill-color:#000000!important">${r.conv.c}</td><td class="center" style="color:#000000!important;-webkit-text-fill-color:#000000!important">${r.conv.e}</td>
         <td class="center b" style="color:#000000!important;-webkit-text-fill-color:#000000!important">${r.conv.total}</td><td class="center b" style="white-space:nowrap;color:#000000!important;-webkit-text-fill-color:#000000!important">${subPosStr}</td><td class="center b" style="color:${mono?'#000000':gradeColor(g[0])}!important;-webkit-text-fill-color:${mono?'#000000':gradeColor(g[0])}!important">${g[0]}</td><td class="small" style="color:#000000!important;-webkit-text-fill-color:#000000!important">${g[1]}</td></tr>`;}).join('')}
     </tbody></table>
-    <!-- Clean space between scores table and summary row -->
-    <div class="center small mt2" style="display:flex;justify-content:center;align-items:center;gap:.4rem 1.6rem;flex-wrap:wrap;color:#000000!important">
-      <span><span class="mut" style="color:#475569!important">AGGREGATE (Σ converted):</span> <b style="font-size:1.1rem;color:${mono?'#000000':T.c1}!important">${aggTotal===null?'—':aggTotal}</b></span>
-      ${RP.showAtt?`<span><span class="mut" style="color:#475569!important">ATTENDANCE:</span> <b style="font-size:1.1rem;color:${mono?'#000000':T.c1}!important">${att||0} / ${exp||'—'} days</b></span>`:''}
-      ${avgPct!==null?`<span><span class="mut" style="color:#475569!important">AVERAGE:</span> <b style="font-size:1.1rem;color:${mono?'#000000':T.c1}!important">${avgPct}%</b></span>`:''}
-      ${isJHS(cls)&&bece?`<span><span class="mut" style="color:#475569!important">🏅 BEST SIX:</span> <b style="font-size:1.1rem;color:${mono?'#000000':T.c1}!important">${bece.total}</b> <span class="small mut" style="color:#475569!important">(${bece.chosen.map(x=>{ const a=subAbbr(x.sub, true); return esc(a!==x.sub? a : a.split(' ').map(w=>w[0]).join('').slice(0,3)); }).join(' · ')})</span></span>`:''}
     </div>
+    <div class="rc-swipe-hint no-print">↔️ Swipe table horizontally · Subject name stays pinned on left</div>
+    <!-- Clean space between scores table and summary row -->
+    ${(()=>{
+      // Requirement 1: Overall Score Calculation = sum of all subject scores (each marked out of 100)
+      let overallScore = 0;
+      let validSubCount = 0;
+      rows.forEach(r => {
+        if(r.conv && r.conv.total !== null && !isNaN(Number(r.conv.total))){
+          overallScore += Number(r.conv.total);
+          validSubCount++;
+        }
+      });
+      if(validSubCount === 0) overallScore = null;
+      else overallScore = Math.round(overallScore * 10) / 10;
+
+      const showAgg = shouldShowJhsAggregate(s, cls);
+      const jhsBest6 = showAgg ? calculateJhsBest6Aggregate(st.id, cls, term, year, s) : null;
+
+      return `
+      <div class="rc-summary-strip small mt2">
+        <span><span class="mut">OVERALL SCORE:</span> <b style="font-size:1.05rem;color:${mono?'#000000':T.c1}!important">${overallScore !== null ? overallScore : '—'}</b></span>
+        ${RP.showAtt?`<span><span class="mut">ATTENDANCE:</span> <b style="font-size:1.05rem;color:${mono?'#000000':T.c1}!important">${att||0} / ${exp||'—'} days</b></span>`:''}
+        ${avgPct!==null?`<span><span class="mut">AVERAGE:</span> <b style="font-size:1.05rem;color:${mono?'#000000':T.c1}!important">${avgPct}%</b></span>`:''}
+        ${(showAgg && jhsBest6)?`<span><span class="mut">🏅 BEST SIX:</span> <b style="font-size:1.05rem;color:${mono?'#000000':T.c1}!important">${jhsBest6.total}</b> <span class="small mut">(${jhsBest6.chosen.map(x=>{ const a=subAbbr(x.sub, true); return esc(a!==x.sub? a : a.split(' ').map(w=>w[0]).join('').slice(0,3)); }).join(' · ')})</span></span>`:''}
+      </div>
+      `;
+    })()}
     <!-- Conduct, Interest & Attitude (School Admin configurable: can be ticked on/off, horizontal or vertical) -->
     ${(()=>{
       const showCond = s.showConduct !== false;
@@ -26427,15 +27430,15 @@ function reportCardHTML(s, cls, st, term, year){
         ${items.map(([lbl, val])=>`<div style="display:inline-flex;align-items:baseline;gap:.4rem;flex:1 1 0;min-width:0"><b style="color:${mono?'#000000':T.c1};white-space:nowrap">${lbl}:</b> <span style="font-weight:600;color:#000000!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(val)}</span></div>`).join('')}
       </div>`;
     })()}
-    ${RP.showCom?`<div class="mt2 small" style="background:${T.c2}14;border-radius:8px;padding:${cls&&cls.stream==='Pre-school'?'.65rem 1rem':'.5rem .8rem'};color:#000000!important;${cls&&cls.stream==='Pre-school'?'font-size:.82rem;line-height:1.45;':''}">
+    ${RP.showCom?`<div class="rc-com-box mt2 small" style="background:${T.c2}14;border-radius:8px;padding:${cls&&cls.stream==='Pre-school'?'.65rem 1rem':'.5rem .8rem'};color:#000000!important;${cls&&cls.stream==='Pre-school'?'font-size:.82rem;line-height:1.45;':''}">
       <div><b>Class teacher's remark:</b> ${esc(teacherC)}</div>
       <div class="${cls&&cls.stream==='Pre-school'?'mt2':'mt1'}"><b>Head's remark:</b> ${esc(headC)}</div></div>`:''}
     ${promo?`<div class="mt2 center" style="border:2px dashed ${T.c1};border-radius:10px;padding:.5rem .8rem;background:${promo.bg}">
       <div class="small mut" style="letter-spacing:.09em">END-OF-YEAR PROMOTION STATUS</div>
       <div class="b" style="font-size:1.1rem;color:${promo.c}">${promo.label}</div>
       <div class="small">${promo.sub}</div></div>`:''}
-    <div class="flex between mt2 small" style="align-items:flex-end;color:#000000!important;padding:0 14px;width:100%;box-sizing:border-box">
-      <div class="center" style="width:125px;max-width:135px;text-align:center;box-sizing:border-box">
+    <div class="flex between mt2 small rc-sig-row" style="align-items:flex-end;color:#000000!important;padding:0 14px;width:100%;box-sizing:border-box">
+      <div class="center rc-sig-col" style="width:125px;max-width:135px;text-align:center;box-sizing:border-box">
         <div style="min-height:34px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:2px">
           ${ct&&ct.sig?`<img class="sig-img" src="${ct.sig}" style="max-height:34px;max-width:125px;object-fit:contain">`:''}
         </div>
@@ -26444,7 +27447,7 @@ function reportCardHTML(s, cls, st, term, year){
           <div style="font-size:.74rem;color:#334155;font-weight:600;margin-top:2px;letter-spacing:.01em;text-align:center">Class Teacher</div>
         </div>
       </div>
-      <div class="center" style="width:125px;max-width:135px;text-align:center;box-sizing:border-box;margin-right:8px">
+      <div class="center rc-sig-col" style="width:125px;max-width:135px;text-align:center;box-sizing:border-box;margin-right:8px">
         <div style="min-height:34px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:2px">
           ${s.headSig?`<img class="sig-img" src="${s.headSig}" style="max-height:34px;max-width:125px;object-fit:contain">`:''}
         </div>
@@ -26658,25 +27661,24 @@ function renderSettings(){
     ? [['users','🧑‍🤝‍🧑 Users'],['sms','📲 SMS provider'],['smslog','📨 SMS outbox'],['cloud','☁️ JSONBin'],['plans','💳 Plan prices'],['security','🔐 Security']]
     : u.role==='schooladmin'
     ? (isLife
-        ? [['users','🧑‍🤝‍🧑 Users'],['security','🔐 Security & cash password'],['sms','📲 SMS provider'],['smslog','📨 SMS outbox']]
-        : [['users','🧑‍🤝‍🧑 Users'],['security','🔐 Security & cash password'],['sms','📲 SMS provider'],['smslog','📨 SMS outbox'],['payment','💳 Subscription']])
+        ? [['users','🧑‍🤝‍🧑 Users'],['feesettings','⚡ Fee Allocation'],['grading','🎚 Grading & Report Card'],['security','🔐 Security & cash password'],['sms','📲 SMS provider'],['smslog','📨 SMS outbox']]
+        : [['users','🧑‍🤝‍🧑 Users'],['feesettings','⚡ Fee Allocation'],['grading','🎚 Grading & Report Card'],['security','🔐 Security & cash password'],['sms','📲 SMS provider'],['smslog','📨 SMS outbox'],['payment','💳 Subscription']])
     : u.role==='parent' ? [['account','👤 Account'],['smslog','📨 SMS notices']]
     : [['account','👤 Account'],['security','🔐 Security']];
-  if(!SET_TAB || (!tabs.some(t=>t[0]===SET_TAB) && !(SET_TAB==='school' && u.role==='schooladmin'))) SET_TAB=tabs[0][0];   /* Round-108: 'school' stays a silent legacy route (old sessions) — no visible tab */
+  if(!SET_TAB || (!tabs.some(t=>t[0]===SET_TAB) && !(SET_TAB==='school' && u.role==='schooladmin'))) SET_TAB=tabs[0][0];
   return `<div class="tabs">${tabs.map(t=>`<div class="tab ${SET_TAB===t[0]?'on':''}" onclick="SET_TAB='${t[0]}';render()">${t[1]}</div>`).join('')}</div>
   ${SET_TAB==='school'? schoolSettingsHTML() :
     SET_TAB==='users'? usersSettingsHTML() :
+    SET_TAB==='feesettings'? renderFeePriorityListHTML(mySchool()) :
+    SET_TAB==='grading'? profileGradesCardHTML(mySchool()) :
     SET_TAB==='security'? securitySettingsHTML() :
     SET_TAB==='sms'? smsSettingsHTML() :
     SET_TAB==='cloud'? cloudSettingsHTML() :
     SET_TAB==='payment'? paymentSettingsHTML() :
     SET_TAB==='plans'? planSettingsHTML() :
     SET_TAB==='smslog'? smsLogHTML() : accountHTML()}
-  <div class="center small mt3" style="opacity:1"><b style="color:var(--gold)">HEREMS_PLUS-SMS v${APP_VERSION} ${APP_BUILD}</b> · offline-first school system 🇬🇭</div>`;   <!-- Round-201: bright version -->
+  <div class="center small mt3" style="opacity:1"><b style="color:var(--gold)">HEREMS_PLUS-SMS v${APP_VERSION} ${APP_BUILD}</b> · offline-first school system 🇬🇭</div>`;
 }
-/* Round-118: Old Students auto-move is now FULLY AUTOMATIC — the moment the admin sets the school term to Term 3,
-   EVERY Basic-9 class moves to Old Students. No dropdown left to choose: every class has its own fixed schedule.
-   Round-119: and this explainer card now lives on the ARCHIVES portal (with the Old Students folder), not on School Profile. */
 function alumniCardHTML(s, trig){ return `
   <div class="card alm-card"><h3>🎓 Old Students — auto-move</h3>
     <label>Move to Old Students after: <b>fully automatic — nothing to set</b></label>
@@ -26770,17 +27772,195 @@ function profileMediaCardHTML(s, logoOK){ return `<div class="card"><h3>🖼 Sch
       ${Object.entries(RPT_TEMPLATES).map(([k,tp])=>`<option value="${k}" ${s.reportTpl===k?'selected':''} ${(!logoOK&&!tp.free)?'disabled':''}>${tp.name}${tp.free?'':' 🔒'}</option>`).join('')}
     </select>
     ${isLifetime(s) ? '' : `<h4 class="mt3">Subscription status</h4>${subBadge()} ${s.paidUntil ? `<div class="small mut mt1">Plan: <b>${s.plan==='year'?'Yearly Plan':'Termly Plan'}</b> · Expires: <b>${fmtD(new Date(s.paidUntil).toISOString().slice(0,10))}</b></div>` : ''}`}</div>`; }
-function profileGradesCardHTML(s){ return `<div class="card"><h3>🎚 Grade boundaries (A – F)</h3>
-    <div class="small mut mb2">The School Administrator may adjust the grading scale — set the <b>minimum total (out of 100)</b> for each grade. Every boundary must be <b>lower</b> than the one above it. Applies instantly to report cards, performance sheets, the master copy &amp; remarks.</div>
-    <div class="grid g3">
-      ${gradeBandsOf(s).map(b=> b.l==='F'
-        ? `<div><label>F grade</label><input value="Below E — automatic" disabled></div>`
-        : `<div><label>${b.l} — minimum %</label><input type="number" min="1" max="100" id="gb-${b.l}" value="${b.min}"></div>`).join('')}
+function profileGradesCardHTML(s){
+  const jhsScale = (s && s.jhsGradingSystem) || 'number';
+  const aggVis = (s && s.jhsAggregateVisibility) || 'all';
+  const primaryBands = primaryGradeBandsOf(s);
+  const jhsBands = jhsNumberBandsOf(s);
+
+  return `
+  <div class="card mb2" style="background:#fff;border:1.5px solid #0284c7;border-radius:12px;padding:1.15rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:1.5px solid #e0f2fe;padding-bottom:10px;margin-bottom:14px">
+      <div>
+        <h3 style="margin:0;color:#0369a1;font-size:1.15rem;display:flex;align-items:center;gap:8px">
+          <span>🎚 Grading Systems &amp; Report Card Settings</span>
+        </h3>
+        <div class="small mut mt1">Configure primary letter grading, JHS stanine number/letter scales, score boundaries, and aggregate visibility.</div>
+      </div>
+      <span class="badge" style="background:#0284c7;color:#fff;font-weight:700">Official Standards</span>
     </div>
-    <div class="small mut mt1">Current scale: <div class="center" style="margin-top:.35rem">${gradeLegendTableHTML(false, s)}</div>
-      ${s.gradeBands?'<span class="badge gold">custom scale</span>':'<span class="badge info">standard scale</span>'}</div>
-    <div class="flex mt2"><button class="btn" onclick="A.saveGradeBands()">💾 Save grade boundaries</button>
-    ${s.gradeBands?`<button class="btn ghost" onclick="A.resetGradeBands()">↩️ Reset to standard (80/70/60/50/40)</button>`:''}</div></div>`; }
+
+    <!-- SECTION 1: PRIMARY LEVEL (BASIC 1 - 6) STANDARDIZED LETTER SYSTEM (A - F) -->
+    <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;padding:12px;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <b style="color:#0f172a;font-size:.88rem">1. Primary Level (Basic 1 – 6) — Standardized Letter System (A – F)</b>
+        <span class="badge" style="background:#15803d;color:#fff;font-weight:700">A to F Scale</span>
+      </div>
+      <div class="small mut mb2">Set custom minimum score thresholds (out of 100) for each letter grade:</div>
+      <div class="grid g3" style="gap:10px">
+        ${primaryBands.map(b => b.l === 'F'
+          ? `<div><label style="font-size:.76rem;font-weight:700">F Grade (&lt; 40)</label><input value="Below E — automatic" disabled style="font-size:.82rem"></div>`
+          : `<div><label style="font-size:.76rem;font-weight:700">${b.l} (${esc(b.remark || '')}) — Min %</label><input type="number" min="1" max="100" id="pgb-${b.l}" value="${b.min}" style="font-size:.82rem;font-weight:700"></div>`
+        ).join('')}
+      </div>
+    </div>
+
+    <!-- SECTION 2: JHS LEVEL (BASIC 7 - 9) GRADING SYSTEM -->
+    <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;padding:12px;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+        <b style="color:#0f172a;font-size:.88rem">2. JHS Level (Basic 7 – 9) — Grading Scale Selection</b>
+        <div style="display:flex;gap:6px">
+          <button type="button" class="btn sm ${jhsScale === 'number' ? 'gold' : 'ghost'}" style="font-weight:700;padding:3px 10px;font-size:.78rem" onclick="A.setJhsGradingScale('number')">
+            1 to 9 (Number System)
+          </button>
+          <button type="button" class="btn sm ${jhsScale === 'letter' ? 'gold' : 'ghost'}" style="font-weight:700;padding:3px 10px;font-size:.78rem" onclick="A.setJhsGradingScale('letter')">
+            A to F (Letter System)
+          </button>
+        </div>
+      </div>
+      <div class="small mut mb2">
+        Active scale for JHS: <b>${jhsScale === 'number' ? 'Number System: 1 (Highest/Best) to 9 (Lowest/Worst) — BECE Stanine' : 'Letter System: A through F'}</b>
+      </div>
+
+      ${jhsScale === 'number' ? `
+        <div class="small mut mb1">Score boundaries for Number Scale (1–9):</div>
+        <div class="grid g3" style="gap:8px">
+          ${jhsBands.map(b => b.g === 9
+            ? `<div><label style="font-size:.74rem;font-weight:700">Grade 9 (Lowest)</label><input value="Below 8 — automatic" disabled style="font-size:.8rem"></div>`
+            : `<div><label style="font-size:.74rem;font-weight:700">Grade ${b.g} (${esc(b.remark || '')}) — Min %</label><input type="number" min="1" max="100" id="jgb-${b.g}" value="${b.min}" style="font-size:.8rem;font-weight:700"></div>`
+          ).join('')}
+        </div>
+      ` : `
+        <div class="small info" style="background:#e0f2fe;padding:8px 10px;border-radius:6px;color:#0369a1;font-weight:600">
+          ℹ️ JHS classes will display letter grades (A–F) using the configured primary score boundaries above.
+        </div>
+      `}
+    </div>
+
+    <!-- SECTION 3: JHS AGGREGATE VISIBILITY TOGGLES -->
+    <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;padding:12px;margin-bottom:14px">
+      <div style="font-weight:800;color:#0f172a;font-size:.88rem;margin-bottom:6px">
+        3. JHS Aggregate Visibility on Report Cards (Best 6 Subjects)
+      </div>
+      <div class="small mut mb2">
+        Choose which class levels show the Best 6 Aggregate (4 Core + 2 Best Electives) on terminal report cards. If turned off, report card defaults to displaying <b>only the Overall Score</b>.
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:8px">
+        ${[
+          { id: 'all', label: 'All JHS (Basic 7 – 9)' },
+          { id: 'bs7', label: 'Only Basic 7 (JHS 1)' },
+          { id: 'bs8', label: 'Only Basic 8 (JHS 2)' },
+          { id: 'bs9', label: 'Only Basic 9 (JHS 3 / BECE)' },
+          { id: 'none', label: 'Disabled (Off — Overall Score Only)' }
+        ].map(opt => `
+          <label style="display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid ${aggVis === opt.id ? '#0284c7' : '#cbd5e1'};border-radius:8px;padding:8px 10px;cursor:pointer;font-size:.8rem;font-weight:700;color:${aggVis === opt.id ? '#0369a1' : '#1e293b'}">
+            <input type="radio" name="jhs-agg-vis" value="${opt.id}" ${aggVis === opt.id ? 'checked' : ''} onchange="A.setJhsAggVis(this.value)">
+            ${esc(opt.label)}
+          </label>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="flex wrap between" style="gap:8px">
+      <button class="btn gold" onclick="A.saveGradingAndReportSettings()" style="font-weight:800">
+        💾 Save Grading &amp; Aggregate Settings
+      </button>
+      <button class="btn ghost" onclick="A.resetGradingToDefaults()" style="font-size:.82rem">
+        ↩️ Reset to Official Standards
+      </button>
+    </div>
+  </div>
+  `;
+}
+
+A.setJhsGradingScale = function(scale){
+  const s = mySchool(); if(!s) return;
+  s.jhsGradingSystem = scale;
+  saveDB();
+  toast(`JHS grading system set to: ${scale === 'number' ? '1 to 9 (Number System)' : 'A to F (Letter System)'}`, 'ok');
+  render();
+};
+
+A.setJhsAggVis = function(val){
+  const s = mySchool(); if(!s) return;
+  s.jhsAggregateVisibility = val;
+  saveDB();
+  toast(`JHS Aggregate report card visibility set to: ${val}`, 'ok');
+  render();
+};
+
+A.saveGradingAndReportSettings = function(){
+  const s = mySchool(); if(!s) return;
+
+  // 1. Primary grade boundaries
+  const pOrder = ['A','B','C','D','E'];
+  const pVals = {};
+  for(const l of pOrder){
+    const el = $('#pgb-' + l);
+    const v = el ? parseInt(el.value, 10) : NaN;
+    if(isNaN(v) || v < 1 || v > 100) return toast('⚠️ Enter each Primary boundary as a number from 1 to 100', 'bad');
+    pVals[l] = v;
+  }
+  for(let i = 1; i < pOrder.length; i++){
+    if(!(pVals[pOrder[i]] < pVals[pOrder[i-1]])){
+      return toast('⚠️ Each Primary boundary must be LOWER than the one above it — A is the highest, E the lowest.', 'bad');
+    }
+  }
+  s.primaryGradeBands = [
+    { l: 'A', min: pVals.A, remark: 'Excellent' },
+    { l: 'B', min: pVals.B, remark: 'Very Good' },
+    { l: 'C', min: pVals.C, remark: 'Good' },
+    { l: 'D', min: pVals.D, remark: 'Credit' },
+    { l: 'E', min: pVals.E, remark: 'Pass' },
+    { l: 'F', min: 0, remark: 'Fail' }
+  ];
+  s.gradeBands = s.primaryGradeBands;
+
+  // 2. JHS number boundaries (if number scale is active)
+  if((s.jhsGradingSystem || 'number') === 'number'){
+    const jOrder = [1, 2, 3, 4, 5, 6, 7, 8];
+    const jVals = {};
+    for(const g of jOrder){
+      const el = $('#jgb-' + g);
+      const v = el ? parseInt(el.value, 10) : NaN;
+      if(isNaN(v) || v < 1 || v > 100) return toast('⚠️ Enter each JHS boundary as a number from 1 to 100', 'bad');
+      jVals[g] = v;
+    }
+    for(let i = 1; i < jOrder.length; i++){
+      if(!(jVals[jOrder[i]] < jVals[jOrder[i-1]])){
+        return toast('⚠️ Each JHS boundary must be LOWER than the one above it — Grade 1 is highest, Grade 8 is lower.', 'bad');
+      }
+    }
+    s.jhsNumberBands = [
+      { g: 1, min: jVals[1], remark: 'Highest' },
+      { g: 2, min: jVals[2], remark: 'Higher' },
+      { g: 3, min: jVals[3], remark: 'High' },
+      { g: 4, min: jVals[4], remark: 'High Average' },
+      { g: 5, min: jVals[5], remark: 'Average' },
+      { g: 6, min: jVals[6], remark: 'Low Average' },
+      { g: 7, min: jVals[7], remark: 'Low' },
+      { g: 8, min: jVals[8], remark: 'Lower' },
+      { g: 9, min: 0, remark: 'Lowest' }
+    ];
+  }
+
+  saveDB();
+  toast('💾 Grading Systems & Report Card Settings saved successfully!', 'ok');
+  render();
+};
+
+A.resetGradingToDefaults = function(){
+  const s = mySchool(); if(!s) return;
+  delete s.primaryGradeBands;
+  delete s.gradeBands;
+  delete s.jhsNumberBands;
+  s.jhsGradingSystem = 'number';
+  s.jhsAggregateVisibility = 'all';
+  saveDB();
+  toast('↩️ Restored official standards for Primary & JHS grading', 'gold');
+  render();
+};
+
 function schoolSettingsHTML(){
   const s=mySchool(); const logoOK=fullAccess(s);
   return `<div class="grid g2">${profileMainCardHTML(s)}${profileMediaCardHTML(s,logoOK)}${profileGradesCardHTML(s)}</div>`;   /* Round-119: auto-move card lives in Archives now */
