@@ -10653,7 +10653,7 @@ A.mockMasterAsk=function(mid){   /* Round-311 (owner item 2): the ADMINISTRATOR 
 };
 A.mockMasterGo=function(mid){ const ids=$$('.mm-ck').filter(c=>c.checked).map(c=>c.value); closeModal(); A.mockMaster(mid, ids); };
 A.mockMaster=function(mid, mockIds){const s=mySchool(),m=(DB.mocks||[]).find(x=>x.id===mid);let mocks=(DB.mocks||[]).filter(x=>x.schoolId===s.id);
-  if(Array.isArray(mockIds)&&mockIds.length){ mocks=mocks.filter(x=>mockIds.indexOf(x.id)>=0); if(!mocks.some(x=>x.id===m.id)) mocks.push(m); }   /* Round-311: only the Administrator's chosen mocks ride the comparison */if(!s||!m)return;const cs=mockActiveClasses(s,m),rows=[];cs.forEach(c=>{const subs=studentSubjectsForClass(s,c);activeStudents(s.id).filter(st=>st.classId===c.id).forEach(st=>{const z=mockStudentStats(s,m,st,subs),vals=subs.map(x=>Number(((m.scores||{})[st.id]||{})[x])).filter(Number.isFinite);rows.push({st,c,subs,vals,total:z.total,rawScore:z.rawScore,avg:z.avg,aggregate:z.aggregate});});});rows.sort((a,b)=>b.rawScore-a.rawScore);const table='<table><thead><tr><th>Position</th><th>Student</th><th>Class</th><th>Total<br>all subjects</th><th>Raw Score<br>best six</th><th>Average<br>raw ÷ 6</th><th>Aggregate</th></tr></thead><tbody>'+rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.st.firstName+' '+r.st.surname)+'</td><td>'+esc(r.c.name)+'</td><td>'+r.total.toFixed(2)+'</td><td><b>'+r.rawScore.toFixed(2)+'</b></td><td>'+r.avg.toFixed(2)+'</td><td><b>'+r.aggregate+'</b></td></tr>').join('')+'</tbody></table>';const sheets='<div class="mock-report-sheet mock-master mock-landscape">'+mockWM(s)+mockHead(s, esc(m.name))+mockMasterStudentsGraph(rows,mocks,s)+'</div><div class="mock-report-sheet mock-master">'+mockWM(s)+mockHead(s,'Master Score Report \u00b7 '+esc(m.name)+' \u00b7 Best-six raw score, average and aggregate')+'<div class="mock-subspace"></div>'+table+'</div>'+mockSubjectSheets(s,m,rows);$('#print-root').innerHTML=sheets;window.print();};
+  if(Array.isArray(mockIds)&&mockIds.length){ mocks=mocks.filter(x=>mockIds.indexOf(x.id)>=0); if(!mocks.some(x=>x.id===m.id)) mocks.push(m); }   /* Round-311: only the Administrator's chosen mocks ride the comparison */if(!s||!m)return;const cs=mockActiveClasses(s,m),rows=[];cs.forEach(c=>{const subs=studentSubjectsForClass(s,c);activeStudents(s.id).filter(st=>st.classId===c.id).forEach(st=>{const z=mockStudentStats(s,m,st,subs),vals=subs.map(x=>Number(((m.scores||{})[st.id]||{})[x])).filter(Number.isFinite);rows.push({st,c,subs,vals,total:z.total,rawScore:z.rawScore,avg:z.avg,aggregate:z.aggregate});});});rows.sort((a,b)=>b.rawScore-a.rawScore);const table='<table><thead><tr><th>Position</th><th>Student</th><th>Class</th><th>Student ID</th><th>Index No</th><th>Total<br>all subjects</th><th>Raw Score<br>best six</th><th>Average<br>raw ÷ 6</th><th>Aggregate</th></tr></thead><tbody>'+rows.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.st.firstName+' '+r.st.surname)+'</td><td>'+esc(r.c.name)+'</td><td class="small mut">'+esc(r.st.sid||'—')+'</td><td class="small b" style="color:#0369a1">'+esc(studentIndexNo(r.st, s)||'—')+'</td><td>'+r.total.toFixed(2)+'</td><td><b>'+r.rawScore.toFixed(2)+'</b></td><td>'+r.avg.toFixed(2)+'</td><td><b>'+r.aggregate+'</b></td></tr>').join('')+'</tbody></table>';const sheets='<div class="mock-report-sheet mock-master mock-landscape">'+mockWM(s)+mockHead(s, esc(m.name))+mockMasterStudentsGraph(rows,mocks,s)+'</div><div class="mock-report-sheet mock-master">'+mockWM(s)+mockHead(s,'Master Score Report \u00b7 '+esc(m.name)+' \u00b7 Best-six raw score, average and aggregate')+'<div class="mock-subspace"></div>'+table+'</div>'+mockSubjectSheets(s,m,rows);$('#print-root').innerHTML=sheets;window.print();};
 
 function render(){
   const c=$('#content');
@@ -12940,13 +12940,90 @@ A.dupTwin=function(mark){
 };
 A.dupCancel=function(){ DUP_PEND=null; _twinNextMark=null; _twinFrom=null; closeModal();
   toast('🚫 Registration cancelled — no duplicate was created','gold'); };
+function isBS9(cls){
+  if(!cls) return false;
+  return !!(/(\bbasic\s*9\w*|\bbs\s*9\w*|\bjhs\s*3\b|\bj\.?h\.?s\.?\s*3\b|\bclass\s*9\b)/i.test(String(cls.name || '')));
+}
+
+function isStudentBS9(st, school){
+  if(!st) return false;
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null);
+  const c = classOf(s, st.classId);
+  return isBS9(c);
+}
+
+function studentIndexNo(st, school){
+  if(!st) return '';
+  if(st.indexNo && String(st.indexNo).trim()) return String(st.indexNo).trim();
+  const s = school || (typeof mySchool === 'function' ? mySchool() : null);
+  const c = classOf(s, st.classId);
+  if(isBS9(c)){
+    const baseCode = (s && s.centreNo) ? String(s.centreNo).padStart(7, '0').slice(0, 7) : '1234567';
+    const numDigits = String(st.sid || '').replace(/\D/g, '');
+    const candPart = (numDigits ? numDigits.slice(-3) : '001').padStart(3, '0');
+    return baseCode + candPart;
+  }
+  return '';
+}
+
+A.promptSetIndexNo = function(stId){
+  const st = (DB.students || []).find(x => x.id === stId);
+  if(!st) return toast('Student not found', 'bad');
+  const cur = st.indexNo || studentIndexNo(st);
+  const val = prompt('Enter official WAEC / BECE Index Number for ' + st.firstName + ' ' + st.surname + ' (e.g. 1234567001):', cur);
+  if(val !== null){
+    st.indexNo = val.trim();
+    saveDB();
+    toast('Index Number updated for ' + st.firstName + ' ✅', 'ok');
+    render();
+  }
+};
+
+/* ==================== NEW STUDENT BADGE LOGIC (RULES A, B, C) ====================
+   Rule A: Who is OLD?
+   If admission_year < current academic year (e.g. 2014, 2004, 2022, 2023) -> OLD student. No NEW badge ever.
+   
+   Rule B: Who is NEW?
+   If admission_date is this academic year (e.g. 2026) -> NEW student candidate.
+   
+   Rule C: How long does NEW stay?
+   When a NEW student is registered, tag "NEW" attaches to name.
+   It stays for 7 days (168 hours) by default (configurable in settings: 7 days default, 24 hours / 1 day optional).
+   After 7 days, NEW automatically vanishes and student becomes a regular pupil.
+*/
 function isStudentNew(st){
   if(!st) return false;
-  const ts = Number(st.createdAt || 0) || (st.adm ? new Date(st.adm + 'T00:00:00').getTime() : 0);
-  if(!ts) return false;
-  const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000; // exactly 2 days (48 hours)
-  const age = Date.now() - ts;
-  return age >= 0 && age <= TWO_DAYS_MS;
+
+  const nowYear = (new Date()).getFullYear();
+  let admYear = null;
+  let admTime = 0;
+  if(st.adm){
+    const parts = String(st.adm).split('-');
+    if(parts.length >= 1) admYear = parseInt(parts[0], 10);
+    const d = new Date(st.adm + 'T00:00:00');
+    if(!isNaN(d.getTime())) admTime = d.getTime();
+  }
+
+  // Current academic year start year: e.g. "2025/2026" -> 2025, or 2026
+  let curYear = nowYear;
+  const yrStr = typeof yearSel === 'function' ? String(yearSel() || '') : '';
+  if(yrStr && yrStr.includes('/')){
+    const yStart = parseInt(yrStr.split('/')[0], 10);
+    if(!isNaN(yStart)) curYear = yStart;
+  }
+
+  // Rule A: Old students (admission_year < current academic year) NEVER show NEW badge
+  if(admYear && admYear < curYear) return false;
+
+  // Rule B & C: Registered this academic year; badge stays for 7 days (default 168 hours)
+  const regTime = Number(st.createdAt || 0) || admTime || 0;
+  if(!regTime) return false;
+
+  const days = (DB && DB.settings && DB.settings.newBadgeDays) ? Number(DB.settings.newBadgeDays) : 7;
+  const DURATION_MS = days * 24 * 60 * 60 * 1000;
+
+  const age = Date.now() - regTime;
+  return age >= 0 && age <= DURATION_MS;
 }
 function nextStudentSid(school, admISO, gender){
   const yy=(admISO||todayISO()).slice(2,4);
@@ -13226,7 +13303,8 @@ function renderStudentBoard(){
           ${st.gender === 'F' ? '<span title="Female">👧</span>' : '<span title="Male">👦</span>'}
         </h1>
         <div class="stubord-chips">
-          <span class="stubord-chip gold">🆔 ${esc(st.sid || '—')}</span>
+          <span class="stubord-chip gold">🆔 Student ID: ${esc(st.sid || '—')}</span>
+          ${(isBS9(cls) || st.indexNo) ? `<span class="stubord-chip" style="background:#3730a3;border-color:#6366f1;color:#e0e7ff">🎓 Index No: ${esc(studentIndexNo(st, s) || 'Not set')}</span>` : ''}
           <span class="stubord-chip">🏫 ${esc(cls ? cls.name : 'No Class')} ${cls ? '(' + esc(cls.stream) + ')' : ''}</span>
           <span class="stubord-chip">🎂 ${age != null ? age + ' yrs' : '—'} (${genderLabel(st.gender)})</span>
           ${house ? `<span class="stubord-chip" style="background:${house.color}44;border-color:${house.color}"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${house.color}"></span> ${esc(house.name)}</span>` : ''}
@@ -13321,6 +13399,14 @@ function renderStuBoardDetails(st, s, cls, house, prefects, yr){
       <div class="stubord-info-row">
         <span class="stubord-info-label">Student ID (SID):</span>
         <span class="stubord-info-value"><b style="color:#0369a1">${esc(st.sid || '—')}</b></span>
+      </div>
+      <div class="stubord-info-row">
+        <span class="stubord-info-label">Index Number (BECE / External):</span>
+        <span class="stubord-info-value">
+          <b style="color:#4338ca">${esc(studentIndexNo(st, s) || '—')}</b>
+          ${isBS9(cls) ? '<span class="badge sm gold ml1">BS 9 Candidate</span>' : ''}
+          <button class="btn sm ghost" style="padding:1px 7px;font-size:.72rem;margin-left:6px" onclick="A.promptSetIndexNo('${st.id}')">✏️ Set Index No</button>
+        </span>
       </div>
       <div class="stubord-info-row">
         <span class="stubord-info-label">Class &amp; Stream:</span>
@@ -23314,6 +23400,7 @@ function renderMyDebt(){
       </div></div>
     ${rows.length?`<div class="table-wrap mt2"><table><thead><tr><th>#</th><th>Student</th><th>ID</th><th>Fees owing</th><th>↳ incl. carried</th><th>Canteen owing</th><th>Total owing</th><th>Guardian phone</th></tr></thead><tbody>
       ${rows.map((r,i)=>`<tr><td class="mut">${i+1}</td><td><b>${esc(r.st.firstName)} ${esc(r.st.surname)}</b></td><td class="small mut">${esc(r.st.sid||'—')}</td>
+      ${isBS9(cls)? `<td class="small b center" style="color:#0369a1">${esc(studentIndexNo(r.st, s)||'—')}</td>`: ''}
         <td class="bad">${r.d.fees?ghs(r.d.fees):'—'}</td><td class="small mut">${r.d.carried?ghs(r.d.carried):'—'}</td>
         <td class="bad">${r.d.cant?ghs(r.d.cant)+` <span class="tag">${r.d.cantPlan}</span>`:'—'}</td>
         <td class="bad b">${ghs(r.d.total)}</td><td class="small">${esc(r.st.parentPhone||'—')}</td></tr>`).join('')}
@@ -25987,7 +26074,7 @@ function masterCopyHTML(s, cls, term, year){
       <div class="small mut mt1">Converted marks (class ${w.c}% / exam ${w.e}%) · arranged in <b>ascending order of position</b> · ${D.rows.filter(r=>r.pos).length} ranked of ${D.rows.length}</div>
     </div>
     <table class="ms-table"><thead><tr>
-      <th class="center">Pos</th><th>Student</th><th>ID</th>
+      <th class="center">Pos</th><th>Student</th>${isBS9(cls)?'<th class="center">Student ID</th><th class="center">Index No</th>':'<th class="center">Student ID</th>'}
       ${D.subs.map(x=>`<th class="center" title="${esc(x)}">${esc(subHead(x))}</th>`).join('')}
       <th class="center">Aggregate<br><span class="ms-sub">Σ converted</span></th><th class="center">Avg</th><th class="center">Grade</th></tr></thead><tbody>
     ${D.rows.map(r=>{ const og=r.avg===null?null:gradeBand(r.avg);
@@ -26269,14 +26356,21 @@ function reportCardHTML(s, cls, st, term, year){
     <div class="flex small rc-band-light mt2 mb1" style="background:${T.c1}10;align-items:center;gap:.8rem;color:#000000!important">
       ${st.photo?`<img class="avatar lg" src="${st.photo}" style="border-color:${T.c1}">`:`<span class="av-fallback lg" style="background:${T.c1}">${esc((st.firstName[0]||'')+(st.surname[0]||''))}</span>`}
       <div class="grow rc-idgrid" style="color:#000000!important">
-        ${[['Name:', (esc(st.firstName)+' '+esc(st.otherName||'')+' '+esc(st.surname)).replace(/\s+/g,' ').trim()],
-           ['ID:', esc(st.sid)],
-           ['Class:', esc(cls.name)],
-           ['Stream:', esc(cls.stream)],
-           ...(pupilShowsHouse(s,st)?[['House:', h?esc(h.name):'—']]:[]),   /* Round-236 (item 5): a pre-school report carries no house line at all */
-           ['Gender:', (st.gender==='M'?'Male':'Female')]
-          , ...(s.showPosition!==false?[['Overall Position:', pos? pos+' / '+aggs.length : '—']]:[])
-        ].map(r=>`<div class="rc-idcell" style="color:#000000!important"><span class="rc-idk" style="color:#475569!important">${r[0]}</span><span class="rc-idv" style="color:#000000!important;font-weight:700">${r[1]}</span></div>`).join('')}
+        ${(function(){
+        const isCand = isBS9(cls) || !!(st.indexNo);
+        const candIdx = studentIndexNo(st, s);
+        const rows = [
+          ['Name:', (esc(st.firstName)+' '+esc(st.otherName||'')+' '+esc(st.surname)).replace(/\s+/g,' ').trim()],
+          ['Student ID:', esc(st.sid)],
+          ...(isCand ? [['Index No:', `<b style="color:#0369a1">${esc(candIdx || '—')}</b>`]] : []),
+          ['Class:', esc(cls.name)],
+          ['Stream:', esc(cls.stream)],
+          ...(pupilShowsHouse(s,st)?[['House:', h?esc(h.name):'—']]:[]),
+          ['Gender:', (st.gender==='M'?'Male':'Female')],
+          ...(s.showPosition!==false?[['Overall Position:', pos? pos+' / '+aggs.length : '—']]:[])
+        ];
+        return rows.map(r=>`<div class="rc-idcell" style="color:#000000!important"><span class="rc-idk" style="color:#475569!important">${r[0]}</span><span class="rc-idv" style="color:#000000!important;font-weight:700">${r[1]}</span></div>`).join('');
+      })()}
       </div>   <!-- Round-232 (owner, item 4): ONE uniform label/value grid — every value lines up down the card, centred; Print-safe (no flex guessing). -->
     </div>
     <div class="center mb2" style="background:${T.c1}10;border-radius:10px;padding:.35rem"><span class="badge" style="background:${T.c2};color:#fff;font-size:.76rem;padding:.3rem .9rem;display:inline-flex;align-items:center">${rcVacationIconSVG(mono)}<span>${vac? `Vacation: <b>${vac}</b> · ` : ''}Next term begins: <b>${nextStart? fmtD(nextStart) : 'to be announced'}</b></span></span></div>
@@ -26621,6 +26715,23 @@ function profileMainCardHTML(s){ return `<div class="card"><h3>🏫 School profi
         <input id="sp-head-name-main" value="${esc(s.headName||'')}" placeholder="e.g. Mrs. Abena Mensah">
       </div>
     </div>
+    <div class="frow c2">
+      <div>
+        <label>🆕 Student Tag Duration</label>
+        <select id="sp-newbadge">
+          <option value="7" ${(DB.settings&&DB.settings.newBadgeDays==7)||!DB.settings||!DB.settings.newBadgeDays?'selected':''}>7 Days (1 Week — Default)</option>
+          <option value="1" ${DB.settings&&DB.settings.newBadgeDays==1?'selected':''}>24 Hours (1 Day)</option>
+          <option value="3" ${DB.settings&&DB.settings.newBadgeDays==3?'selected':''}>3 Days</option>
+          <option value="14" ${DB.settings&&DB.settings.newBadgeDays==14?'selected':''}>14 Days (2 Weeks)</option>
+        </select>
+        <div class="small mut mt1">After this duration, [NEW] automatically vanishes from student lists.</div>
+      </div>
+      <div>
+        <label>BECE / WAEC Centre Number</label>
+        <input id="sp-centreno" value="${esc(s.centreNo||'')}" placeholder="e.g. 1234567">
+        <div class="small mut mt1">Used for BS 9 Candidate Index Numbers (e.g. 1234567001).</div>
+      </div>
+    </div>
     <label>Ghanaian languages offered <span class="mut small">(tap a tile to toggle)</span></label>
     <div class="lang-grid">${GH_LANGS.map(l=>{ const on=(s.langs||[]).includes(l); return `<div class="lang-it${on?' on':''}" data-tip="Tap to include / remove ${l}" onclick="A.langTile(this)"><span class="lang-box"></span><span class="lang-t">${l}</span><input type="checkbox" class="sp-lg" value="${l}" ${on?'checked':''} tabindex="-1" hidden></div>`; }).join('')}</div>   <!-- Round-111: compact 2-col tiles, each with a real ☑️ tick box -->
     <div class="checkline mt2"><input type="checkbox" id="sp-pos" ${s.showPosition!==false?'checked':''}>
@@ -26807,6 +26918,8 @@ A.saveSchoolProfile=function(){
   const attEl=$('#sp-att'); if(attEl) s.showAttitude=attEl.checked;
   const bmEl=$('#sp-beh-mode'); if(bmEl) s.behaviorMode=bmEl.value;
   const hnEl=$('#sp-head-name') || $('#sp-head-name-main'); if(hnEl && hnEl.value !== undefined) s.headName=hnEl.value.trim().toUpperCase();
+  const nbEl=$('#sp-newbadge'); if(nbEl){ DB.settings=DB.settings||{}; DB.settings.newBadgeDays=Number(nbEl.value)||7; }
+  const cnEl=$('#sp-centreno'); if(cnEl) s.centreNo=cnEl.value.trim();
   // ensure subject matrix covers newly added langs
   s.subjectStreams=s.subjectStreams||{};
   s.langs.forEach(l=>{ if(!s.subjectStreams[l]) s.subjectStreams[l]=['Lower Primary','Upper Primary','JHS']; });
