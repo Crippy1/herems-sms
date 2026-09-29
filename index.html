@@ -23550,7 +23550,7 @@ function renderReports(){
       <div class="checkline" style="display:inline-flex;align-items:center;gap:4px;margin:0;padding:0"><input type="checkbox" ${RP.showCom?'checked':''} onchange="RP.showCom=this.checked"> Comments</div>
       <div class="checkline" style="display:inline-flex;align-items:center;gap:4px;margin:0;padding:0"><input type="checkbox" ${RP.showLogo?'checked':''} onchange="RP.showLogo=this.checked"> Logo</div>
       ${u.role==='teacher'   /* Round-145: teachers VIEW reports — the Position setting belongs to the School Administrator */
-        ? `<div class="checkline" style="display:inline-flex;align-items:center;gap:4px;margin:0;padding:0" data-tip="Set by the School Administrator — view only for teachers"><input type="checkbox" ${s.showPosition!==false?'checked':''} disabled> Position</div>
+        ? `<div class="checkline" style="display:inline-flex;align-items:center;gap:4px;margin:0;padding:0" data-tip="Set by the School Administrator — view only for teachers"><input type="checkbox" ${s.showPosition!==false?'checked':''} disabled> Overall Position</div>
            <div class="checkline" style="display:inline-flex;align-items:center;gap:4px;margin:0;padding:0" data-tip="Set by the School Administrator — view only for teachers"><input type="checkbox" ${s.showConduct!==false?'checked':''} disabled> Conduct</div>
            <div class="checkline" style="display:inline-flex;align-items:center;gap:4px;margin:0;padding:0" data-tip="Set by the School Administrator — view only for teachers"><input type="checkbox" ${s.showInterest!==false?'checked':''} disabled> Interest</div>
            <div class="checkline" style="display:inline-flex;align-items:center;gap:4px;margin:0;padding:0" data-tip="Set by the School Administrator — view only for teachers"><input type="checkbox" ${s.showAttitude!==false?'checked':''} disabled> Attitude</div>
@@ -23558,7 +23558,7 @@ function renderReports(){
              <span style="font-size:.84rem;font-weight:700;color:#0f172a;white-space:nowrap">📐 Layout:</span>
              <span style="font-size:.84rem;font-weight:600;color:#334155">${s.behaviorMode==='horizontal'?'↔️ Horizontal':'↕️ Vertical'}</span>
            </div>`
-        : `<div class="checkline" style="display:inline-flex;align-items:center;gap:4px;margin:0;padding:0" data-tip="Show each student's class POSITION (rank) on the report card"><input type="checkbox" ${s.showPosition!==false?'checked':''} onchange="A.rpPos(this.checked)"> Position</div>
+        : `<div class="checkline" style="display:inline-flex;align-items:center;gap:4px;margin:0;padding:0" data-tip="Show each student's class OVERALL POSITION (rank) on the report card"><input type="checkbox" ${s.showPosition!==false?'checked':''} onchange="A.rpPos(this.checked)"> Overall Position</div>
            <div class="checkline" style="display:inline-flex;align-items:center;gap:4px;margin:0;padding:0" data-tip="Show student Conduct on report cards"><input type="checkbox" ${s.showConduct!==false?'checked':''} onchange="A.rpOpt('showConduct',this.checked)"> Conduct</div>
            <div class="checkline" style="display:inline-flex;align-items:center;gap:4px;margin:0;padding:0" data-tip="Show student Interest on report cards"><input type="checkbox" ${s.showInterest!==false?'checked':''} onchange="A.rpOpt('showInterest',this.checked)"> Interest</div>
            <div class="checkline" style="display:inline-flex;align-items:center;gap:4px;margin:0;padding:0" data-tip="Show student Attitude on report cards"><input type="checkbox" ${s.showAttitude!==false?'checked':''} onchange="A.rpOpt('showAttitude',this.checked)"> Attitude</div>
@@ -23802,7 +23802,7 @@ A.tplDecline=function(id){ const r=(DB.tplReq||[]).find(x=>x.id===id); if(!r) re
 /* Round-20: school admin ticks Position on/off straight from the Options tab (syncs Academic Settings) */
 A.rpPos=function(v){ const u=me(); const sc=mySchool(); if(!sc) return;
   if(u&&u.role==='teacher'){ toast('🔒 View only — only the School Administrator controls positions on report cards.','bad'); render(); return; }   /* Round-145: teachers can VIEW reports, never edit school report settings */
-  sc.showPosition=!!v; saveDB(); render(); toast(v?'✅️ Position will show on report cards':'Position hidden from report cards','gold'); };
+  sc.showPosition=!!v; saveDB(); render(); toast(v?'✅️ Overall Position will show on report cards':'Overall Position hidden from report cards','gold'); };
 A.rpOpt=function(k,v){ const u=me(); const sc=mySchool(); if(!sc) return;
   if(u&&u.role==='teacher'){ toast('🔒 View only — only the School Administrator controls report card options.','bad'); render(); return; }
   sc[k]=v; if(typeof RP!=='undefined') RP[k]=v; saveDB(); render();
@@ -23835,6 +23835,29 @@ function reportCardHTML(s, cls, st, term, year){
   }).filter(a=>a.agg!==null).sort((a,b)=>b.agg-a.agg);
   const mine=aggs.find(a=>a.id===st.id);
   const pos=mine? aggs.indexOf(mine)+1 : null;
+  const showPos = s.showPosition !== false;
+
+  // Subject position calculation (solely for subject position, not overall position)
+  const subPositions = {};
+  subs.forEach(sub => {
+    const subScores = all.map(x => {
+      const tot = studentTotal(x.id, sub, term, year, cls.stream);
+      const isValid = (tot !== null && tot !== "" && !isNaN(Number(tot)));
+      return { id: x.id, total: isValid ? Number(tot) : null };
+    }).filter(x => x.total !== null);
+
+    subScores.sort((a, b) => b.total - a.total);
+
+    const ranks = {};
+    let curRank = 1;
+    for (let idx = 0; idx < subScores.length; idx++) {
+      if (idx > 0 && subScores[idx].total < subScores[idx - 1].total) {
+        curRank = idx + 1;
+      }
+      ranks[subScores[idx].id] = { rank: curRank, totalRanked: subScores.length };
+    }
+    subPositions[sub] = ranks;
+  });
   const aggTotal=mine? mine.agg : null;
   const avgPct=mine&&mine.n? r1(mine.agg/mine.n) : null;
   const bece=isJHS(cls)? beceAggregate(st.id,cls,term,year):null;   // Round-35: best-six on every JHS report
@@ -23937,7 +23960,7 @@ function reportCardHTML(s, cls, st, term, year){
            ['Stream:', esc(cls.stream)],
            ...(pupilShowsHouse(s,st)?[['House:', h?esc(h.name):'—']]:[]),   /* Round-236 (item 5): a pre-school report carries no house line at all */
            ['Gender:', (st.gender==='M'?'Male':'Female')]
-          , ...(s.showPosition!==false?[['Position:', pos? pos+' / '+aggs.length : '—']]:[])
+          , ...(s.showPosition!==false?[['Overall Position:', pos? pos+' / '+aggs.length : '—']]:[])
         ].map(r=>`<div class="rc-idcell" style="color:#000000!important"><span class="rc-idk" style="color:#475569!important">${r[0]}</span><span class="rc-idv" style="color:#000000!important;font-weight:700">${r[1]}</span></div>`).join('')}
       </div>   <!-- Round-232 (owner, item 4): ONE uniform label/value grid — every value lines up down the card, centred; Print-safe (no flex guessing). -->
     </div>
@@ -23947,12 +23970,16 @@ function reportCardHTML(s, cls, st, term, year){
       <th class="center" style="color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background:${T.c1}">Class ${w.c}%<br>(converted)</th>
       <th class="center" style="color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background:${T.c1}">Exam ${w.e}%<br>(converted)</th>
       <th class="center" style="color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background:${T.c1}">Total (100)</th>
+      <th class="center" style="white-space:nowrap;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background:${T.c1}">Position</th>
       <th class="center" style="color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background:${T.c1}">Grade</th>
       <th style="color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;background:${T.c1}">Remark</th></tr></thead><tbody>
-      ${rows.map((r,i)=>{ if(!r.conv) return `<tr style="background:${i%2?T.c1+'08':'#fff'};color:#000000!important"><td style="color:#000000!important;-webkit-text-fill-color:#000000!important">${esc(subAbbr(r.sub))}</td><td colspan="5" class="center mut" style="color:#475569!important;-webkit-text-fill-color:#475569!important">—</td></tr>`;
+      ${rows.map((r,i)=>{
+        const subPosInfo = (subPositions[r.sub] && subPositions[r.sub][st.id]) || null;
+        const subPosStr = subPosInfo ? ordinal(subPosInfo.rank) : "—";
+        if(!r.conv) return `<tr style="background:${i%2?T.c1+'08':'#fff'};color:#000000!important"><td style="color:#000000!important;-webkit-text-fill-color:#000000!important">${esc(subAbbr(r.sub))}</td><td colspan="6" class="center mut" style="color:#475569!important;-webkit-text-fill-color:#475569!important">—</td></tr>`;
         const g=gradeBand(r.conv.total);
         return `<tr style="background:${i%2?T.c1+'08':'#fff'};color:#000000!important"><td style="color:#000000!important;-webkit-text-fill-color:#000000!important">${esc(subAbbr(r.sub))}</td><td class="center" style="color:#000000!important;-webkit-text-fill-color:#000000!important">${r.conv.c}</td><td class="center" style="color:#000000!important;-webkit-text-fill-color:#000000!important">${r.conv.e}</td>
-        <td class="center b" style="color:#000000!important;-webkit-text-fill-color:#000000!important">${r.conv.total}</td><td class="center b" style="color:${mono?'#000000':gradeColor(g[0])}!important;-webkit-text-fill-color:${mono?'#000000':gradeColor(g[0])}!important">${g[0]}</td><td class="small" style="color:#000000!important;-webkit-text-fill-color:#000000!important">${g[1]}</td></tr>`;}).join('')}
+        <td class="center b" style="color:#000000!important;-webkit-text-fill-color:#000000!important">${r.conv.total}</td><td class="center b" style="white-space:nowrap;color:#000000!important;-webkit-text-fill-color:#000000!important">${subPosStr}</td><td class="center b" style="color:${mono?'#000000':gradeColor(g[0])}!important;-webkit-text-fill-color:${mono?'#000000':gradeColor(g[0])}!important">${g[0]}</td><td class="small" style="color:#000000!important;-webkit-text-fill-color:#000000!important">${g[1]}</td></tr>`;}).join('')}
     </tbody></table>
     <!-- Clean space between scores table and summary row -->
     <div class="center small mt2" style="display:flex;justify-content:center;align-items:center;gap:.4rem 1.6rem;flex-wrap:wrap;color:#000000!important">
@@ -24282,7 +24309,7 @@ function profileMainCardHTML(s){ return `<div class="card"><h3>🏫 School profi
     <label>Ghanaian languages offered <span class="mut small">(tap a tile to toggle)</span></label>
     <div class="lang-grid">${GH_LANGS.map(l=>{ const on=(s.langs||[]).includes(l); return `<div class="lang-it${on?' on':''}" data-tip="Tap to include / remove ${l}" onclick="A.langTile(this)"><span class="lang-box"></span><span class="lang-t">${l}</span><input type="checkbox" class="sp-lg" value="${l}" ${on?'checked':''} tabindex="-1" hidden></div>`; }).join('')}</div>   <!-- Round-111: compact 2-col tiles, each with a real ☑️ tick box -->
     <div class="checkline mt2"><input type="checkbox" id="sp-pos" ${s.showPosition!==false?'checked':''}>
-      <span>Show class <b>position</b> on report cards <span class="mut">(SchoolAdmin decides)</span></span></div>
+      <span>Show class <b>overall position</b> on report cards <span class="mut">(SchoolAdmin decides)</span></span></div>
     <div class="checkline mt1"><input type="checkbox" id="sp-cond" ${s.showConduct!==false?'checked':''}>
       <span>Show student <b>Conduct</b> on report cards</span></div>
     <div class="checkline mt1"><input type="checkbox" id="sp-int" ${s.showInterest!==false?'checked':''}>

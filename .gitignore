@@ -1,0 +1,10 @@
+# Sensitive and Local Server Files
+server.js
+build_clients.js
+HEREMS-SCHOOL-*.html
+*.zip
+uploads/
+README.txt
+RECOVERY_REPORT.md
+.DS_Store
+Thumbs.db
