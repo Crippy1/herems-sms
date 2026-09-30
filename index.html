@@ -9294,9 +9294,7 @@ function stopAuthClock(){ if(AUTH_CLK){ clearInterval(AUTH_CLK); AUTH_CLK=null; 
 
 /* ---------- LOGIN ---------- */
 function loginHTML(flash){
-  const demo = DB.schools.length ? '' : `
-    <div class="notice info mini mt2">💡 <span>First time? Schools join with a <b>one-time code</b> from the <b>System Administrator</b> — or
-      <button class="linkish" onclick="A.loadDemo()">load demo data</button> to explore instantly.</span></div>`;
+  const demo = "";
   return `
     <!-- Round-54: one shared, role-detecting gate (Super Admin · School Admin · Teacher · Parent) — brand the door, not one role -->
     <!-- Round-62: colourful, center-aligned welcome hero + motto -->
@@ -9332,27 +9330,10 @@ function loginHTML(flash){
       <button class="btn ghost sm" onclick="A.showAuth('teacher')">👩‍🏫 Register as Teacher</button>
       <button class="btn ghost sm" onclick="A.showAuth('parent')">👨‍👩‍👧 Register as Parent</button>
     </div>
-    <!-- HEREMS Live Presentation & 1-Tap Demo Access -->
-    <div class="card mini mt2" style="background:rgba(217,119,6,0.06);border:1.5px dashed var(--gold);padding:10px 14px;border-radius:10px;text-align:left">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
-        <span class="small" style="font-weight:700;color:var(--brand)">🎯 Live Presentation &amp; Demo Access:</span>
-        <button class="btn sm ghost" style="padding:2px 8px;font-size:11px" onclick="A.loadDemo()">🔄 Reset Demo Data</button>
-      </div>
-      <div class="mt1" style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="btn sm" style="font-size:11px;padding:5px 10px" onclick="A.quickDemoFill('admin')">🏫 Admin Demo (1-Tap)</button>
-        <button class="btn sm ghost" style="font-size:11px;padding:5px 10px" onclick="A.quickDemoFill('teacher')">🧑‍🏫 Teacher Demo (1-Tap)</button>
-        <button class="btn sm ghost" style="font-size:11px;padding:5px 10px" onclick="A.quickDemoFill('super')">🛡 Super Admin (1-Tap)</button>
-      </div>
-      <div class="mut" style="font-size:11px;margin-top:6px">Herems International School: <b>admin@herems.edu.gh</b> / <b>Herems@123</b></div>
-    </div>
-
-    <div class="center mt2" style="display:flex;gap:.45rem;justify-content:center;align-items:center;flex-wrap:wrap">
+        <div class="center mt2" style="display:flex;gap:.45rem;justify-content:center;align-items:center;flex-wrap:wrap">
       ${installCueHTML(true)}
     </div>   <!-- Round-100: Install sits ON the login card · Round-106: About moved UP into its own glossy banner -->
-    <!-- Round-69: client-file onboarding — the file from the Super Admin IS the onboarding (no code typing, no sync wait) -->
-    <div class="center mt2"><button class="linkish" onclick="A.loadClientFile()">📂 Have a client file? Load it here</button>
-      <div class="small mut" style="font-size:.72rem">(the file the System Administrator sent you — opens your school setup or teacher registration instantly)</div>
-    </div>
+    
 ${demo}`;
 }
 /* Round-69: load & apply a HEREMS_PLUS client file (school-admin or teacher) */
@@ -9431,7 +9412,7 @@ A.newHere = function(){
       </ol>
       <button class="btn sm" onclick="A.newHereGo('parent')">👨‍👩‍👧 Start — Parent Portal →</button>
     </div>
-    <div class="notice info mini mt2">💡 <span><b>Just exploring?</b> Close this and tap <b>"load demo data"</b> on the login screen to try a fully-set-up demo school — no registration needed.</span></div>
+    
   </div>
   <div class="m-foot"><button class="btn ghost" onclick="A.closeModal()">✖️ Close</button></div>`);
 };
@@ -9485,23 +9466,6 @@ function acctStamp(u){ for(const k of ['pwChangedAt','pwResetAt','createdAt']){ 
 function loginCandidates(id){ const w=String(id||'').toLowerCase();
   return DB.users.filter(x=>x.active!==false && ((x.email&&x.email.toLowerCase()===w) || (x.phone&&x.phone===id)))
     .sort((a,b)=>acctStamp(b)-acctStamp(a)); }
-
-A.quickDemoFill = function(role){
-  const idEl = $('#li-id'), pwEl = $('#li-pw');
-  if(!idEl || !pwEl) return;
-  if(role === 'admin'){
-    idEl.value = 'admin@herems.edu.gh';
-    pwEl.value = 'Herems@123';
-  } else if(role === 'teacher'){
-    idEl.value = 'd.owusu@herems.edu.gh';
-    pwEl.value = 'Herems@123';
-  } else if(role === 'super'){
-    idEl.value = '1crippyhunter@gmail.com';
-    pwEl.value = 'Super@123';
-  }
-  toast('🎯 Credentials filled — signing you in…', 'ok');
-  setTimeout(() => { A.doLogin(); }, 250);
-};
 
 A.doLogin = async function(){
   const id=$('#li-id').value.trim(), pw=($('#li-pw').value||'').trim();   // Round-52: stray spaces (copy-paste/autofill) must not lock anyone out
@@ -9959,12 +9923,7 @@ function teacherRegHTML(inApp){
     <h2>👩‍🏫 Teacher registration</h2><div class="mut small">Stage 1 of 4 — School code</div>${stepsHTML(1,4)}
     <p class="small mut mb2">Enter the <b>school code</b> from your school administrator. You'll be linked to that school automatically.</p>
     <label>School code *</label><input id="tr-code" placeholder="e.g. HER-4821" style="text-transform:uppercase" value="${esc(d.code||'')}">
-    ${(DB.schools&&DB.schools.length)?`<div class="card mini mt2" style="background:#f0f9ff;border:1px dashed #38bdf8;padding:8px 12px;border-radius:8px">
-      <div class="small" style="font-weight:700;color:var(--brand)">🏫 Quick Select School on this device:</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
-        ${DB.schools.map(s => `<button type="button" class="btn sm" style="font-size:11px;padding:3px 8px" onclick="$('#tr-code').value='${esc(s.code)}';A.tReg1(${inApp?'1':''})">${esc(s.name)} (<b>${esc(s.code)}</b>)</button>`).join('')}
-      </div>
-    </div>`:''}
+    
     <div class="flex between mt3">${inApp?'':`<button class="btn ghost" onclick="A.showAuth('login')">← Back</button>`}
     <button class="btn" onclick="A.tReg1(${inApp?'1':''})">Validate code →</button></div>`;
   else if(step===2){ const s=(d.schoolId ? DB.schools.find(x=>x.id===d.schoolId) : null) || DB.schools.find(x=>x.code===(d.code||'').toUpperCase());
@@ -11047,7 +11006,7 @@ function renderShell(){
   }
   const _hasSchLogo = !!(s && s.logo && u.role !== 'superadmin');
   $('#sidebar').innerHTML=`
-    <div class="s-brand" onclick="A.sbBrandClick(event)" style="cursor:pointer" data-tip="${document.body.classList.contains('sb-mini')?'Tap to ⏭ Expand sidebar':(_hasSchLogo?`🏫 ${esc(s.name)}`:'Tap for ℹ️ About HEREMS_PLUS')}">
+    <div class="s-brand" onclick="A.sbBrandClick(event)" style="cursor:pointer" data-tip="${document.body.classList.contains('sb-mini')?'Tap to ⏭ Expand sidebar':(_hasSchLogo?`🏫 ${esc(s.name)} — tap for 📖 About Our School`:'ℹ️ About HEREMS_PLUS')}">
       ${_hasSchLogo ? `<img src="${s.logo}" class="logo" style="width:36px;height:36px;object-fit:contain;border-radius:8px;background:#fff;padding:2px;box-shadow:0 2px 6px rgba(0,0,0,0.22);flex:none" alt="${esc(s.name)}">` : logoSVG()}
       <b style="line-height:1.2;font-size:.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${_hasSchLogo ? esc(s.name) : 'HEREMS<span>_PLUS</span>'}</b>
     </div>
@@ -11076,7 +11035,7 @@ function renderShell(){
         <div onclick="A.changePwModal()">🔐 Change password</div>
         ${u.role==='schooladmin'&&!sess().cashUnlocked?'<div onclick="A.cashUnlockModal()">🔑 Unlock cash modules</div>':''}
         ${u.role==='schooladmin'&&sess().cashUnlocked?'<div onclick="A.lockCash()">🔒 Lock cash modules</div>':''}
-        <div onclick="A.showAuth('about')"><img class="about-ic" src="${APP_LOGO_URI}" alt="">About HEREMS_PLUS</div>   <!-- Round-101: app icon on the About entry -->
+        <div onclick="A.showAuth('about')"><img class="about-ic" src="${APP_LOGO_URI}" alt="">About HEREMS_PLUS</div>   <!-- Round-101: app icon on the About entry — visible to all roles -->
         ${isAppInstalled()?'':'<div onclick="A.installApp(event)">📲 Install app</div>'}   <!-- Round-101: install from ANY portal too (auto-hides once installed) -->
         <div onclick="A.logout()">↩️ Sign out</div>
       </div></div>`; emojiize($('#topbar'));   /* Round-183 */
@@ -11098,7 +11057,7 @@ A.sbBrandClick = function(e){
   if(document.body.classList.contains('sb-mini')){
     A.sbMini();
   } else {
-    A.showAuth('about');
+    go('schoolabout');
   }
 };
 A.sbMini=function(){
@@ -11112,7 +11071,7 @@ A.sbMini=function(){
   }
   const br=$('#sidebar .s-brand');
   if(br){
-    br.setAttribute('data-tip', on ? 'Tap to ⏭ Expand sidebar' : 'Tap for ℹ️ About HEREMS_PLUS');
+    br.setAttribute('data-tip', on ? 'Tap to ⏭ Expand sidebar' : '📖 About Our School');
   }
   const bg=$('#burger');
   if(bg && window.innerWidth > 900){
@@ -28378,8 +28337,14 @@ A.saveSchoolAbout=function(){
   Object.keys(a).forEach(k=>{ if(!a[k]) delete a[k]; });
   if(Object.keys(a).length){ a.at=Date.now(); s.about=a; }
   else delete s.about;
-  saveDB(); render();
+  saveDB();
   toast(Object.keys(a).length? '✅️ About Our School published — parents & teachers see it on their 📖 About the School page' : '🗑 About Our School cleared — the page hides itself until you write again','ok');
+  /* After saving, show About HEREMS_PLUS page as advertisement */
+  if(Object.keys(a).length){
+    setTimeout(function(){ showAuth('about'); }, 800);
+  } else {
+    render();
+  }
   return 'saved';
 };
 A.clearSchoolAbout=async function(){
