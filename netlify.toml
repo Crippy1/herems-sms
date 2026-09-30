@@ -1,0 +1,71 @@
+# Netlify Configuration for HEREMS_PLUS & Multi-Provider SMS CORS Proxy
+
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/api/agoosms/*"
+  to = "https://api.agoosms.com/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/mnotify/*"
+  to = "https://api.mnotify.com/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/arkesel/*"
+  to = "https://sms.arkesel.com/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/hubtel/*"
+  to = "https://smsc.hubtel.com/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/termii/*"
+  to = "https://api.ng.termii.com/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/smsto/*"
+  to = "https://api.sms.to/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/twilio/*"
+  to = "https://api.twilio.com/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/africastalking/*"
+  to = "https://api.africastalking.com/:splat"
+  status = 200
+  force = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, X-API-Key, api-key, Authorization, Accept, X-School-Token"
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, X-API-Key, api-key, Authorization, Accept, X-School-Token"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

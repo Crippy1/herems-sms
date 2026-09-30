@@ -1,0 +1,83 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/api/agoosms/:path*",
+      "destination": "https://api.agoosms.com/:path*"
+    },
+    {
+      "source": "/api/mnotify/:path*",
+      "destination": "https://api.mnotify.com/:path*"
+    },
+    {
+      "source": "/api/arkesel/:path*",
+      "destination": "https://sms.arkesel.com/:path*"
+    },
+    {
+      "source": "/api/hubtel/:path*",
+      "destination": "https://smsc.hubtel.com/:path*"
+    },
+    {
+      "source": "/api/termii/:path*",
+      "destination": "https://api.ng.termii.com/:path*"
+    },
+    {
+      "source": "/api/smsto/:path*",
+      "destination": "https://api.sms.to/:path*"
+    },
+    {
+      "source": "/api/twilio/:path*",
+      "destination": "https://api.twilio.com/:path*"
+    },
+    {
+      "source": "/api/africastalking/:path*",
+      "destination": "https://api.africastalking.com/:path*"
+    },
+    {
+      "source": "/((?!api/|icons/|sw\\.js|manifest\\.webmanifest).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, X-API-Key, api-key, Authorization, Accept, X-School-Token"
+        }
+      ]
+    },
+    {
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
+      ]
+    },
+    {
+      "source": "/(index\\.html|manifest\\.webmanifest)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+        }
+      ]
+    }
+  ]
+}
