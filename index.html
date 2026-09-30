@@ -6230,7 +6230,9 @@ function mkClientSlimSchool(s, includeJoin){
     status:s.status||'active', gracePeriodExpiry:s.gracePeriodExpiry||null, currentTerm:s.currentTerm||'Term 1',
     createdAt:s.createdAt||Date.now(), graceEndsAt:s.graceEndsAt||graceEndsAtFromWorkingDays(GRACE_DAYS),   /* Round-345 (item 3): the fallback is working days too */
     paidUntil:s.paidUntil||null, isLifetime:isLifetime(s), isPremium:isLifetime(s), plan:s.plan||(isLifetime(s)?'once':(s.paidUntil?'m3':null)), logo:s.logo||(typeof APP_LOGO_URI!=='undefined'?APP_LOGO_URI:null), headSig:s.headSig||null, headName:s.headName||'', reportTpl:s.reportTpl||'default',
-    classes:s.classes||[], conversion:s.conversion||{}, subjectStreams:s.subjectStreams||{}, customSubjects:s.customSubjects||[],
+    classes:s.classes||[], conversion:s.conversion||{},
+    subjectStreams:(s.subjectStreams&&Object.keys(s.subjectStreams).length)?s.subjectStreams:(typeof defaultSubjectStreams==='function'?defaultSubjectStreams(s.langs):{}),
+    customSubjects:s.customSubjects||[],
     houses:s.houses||[], terms:s.terms||[], rcptSeq:s.rcptSeq||0, stuSeq:s.stuSeq||{}, year:s.year||curYear(),
     canteenDaily:s.canteenDaily||{}, showPosition:s.showPosition!==false, logoColors:s.logoColors||null,
     use_app_for_canteen:s.use_app_for_canteen!==false };
@@ -7661,11 +7663,21 @@ function studentSubjectsForClass(school, cls){
      (a core subject that also appears under custom subjects, or a language repeated) used to enter the list TWICE
      and every duplicate was double-counted in the student's Total (all subjects), the raw score, the average and
      the aggregate. Every subject now enters the list exactly ONCE. */
+  if(!school || !cls) return [];
+  const matrix = (school.subjectStreams && Object.keys(school.subjectStreams).length)
+    ? school.subjectStreams
+    : (typeof defaultSubjectStreams === 'function' ? defaultSubjectStreams(school.langs) : {});
   const out=[];
   const add=function(n){ if(n && out.indexOf(n)<0) out.push(n); };
-  CORE_SUBJECTS.forEach(n=>{ if(((school.subjectStreams||{})[n]||[]).includes(cls.stream)) add(n); });
-  (school.langs||[]).forEach(l=>{ if(((school.subjectStreams||{})[l]||[]).includes(cls.stream)) add(l); });
-  (school.customSubjects||[]).forEach(n=>{ if(((school.subjectStreams||{})[n]||[]).includes(cls.stream)) add(n); });
+  CORE_SUBJECTS.forEach(n=>{ if(((matrix||{})[n]||[]).includes(cls.stream)) add(n); });
+  (school.langs||[]).forEach(l=>{ if(((matrix||{})[l]||[]).includes(cls.stream)) add(l); });
+  (school.customSubjects||[]).forEach(n=>{ if(((matrix||{})[n]||[]).includes(cls.stream)) add(n); });
+  if(!out.length){
+    if(cls.stream === 'Pre-school'){
+      return (typeof KG_SUBJECTS !== 'undefined' ? KG_SUBJECTS.slice() : ['Language and Literacy','Numeracy','Writing','Creative Arts']);
+    }
+    return CORE_SUBJECTS.filter(s => !(typeof KG_SUBJECTS !== 'undefined' && KG_SUBJECTS.includes(s)));
+  }
   return out;
 }
 /* every subject offered in a class stream (from the subject→stream matrix) */
@@ -7694,7 +7706,7 @@ function beceAggregate(studentId, cls, term, year){
   if(chosen.length<6) return { chosen, total:r1(chosen.reduce((a,x)=>a+x.t,0)), partial:true };
   return { chosen, total:r1(chosen.reduce((a,x)=>a+x.t,0)), partial:false };
 }
-function classOf(school, classId){ return (school.classes||[]).find(c=>c.id===classId)||null; }
+function classOf(school, classId){ if(!school || !classId) return null; return (school.classes||[]).find(c=>c.id===classId || c.name===classId)||null; }
 /* Round-200: a class label with its chosen colour (a coloured dot + tinted name) — used in registers/lists */
 function clsTag(c){ if(!c) return '—'; const col=c.color||'';
   return col? `<span class="cls-lbl" style="color:${col}"><span class="cls-lbl-dot" style="background:${col}"></span>${esc(c.name)}</span>` : esc(c.name); }
@@ -7713,14 +7725,26 @@ function genderLabel(g){
 function classIsActive(c){ return !!c && c.active!==false; }
 /* the raw catalogue (every class incl. inactive), ordered — used ONLY by the Classes & Streams manager */
 function allClassesSorted(s){
+  if(!s) return [];
   (s.classes||[]).forEach(c=>{ if(c.ord===undefined) c.ord=900+ (c.name||'').charCodeAt(0); });
   return (s.classes||[]).slice().sort((a,b)=>
     (STREAMS_ORDER.indexOf(a.stream)-STREAMS_ORDER.indexOf(b.stream)) ||
     ((a.ord??999)-(b.ord??999)) ||
     a.name.localeCompare(b.name,undefined,{numeric:true}));
 }
-function sortClasses(s){ return allClassesSorted(s).filter(classIsActive); }   /* Round-200: consumers see active classes only */
-function classStreams(school){ return STREAMS_ORDER.filter(st => (school.classes||[]).some(c=>classIsActive(c)&&c.stream===st)); }
+function sortClasses(s){
+  if(!s) return [];
+  let list = allClassesSorted(s).filter(classIsActive);
+  if(!list.length && Array.isArray(s.classes) && s.classes.length > 0){
+    list = allClassesSorted(s);
+  }
+  return list;
+}
+function classStreams(school){
+  if(!school) return [];
+  const activeCls = sortClasses(school);
+  return STREAMS_ORDER.filter(st => activeCls.some(c=>c.stream===st));
+}
 function isBasic9(cls){ return cls && cls.stream==='JHS' && /^Basic 9/.test(cls.name); }
 function isJHS(cls){ return cls && cls.stream==='JHS'; }   /* Round-35: best-six spans every JHS class (Basic 7-9) */
 function termsForClass(cls){ return isBasic9(cls)? ['Term 1','Term 2'] : TERMS_ALL.slice(); }
@@ -9221,7 +9245,26 @@ A.loadClientFile=function(){ try{ const inp=document.createElement('input'); inp
 A.applyClientFile=function(text){
   const got=readClientFile(text); if(!got) return false;
   let s=DB.schools.find(x=>x.id===got.school.id);
-  if(!s){ s=got.school; if(!s.logo && typeof APP_LOGO_URI !== 'undefined') s.logo = APP_LOGO_URI; if(!s.address) s.address = s.location || ''; if(!s.portalUrl && got.school && got.school.portalUrl) s.portalUrl = got.school.portalUrl; DB.schools.push(s); migrateDB(); saveDB(); } else { if(!s.portalUrl && got.school && got.school.portalUrl){ s.portalUrl = got.school.portalUrl; saveDB(); } }   // plant the school locally — zero cloud/sync dependency
+  if(!s){
+    s=got.school;
+    if(!s.logo && typeof APP_LOGO_URI !== 'undefined') s.logo = APP_LOGO_URI;
+    if(!s.address) s.address = s.location || '';
+    if(!s.portalUrl && got.school && got.school.portalUrl) s.portalUrl = got.school.portalUrl;
+    if(!s.subjectStreams || !Object.keys(s.subjectStreams).length) s.subjectStreams = defaultSubjectStreams(s.langs);
+    DB.schools.push(s);
+    migrateDB();
+    saveDB();
+  } else {
+    if(got.school && got.school.classes && got.school.classes.length) s.classes = got.school.classes;
+    if(got.school && got.school.subjectStreams && Object.keys(got.school.subjectStreams).length) s.subjectStreams = got.school.subjectStreams;
+    if(got.school && got.school.customSubjects) s.customSubjects = got.school.customSubjects;
+    if(got.school && got.school.terms) s.terms = got.school.terms;
+    if(got.school && got.school.year) s.year = got.school.year;
+    if(got.school && got.school.conversion) s.conversion = got.school.conversion;
+    if(!s.portalUrl && got.school && got.school.portalUrl) s.portalUrl = got.school.portalUrl;
+    if(!s.subjectStreams || !Object.keys(s.subjectStreams).length) s.subjectStreams = defaultSubjectStreams(s.langs);
+    saveDB();
+  }
   if(got.kind==='school-client'){
     if(s.joinStatus!=='PENDING'||s.joinActive===false){ toast('This client file has already been used — that school has joined. Ask the System Administrator if that wasn\'t you.','bad'); return false; }
     REG={step:2, data:{code:s.joinCode||'', schoolId:s.id}}; saveRegState(); HEAD_SIG_TMP=null;
@@ -9229,10 +9272,10 @@ A.applyClientFile=function(text){
     r.innerHTML=authShell(joinSchoolHTML());
     toast('✅️ '+s.name+' file loaded — create your administrator credentials below','ok'); return true;
   }
-  REG={step:2, data:{code:s.code}};
+  REG={step:2, data:{code:s.code, schoolId:s.id}};
   const r2=$('#auth-root'); r2.classList.remove('hidden'); const ap2=$('#app'); if(ap2) ap2.classList.add('hidden');
   r2.innerHTML=authShell(teacherRegHTML(false));
-  toast('✅️ '+s.name+' file loaded — continue your teacher registration','ok'); return true;
+  toast('✅️ '+s.name+' Teacher file loaded — register your teacher account below','ok'); return true;
 };
 A.togglePw = function(id, btn){ const i=$('#'+id); i.type = i.type==='password'?'text':'password'; btn.style.color = i.type==='text'?'var(--gold2)':''; };
 A.showAuth = m => showAuth(m);
@@ -10010,7 +10053,7 @@ function rerenderTeacherStage(inApp){
 A.tQ1 = function(v,inApp){ harvestTeacherRoleState(); REG.data.isClass=v;
   if(v){ if(REG.data.alsoSubj===undefined)REG.data.alsoSubj=null; } else { REG.data.alsoSubj=null; }
   rerenderTeacherStage(inApp); };
-A.tClsChange = function(inApp){ harvestTeacherRoleState(); REG.data.classId=$('#tr-cls').value; const classes=(DB.schools.find(x=>x.code===(REG.data.code||'').toUpperCase())||mySchool()).classes;
+A.tClsChange = function(inApp){ harvestTeacherRoleState(); REG.data.classId=$('#tr-cls').value; const sch=DB.schools.find(x=>x.code===(REG.data.code||'').toUpperCase())||mySchool(); const classes=(sch&&sch.classes)||[];
   const c=classes.find(x=>x.id===REG.data.classId); REG.data.className=c?c.name:''; rerenderTeacherStage(inApp); };
 A.tAllSubs = function(v,inApp){ harvestTeacherRoleState(); REG.data.allSubs=v; rerenderTeacherStage(inApp); };
 A.tAlso   = function(v,inApp){ harvestTeacherRoleState(); REG.data.alsoSubj=v; rerenderTeacherStage(inApp); };
@@ -11589,18 +11632,61 @@ function recentActivityHTML(s){
 }
 function emptyMini(t){ return `<div class="empty" style="padding:1.6rem"><span class="e-ic">📭</span>${t}</div>`; }
 function teacherScope(u){
-  // returns {classes:Set(classIds), can(classId, subject)}
-  const a=u.assignments||{subjectClasses:{}};
+  // returns {ids:Set(classIds), can:(classId, subject) => boolean, hasSpecificAssignment:boolean}
+  const a=(u&&u.assignments)||{};
   const ids=new Set();
-  if(a.classTeacherOf) ids.add(a.classTeacherOf);
   const s=mySchool();
-  Object.keys(a.subjectClasses||{}).forEach(cn=>{ const c=(s?s.classes:[]).find(x=>x.name===cn); if(c) ids.add(c.id); });
-  function can(classId, subject){
-    const cls=s&&classOf(s,classId); if(!cls) return false;
-    if(a.classTeacherOf===classId && (a.allSubjects || (a.classSubjects||[]).includes(subject))) return true;
-    return ((a.subjectClasses||{})[cls.name]||[]).includes(subject);
+  const allClasses=(s&&s.classes)?sortClasses(s):[];
+
+  // Class Teacher assignment (check by class ID or class Name)
+  if(a.classTeacherOf){
+    const c=allClasses.find(x=>x.id===a.classTeacherOf || x.name===a.classTeacherOf);
+    if(c) ids.add(c.id);
   }
-  return {ids, can};
+
+  // Subject Classes (check by class ID or class Name)
+  Object.keys(a.subjectClasses||{}).forEach(k=>{
+    const c=allClasses.find(x=>x.id===k || x.name===k);
+    if(c) ids.add(c.id);
+  });
+
+  // Fallback: If teacher has no specific class restrictions assigned yet,
+  // allow access to all active classes in the school so newly registered
+  // or general teachers can access classes and subjects!
+  const hasSpecificAssignment=(ids.size>0);
+  if(!hasSpecificAssignment){
+    allClasses.forEach(c=>ids.add(c.id));
+  }
+
+  function can(classId, subject){
+    const cls=s&&classOf(s,classId);
+    if(!cls) return false;
+
+    // If teacher has no specific restrictions, can teach any valid subject for this class
+    if(!hasSpecificAssignment){
+      return studentSubjectsForClass(s, cls).includes(subject);
+    }
+
+    // If class teacher of this class
+    const isCT=(a.classTeacherOf===classId || a.classTeacherOf===cls.id || a.classTeacherOf===cls.name);
+    if(isCT){
+      // If allSubjects, or if no specific subjects picked (default to all), or if subject in classSubjects
+      if(a.allSubjects || !(a.classSubjects && a.classSubjects.length) || a.classSubjects.includes(subject)){
+        return true;
+      }
+    }
+
+    // If subject teacher for this class (checked by cls.id and cls.name)
+    const subList=((a.subjectClasses||{})[cls.id]||[]).concat((a.subjectClasses||{})[cls.name]||[]);
+    if(subList.includes(subject)) return true;
+
+    // If subject in a.classSubjects or general subjects
+    if((a.classSubjects||[]).includes(subject)) return true;
+
+    return false;
+  }
+
+  return {ids, can, hasSpecificAssignment};
 }
 function dashTeacher(){
   const u=me(); const s=mySchool(); const year=yearSel();
@@ -14739,9 +14825,12 @@ function teachTabHTML(){
   <div class="small mut">🔐 <b>Change</b> requests apply the teacher's own new password once approved. 🔑 <b>Forgot-password</b> resets give a temporary password — the teacher sets a personal one at next login.</div></div>`:''}
   <div class="flex between wrap mb2">
     <div class="mut small">Teachers self-register with your school code <b>${esc(s.code||s.abbrev||'—')}</b> — or add one directly:</div>
-    <div><button class="btn sm ghost" data-tip="Download the teachers Excel/CSV template" onclick="A.tchTemplate()">⬇️ Template</button>
-    <button class="btn sm ghost" data-tip="Import many teachers from Excel/CSV — missing details are completed later" onclick="A.tchImportModal()">⬆️ Upload Teachers</button>
-    <button class="btn" onclick="A.addTeacherWizard()">➕ Add teacher</button></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <button class="btn sm gold" style="font-weight:700" data-tip="Download standalone .html client file to share with teachers (WhatsApp/email/USB)" onclick="A.dlClient('${s.id}','teacher')">📄 Teacher client file (.html)</button>
+      <button class="btn sm ghost" data-tip="Download the teachers Excel/CSV template" onclick="A.tchTemplate()">⬇️ Template</button>
+      <button class="btn sm ghost" data-tip="Import many teachers from Excel/CSV — missing details are completed later" onclick="A.tchImportModal()">⬆️ Upload Teachers</button>
+      <button class="btn" onclick="A.addTeacherWizard()">➕ Add teacher</button>
+    </div>
   </div>
   <div class="table-wrap"><table class="compact-tbl reg-t reg-teach"><thead><tr><th>👤 Full Name</th><th class="c">⚧️ Gender</th><th class="c">🏫 Class Assigned</th><th class="c">🧱 Subjects Assigned</th><th class="c">🔒 Password (ghosted)</th><th class="c">⚙️ Actions</th></tr></thead><tbody>
   ${list.map(t=>{const a=t.assignments||{}; const own=a.classTeacherOf? classOf(s,a.classTeacherOf):null;
@@ -15223,7 +15312,10 @@ A.quickCT=function(cid,tid){
   if(own&&own!==cid) return toast('🏫 '+esc(t.name)+' already holds '+esc((classOf(s,own)||{}).name||'another class')+' — release that first. Nothing saved.','bad');
   const clash=classTeacherTakenBy(s,cid,tid);
   if(clash) return toast('🏫 A class has ONE class teacher — '+esc(clash.name)+' holds it. Nothing saved.','bad');
-  t.assignments=Object.assign(t.assignments||{},{ classTeacherOf:cid });
+  t.assignments=Object.assign(t.assignments||{},{
+    classTeacherOf:cid,
+    allSubjects:(t.assignments&&t.assignments.allSubjects!==undefined)?t.assignments.allSubjects:true
+  });
   saveDB();
   const clsName = (classOf(s, cid)||{}).name || 'the class';
   toast('🏫 '+esc(t.name)+' is now class teacher of '+esc(clsName),'ok');
@@ -28108,7 +28200,12 @@ A.saveSchoolProfile=function(){
 function usersSettingsHTML(){
   const u=me();
   const list = u.role==='superadmin'? DB.users : DB.users.filter(x=>x.schoolId===u.schoolId);
-  return `<div class="card"><h3>🧑‍🤝‍🧑 Users ${u.role==='superadmin'?'(all schools)':'(my school)'}</h3>   <!-- Round-R181 (owner item 1) -->
+  const sch = u.schoolId ? DB.schools.find(s=>s.id===u.schoolId) : null;
+  return `<div class="card">
+  <div class="flex between wrap mb2">
+    <h3>🧑‍🤝‍🧑 Users ${u.role==='superadmin'?'(all schools)':'(my school)'}</h3>
+    ${(u.role==='schooladmin'&&sch)?`<button class="btn sm gold" style="font-weight:700" data-tip="Download standalone .html teacher client file to share with your teachers" onclick="A.dlClient('${sch.id}','teacher')">📄 Download Teacher Client File (.html)</button>`:''}
+  </div>   <!-- Round-R181 (owner item 1) -->
   <div class="table-wrap"><table><thead><tr><th>Name</th><th>Role</th><th>Login</th><th>Phone</th><th>Status</th>${u.role==='superadmin'?'<th>School</th>':''}<th></th></tr></thead><tbody>
   ${list.map(x=>{ const sch=x.schoolId? DB.schools.find(s=>s.id===x.schoolId):null;
     return `<tr><td><b>${esc(x.name)}</b></td><td><span class="badge info">${roleLabel(x.role)}</span></td>
@@ -29547,7 +29644,7 @@ A.regSchoolSave=function(){
       </div>
       <div class="mt2" style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
         <a id="rs-dl-link" class="btn sm gold" href="#" download="${esc(clientFileName)}" style="display:inline-flex;align-items:center;gap:.35rem;text-decoration:none;font-weight:700" onclick="A.dlClient('${school.id}','school')">⬇️ Download Client File (.html) Again</a>
-        <button class="btn sm ghost" onclick="A.dlClient('${school.id}','teacher')">⬇️ Teacher client file (.json)</button>
+        <button class="btn sm ghost" onclick="A.dlClient('${school.id}','teacher')">⬇️ Teacher client file (.html)</button>
       </div>
       <div class="small mut mt1" style="color:#15803d">
         ⚠️ Send the <b>.html</b> file to the School Administrator (via WhatsApp, email, or flash drive). They simply double-click it in any browser to start setup offline!
@@ -29809,7 +29906,7 @@ A.saSchoolDetail=function(id){
   <div class="center mt1" style="display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center">
     ${!isLifetime(s) ? `<button class="btn gold sm" onclick="A.grantLifetime('${id}')">⭐ Upgrade to Premium / Lifetime</button>` : `<button class="btn ghost sm" onclick="A.revokeLifetime('${id}')">🔄 Switch to Termly Plan</button>`}
     <button class="btn sm" onclick="A.dlClient('${id}','school')">⬇️ School-Admin client file (.html)</button>
-    <button class="btn sm ghost" onclick="A.dlClient('${id}','teacher')">⬇️ Teacher client file</button>
+    <button class="btn sm ghost" onclick="A.dlClient('${id}','teacher')">⬇️ Teacher client file (.html)</button>
     <button class="btn sm okb" onclick="A.portableFile('${id}')">📦 Portable school file</button></div>
   <div class="center mt2">${saStatusBtnHTML(s, true)}</div>
   </div><div class="m-foot"><button class="btn ghost" onclick="SA_DETAIL_OPEN=null;A.closeModal()">Close</button>
@@ -30117,8 +30214,7 @@ A.confirmPurgeDemo=function(){
 /* Round-70: client-file DELIVERY — build the payload, then hand it to the delivery sheet (p02), which
    guarantees the file reaches the user even on browsers/webviews that swallow programmatic downloads. */
 A.dlClient=function(schoolId, kind, opt){
-  if(kind==='school') return A.dlClientHtml(schoolId, opt);   /* Round-83: school-admin client file is now a double-clickable .html */
-  A.dlClientJsonOnly(schoolId, 'teacher');
+  return A.dlClientHtml(schoolId, opt, kind || 'school');
 };
 A.dlClientAgain=function(){ const st=_clientFileStash; if(!st) return toast('Nothing to download yet — pick a client file first.','bad');
   const ok=triggerDownload(st.name, st.content);
@@ -30260,18 +30356,22 @@ A.applyYearArchiveText=function(text, name){
    payload inside; the administrator just opens it → the school + joining code plant themselves → the
    admin-credentials step appears. No file-loading, no code-typing, no internet (first open can be offline). */
 let _clientHtmlStash=null;   /* {name, content, school} — delivery buttons */
-A.dlClientHtml=async function(schoolId, opt){
+A.dlClientHtml=async function(schoolId, opt, kind){
+  kind = (kind === 'teacher') ? 'teacher' : 'school';
   const s=DB.schools.find(x=>x.id===schoolId); if(!s) return toast('School not found','bad');
   if(!s.logo && typeof APP_LOGO_URI !== 'undefined') s.logo = APP_LOGO_URI;
   if(!s.address && s.location) s.address = s.location;
   if(!s.portalUrl) s.portalUrl = defaultPortalUrl();
-  let clientJson; try{ clientJson=mkClientPayload('school', s); }catch(e){ return toast('Could not create the client payload: '+((e&&e.message)||e),'bad'); }
-  toast('📄 Building the .html client file with app logo…','gold');
+  if(!s.subjectStreams || !Object.keys(s.subjectStreams).length){
+    s.subjectStreams = defaultSubjectStreams(s.langs);
+  }
+  let clientJson; try{ clientJson=mkClientPayload(kind, s); }catch(e){ return toast('Could not create the client payload: '+((e&&e.message)||e),'bad'); }
+  toast('📄 Building the .html ' + (kind === 'teacher' ? 'teacher' : 'school') + ' client file with app logo…','gold');
   let src = await getAppSourceHtml(); if(!src){ return toast('Could not read app source — please try again.','bad'); }
   const html=injectClient(src, clientJson);
   if(!html) return toast('The app file has an unexpected shape — try again after updating the app.','bad');
-  const name='HEREMS-SCHOOL-'+(s.code||'SCHOOL')+'-CLIENT.html';
-  _clientHtmlStash={ name:name, content:html, school:s };
+  const name='HEREMS-'+(kind === 'teacher' ? 'TEACHER' : 'SCHOOL')+'-'+(s.code||'SCHOOL')+'-CLIENT.html';
+  _clientHtmlStash={ name:name, content:html, school:s, kind:kind };
   triggerDownload(name, html);
   const kb=html.length/1024; const size=kb>=1024? (kb/1024).toFixed(1)+' MB' : Math.ceil(kb)+' KB';
   let _bUrl = '';
@@ -30287,11 +30387,16 @@ A.dlClientHtml=async function(schoolId, opt){
     }
     const st = document.getElementById('rs-dl-status');
     if(st) st.innerHTML = `Client File Downloaded ✅️ (${esc(name)})`;
-    toast('⬇️ Client file with app logo downloaded for Super Administrator!','ok');
+    toast('⬇️ Client file downloaded!','ok');
     return;
   }
 
-  openModal(`${mHead('📄 School client file (.html) — '+size, true)}<div class="m-body">
+  const title = (kind === 'teacher') ? ('📄 Teacher client file (.html) — '+size) : ('📄 School client file (.html) — '+size);
+  const desc = (kind === 'teacher')
+    ? `Your file: <code>${esc(name)}</code><br>Send it to <b>${esc(s.name)}</b> teachers (via WhatsApp, email, or USB). It carries the official <b>HEREMS_PLUS</b> app logo, school curriculum, subjects, and classes. Teachers simply <b>open it in any browser</b> on their phone, tablet, or laptop — the app starts instantly with your school's classes and subjects pre-loaded for teacher registration and scoring.`
+    : `Your file: <code>${esc(name)}</code><br>Send it to <b>${esc(s.name)}</b> Administrator (WhatsApp / email / USB). It carries the official <b>HEREMS_PLUS</b> app logo and school setup. They simply <b>open it in any browser</b> — the app starts, their school loads by itself, and the <b>administrator-credentials</b> step appears. No code-typing, no file-loading; even the first open works offline.`;
+
+  openModal(`${mHead(title, true)}<div class="m-body">
   <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.8rem">
     <img src="${s.logo || APP_LOGO_URI}" style="width:48px;height:48px;object-fit:contain;border-radius:8px;background:#fff;border:1.5px solid #cbd5e1;padding:2px;flex:none">
     <div>
@@ -30299,14 +30404,13 @@ A.dlClientHtml=async function(schoolId, opt){
       <code style="font-size:.85rem">${esc(name)}</code>
     </div>
   </div>
-  <p class="small">Your file: <code>${esc(name)}</code><br>Send it to <b>${esc(s.name)}</b> Administrator (WhatsApp / email / USB). It carries the official <b>HEREMS_PLUS</b> app logo and school setup. They simply <b>open it in any browser</b> — the app starts, their school loads by itself, and the <b>administrator-credentials</b> step appears. No code-typing, no file-loading; even the first open works offline.</p>
-  <div class="notice warn mini mt2">⚠️ This file carries the joining code <b>${esc(s.joinCode||'')}</b> and works <b>once</b> (school stays PENDING until redeemed). Send it ONLY to the school administrator — treat it like a password.</div>
+  <p class="small">${desc}</p>
+  ${kind === 'school' ? `<div class="notice warn mini mt2">⚠️ This file carries the joining code <b>${esc(s.joinCode||'')}</b> and works <b>once</b> (school stays PENDING until redeemed). Send it ONLY to the school administrator — treat it like a password.</div>` : `<div class="notice ok mini mt2">✨️ One teacher client file can be shared with all teachers in the school. It gives them direct access to classes and subjects configured by the administrator.</div>`}
   <div class="mt2" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
     ${_bUrl ? `<a class="btn gold" href="${_bUrl}" download="${esc(name)}" style="text-decoration:none;font-weight:700">⬇️ Download client file (.html)</a>` : `<button class="btn gold" onclick="A.dlClientHtmlAgain()">⬇️ Download the file</button>`}
     ${portableCanShare(name, html)?'<button class="btn sm okb" onclick="A.shareClientHtml()">📤 Share…</button>':''}
-    <button class="btn sm ghost" onclick="A.dlClientRawJson('${schoolId}')">⬇️ raw .json instead</button>
+    <button class="btn sm ghost" onclick="A.dlClientRawJson('${schoolId}','${kind}')">⬇️ raw .json instead</button>
   </div>
-  <p class="small mut mt2">Teachers keep using the teacher client file (.json) — one teacher file is shared to the whole staff.</p>
   </div><div class="m-foot"><button class="btn" onclick="A.closeModal()">Done</button></div>`,{sticky:true});
 };
 A.dlClientHtmlAgain=function(){ const st=_clientHtmlStash; if(!st) return toast('Nothing to download yet — build the .html client file first.','bad');
@@ -30314,9 +30418,9 @@ A.dlClientHtmlAgain=function(){ const st=_clientHtmlStash; if(!st) return toast(
   toast(ok?'⬇️ Downloading — check your <b>Downloads</b> folder for '+esc(st.name):'This browser is blocking downloads — use 📤 Share instead.', ok?'ok':'bad'); };
 A.shareClientHtml=async function(){ const st=_clientHtmlStash; if(!st) return toast('Nothing to share yet — build the .html client file first.','bad');
   try{ const f=new File([st.content], st.name, {type:'text/html'});
-    await navigator.share({ files:[f], title:st.name, text:'HEREMS_PLUS school client file — open in any browser to start the school setup.' });
+    await navigator.share({ files:[f], title:st.name, text:'HEREMS_PLUS ' + ((st.kind==='teacher')?'teacher':'school') + ' client file — open in any browser.' });
   }catch(e){ if(e&&e.name==='AbortError') return; toast('Sharing failed here — use ⬇️ Download instead.','bad'); } };
-A.dlClientRawJson=function(schoolId){ A.dlClientJsonOnly(schoolId, 'school'); };
+A.dlClientRawJson=function(schoolId, kind){ A.dlClientJsonOnly(schoolId, kind || 'school'); };
 A.dlClientJsonOnly=function(schoolId, kind){
   const s=DB.schools.find(x=>x.id===schoolId); if(!s) return toast('School not found','bad');
   if(!s.logo && typeof APP_LOGO_URI !== 'undefined') s.logo = APP_LOGO_URI;
