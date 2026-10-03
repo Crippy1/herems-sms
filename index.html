@@ -6429,19 +6429,81 @@ async function syncPull(quiet, force){ const c=syncCfg(); if(!c.bin||!c.mk) retu
    dashboard ☁️ card, or right after 🗑 Clear cloud. Zero background requests: the free cloud's monthly quota
    is never burnt behind anyone's back, and no data moves without a human deciding it moves.
    wireLiveSync keeps ONLY the adopt-repaint hook (called on every login path, it wires nothing else). */
-function scheduledSyncTick(){try{const u=me&&me();if(!u||!syncCfg().bin||!syncCfg().mk||navigator.onLine===false)return;
-  /* Round-290 (owner): the automatic background sync now follows the Round-288 schedule — EVERY DAY inside
-     the 08:00–22:00 window (once a day, at 09:00), and TWICE on Tuesdays & Fridays (09:00 + 15:00). Each
-     fired slot is stamped in the local store and a late wake SUPERSEDES the earlier slot (one send carries
-     everything newer anyway), so a tick can never double-fire or burn the day's allowance catching up —
-     no duplicate sync events, ever. The run is the same A.syncNow path, so every gate (roles, ladder,
-     daily allowance) still applies untouched, and the same lossless gzip compression rides every send. */
-  const now=new Date(),h=now.getHours()+now.getMinutes()/60;
-  if(h<8||h>=22)return;   /* outside the day's 08:00–22:00 window nothing runs by itself */
-  const date=now.toISOString().slice(0,10),slots=[9,15]; /* Round-288 (owner item 1): twice per day EVERY day (09:00 + 15:00) */
-  const due=slots.filter(slot=>h>=slot&&!store.get('herems_scheduled_sync_'+date+'_'+slot));
-  if(due.length){ slots.forEach(slot=>{ if(h>=slot) store.set('herems_scheduled_sync_'+date+'_'+slot,String(Date.now())); });
-    A.syncNow(false).catch(()=>{}); }}catch(e){}}
+
+/* Sync with confirmation dialog and loading bar */
+A.syncNowWithConfirm = async function(){
+  const u = me();
+  if(!u) return toast('Please sign in first','bad');
+  /* Sync is only allowed between 08:00 and 22:00 */
+  const now=new Date(), h=now.getHours()+now.getMinutes()/60;
+  if(h<8||h>=22) return toast('🕐 Sync is available between 08:00 and 22:00 only. Current time is outside the sync window.','bad');
+  if(!syncOnline()) return toast('🌐 You must be online to sync — check your internet connection and try again','bad');
+  const c = syncCfg();
+  if(!c.bin || !c.mk) return toast('☁️ Add Bin ID + Master Key first','bad');
+  
+  openModal(`${mHead('☁️ Sync to Cloud')}<div class="m-body">
+    <p class="small">Are you sure you want to sync your data to the cloud?</p>
+    <p class="small mut">This will replace old sync data with your current data.</p>
+    <div class="mt2" style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn ghost" onclick="A.closeModal()">No, Cancel</button>
+      <button class="btn gold" onclick="A.closeModal();A.doSyncWithLoading()">Yes, Sync Now</button>
+    </div>
+  </div>`);
+};
+
+A.doSyncWithLoading = async function(){
+  // Show loading bar modal
+  openModal(`${mHead('☁️ Syncing...')}<div class="m-body">
+    <div style="background:#e2e8f0;border-radius:99px;height:24px;overflow:hidden;margin:16px 0">
+      <div id="sync-progress-bar" style="background:linear-gradient(90deg,#4f46e5,#06b6d4);height:100%;width:0%;transition:width 0.3s ease;border-radius:99px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700">0%</div>
+    </div>
+    <div id="sync-progress-text" class="small center mut">Preparing sync...</div>
+  </div>`);
+  
+  const bar = document.getElementById('sync-progress-bar');
+  const txt = document.getElementById('sync-progress-text');
+  
+  function updateBar(pct, msg){
+    if(bar){ bar.style.width = pct+'%'; bar.textContent = pct+'%'; }
+    if(txt) txt.textContent = msg;
+  }
+  
+  try{
+    updateBar(10, 'Connecting to cloud...');
+    await new Promise(r => setTimeout(r, 300));
+    
+    updateBar(30, 'Downloading latest data...');
+    const result = await A.syncNow(false);
+    
+    updateBar(70, 'Processing...');
+    await new Promise(r => setTimeout(r, 300));
+    
+    updateBar(90, 'Finalizing...');
+    await new Promise(r => setTimeout(r, 200));
+    
+    updateBar(100, 'Complete!');
+    await new Promise(r => setTimeout(r, 500));
+    
+    closeModal();
+    
+    if(result === 'pushed' || result === 'adopted'){
+      toast('☁️ Synced to cloud successfully ✅️','ok');
+    } else if(result === 'pulled-only'){
+      toast('☁️ Data is up to date ✅️','ok');
+    } else if(result === 'offline'){
+      toast('🌐 Cannot reach the cloud — you appear to be offline','bad');
+    } else {
+      toast('☁️ Sync completed — check ☁️ Sync page for details','gold');
+    }
+    
+    if(me()) render();
+  }catch(e){
+    closeModal();
+    toast('☁️ Sync failed — please try again when online','bad');
+  }
+};
+
+function scheduledSyncTick(){ /* Auto-sync removed — sync is manual only via confirmation dialog */ }
 function wireScheduledSync(){try{if(window.__heremsScheduleWired)return;window.__heremsScheduleWired=true;scheduledSyncTick();window.setInterval(scheduledSyncTick,5*60*1000);}catch(e){}}
 function wireLiveSync(){
   try{ if(window.__syncWired) return; window.__syncWired=true;wireScheduledSync();wireSyncKeeper();
@@ -6456,7 +6518,7 @@ function wireLiveSync(){
      the union merge + tombstone rules resolve every conflict in favour of the newest record — no duplicates),
      the scheduled lossless sync when its 08:00–22:00 slot is due, and a gentle nudge about any queued SMS.
    · TRANSACTIONAL ACCURACY — one pass at a time (busy flag), never more than one per 5 minutes, and every
-     scheduled slot is stamped once per day. A reconnect storm cannot double-send anything. The upload ladder,
+     scheduled slot is stamped twice per day. A reconnect storm cannot double-send anything. The upload ladder,
      the roles and the daily windows are NEVER bypassed. */
 function keeperPass(reason){try{
   if(window.__keeperBusy)return 'busy'; window.__keeperBusy=true;
@@ -7016,8 +7078,8 @@ function schSyncGate(){ const u=me(); const now0=Date.now(); const base={ cap:sc
   if(used>=schSyncCapFor(now)) return Object.assign(base,{ ok:false, reason:'cap', used:used, next:schNextWindow(now), school:s, termEnd:te });
   return Object.assign(base,{ ok:true, reason:'', used:used, next:schNextWindow(now), school:s, termEnd:te }); }
 function schSyncReasonText(g){ if(!g) return '';
-  if(g.reason==='day') return 'the daily sync window is <b>08:00 – 22:00</b> and it is closed right now — syncing is open <b>every day</b>, <b>twice per day</b>'+(g.next?(', next window <b>'+esc(g.next.label)+'</b>'):'');
-  if(g.reason==='cap') return 'today\'s allowance is already used (<b>'+g.used+' of '+g.cap+'</b>) — <b>twice per day every day (08:00 – 22:00)</b>'+(g.next?(', next window <b>'+esc(g.next.label)+'</b> — a fresh daily allowance'):'');
+  if(g.reason==='day') return 'the daily sync window is <b>08:00 – 22:00</b> and it is closed right now — syncing is open <b>every day, twice per day</b> between <b>08:00 and 22:00</b>'+(g.next?(', next window <b>'+esc(g.next.label)+'</b>'):'');
+  if(g.reason==='cap') return 'today\'s allowance is already used (<b>'+g.used+' of '+g.cap+'</b>) — <b>twice per day between 08:00 – 22:00</b>'+(g.next?(', next window <b>'+esc(g.next.label)+'</b> — a fresh daily allowance'):'');
   if(g.reason==='term-end') return 'the term has ended — this is the automatic end-of-term sync';
   if(g.reason==='noschool') return 'no school is linked to this device';
   return ''; }
@@ -7035,7 +7097,7 @@ function schSyncWindowsHTML(){ const u=me(); if(!u||u.role!=='schooladmin') retu
       : te.ended? '<b>The term has ended</b> — the automatic end-of-term sync is due now.'
       : 'Term <b>'+esc(String(te.term))+'</b> ends <b>'+new Date(te.end).toLocaleDateString()+'</b> — the app syncs your school up <b>by itself</b> on that day (vacation).') : '';
   return '<div class="card mb2"><h3>🗓 School sync windows</h3>   <!-- Round-228 (owner items 4 & 5) -->'
-  + '<div class="small mut">Your school\'s data goes <b>up to the Super Administrator twice per day (every day)</b> inside the <b>08:00 – 22:00</b> window (morning and afternoon) — every send riding the same <b>lossless compression</b> (nothing is ever lost or degraded on the way up). Plus <b>once automatically when a term ends</b> (vacation). Teachers keep handing their packages up to you any day, and ☁️ pulling the central data is never limited.</div>'
+  + '<div class="small mut">Your school\'s data goes <b>up to the Super Administrator twice per day</b> between <b>08:00 – 22:00</b> — every send riding the same <b>lossless compression</b> (nothing is ever lost or degraded on the way up). Plus <b>once automatically when a term ends</b> (vacation). Teachers keep handing their packages up to you any day, and ☁️ pulling the central data is never limited.</div>'
   + '<div class="mt1" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'
   + chip(g.ok?('✅ The 08:00 – 22:00 window is open — '+schDayName()):('🚫 The daily window (08:00 – 22:00) is closed — '+schDayName()), g.ok?'ok':'bad')
   + chip('<b>'+g.used+' of '+g.cap+'</b> used today (2 allowed daily)')
@@ -8464,7 +8526,8 @@ function workingDaysLeft(deadlineIso,fromIso){ fromIso=fromIso||todayISO(); let 
 
 /* ---- SMART GREETING (admin & teacher) ---- */
 function loginGreeting(u){ if(!u||(u.role!=='schooladmin'&&u.role!=='teacher')) return null;
-  const today=ghTodayISO(); const first=((u.name||'').trim().split(/\s+/)[0])||'there';
+  const today=ghTodayISO();
+  const first=(u.nickname && u.nickname.trim()) ? u.nickname.trim() : (u.firstName || ((u.name||'').trim().split(/\s+/)[0]) || 'there');
   const title=u.gender==='Female'?'Madam':(u.gender==='Male'?'Sir':''); let kind;
   if(u.lastLoginDate===today) kind='back';                       // CASE B: same-day return
   else { const h=ghHour(); kind=(h>=5&&h<12)?'morning':(h>=12&&h<17)?'afternoon':'evening'; }
@@ -9311,7 +9374,7 @@ function loginHTML(flash){
       <span class="cta-arrow">→</span>
     </button>
     <div class="mut small mb2 center mt1">One secure sign-in for <b>School Admin</b>, <b>Teachers</b> &amp; <b>Parents</b> — we detect your role after login. Use your <b>email</b> (staff) or <b>phone</b> (parents).</div>
-    ${flash?`<div class="notice ${String(flash).startsWith('✅️')?'ok':'warn'} mb2">${esc(flash)}</div>`:''}   <!-- Round-58: ✅️ flashes render green (join success lands here) -->
+    ${flash?`<div class="notice ${String(flash).startsWith('✅️')?'ok':'warn'} mb2">${flash}</div>`:''}   <!-- Round-58: ✅️ flashes render green (join success lands here) — raw HTML allowed for styled password display -->
     <label>Email or Phone</label>
     <input id="li-id" placeholder="e.g. admin@myschool.com or 024xxxxxxx" autocomplete="username">
     <label>Password</label>
@@ -10326,6 +10389,8 @@ A.tRegFinish = function(inApp){
       classSubjects: d.classSubs||[], subjectClasses: d.subjClasses||{} } };
   DB.users.push(u); saveDB();
   if(!inApp){ try{ notifyTeacherReg(s,u); }catch(e){} }
+  /* Notify Super Admin about new teacher registration */
+  try{ notifySuper(`🆕 New teacher registered at <b>${esc(s.name)}</b>: <b>${esc(u.name)}</b> · ✉️ ${esc(u.email||'—')} · ☎️ ${esc(u.phone||'—')} · Role: Teacher · School Admin will review from their Dashboard/Staff.`); }catch(e){}
   if(inApp){ closeModal(); toast(`Teacher ${esc(u.name)} added. Default password: ${defPw}`,'ok'); go('teachers'); }
   else {
     showAuth('login', `✅️ Account created for ${esc(u.name)}! Sign in with your login email (${esc(u.email)}) · Initial Default Password: <span style="opacity:0.65;font-family:monospace;font-weight:700;color:#64748b">${esc(defPw)}</span> (compulsory change on first login)`);
@@ -11680,6 +11745,24 @@ function newTeacherAlertHTML(){ const u=me(); if(!u||u.role!=='schooladmin') ret
     <button class="btn sm" data-tip="Reviewed — removes this alert on EVERY device" onclick="A.noteDel('${n.id}')">✔️ Reviewed</button></div>`; }).join('')}
   <button class="btn sm ghost" data-tip="Open Staff — teaching &amp; non-teaching" onclick="go('teachers')">🧑‍🏫 Open Staff</button></div>`;
 }
+/* New student registration alert for school admin dashboard */
+function newStudentAlertHTML(s){
+  if(!s) return '';
+  const u=me(); if(!u||u.role!=='schooladmin') return '';
+  const today=todayISO();
+  const newStudents=(DB.students||[]).filter(st=>st.schoolId===s.id && !st.archived && st.createdAt && (Date.now()-st.createdAt)<7*86400000);
+  if(!newStudents.length) return '';
+  const count=newStudents.length;
+  return `<div class="card mb2" style="border-left:5px solid #059669"><h3>🆕 ${count} new student${count===1?'':'s'} registered this week</h3>
+    <div class="small mut">Newly registered students appear here for 7 days. They are automatically assigned fees and can be found in the Students portal.</div>
+    <div class="mt1" style="display:flex;gap:6px;flex-wrap:wrap">
+      ${newStudents.slice(0,5).map(st=>`<span class="badge ok">${esc(st.name||st.surname+' '+st.firstName)}</span>`).join('')}
+      ${count>5?`<span class="badge info">+${count-5} more</span>`:''}
+    </div>
+    <button class="btn sm ghost mt1" onclick="go('students')">Open Students →</button>
+  </div>`;
+}
+
 /* Round-36: SuperAdmin can delete notifications (single or all) · Round-79: TOMBSTONED — the union-merge was
    resurrecting cleared notifications from the cloud ("notifications keep appearing after clearing all").
    Now every clear/delete is recorded and syncs to EVERY device. */
@@ -11789,7 +11872,7 @@ function dashAdmin(){
   const recent=(DASH_Q? studs.filter(st=>stuMatch(st,classOf(s,st.classId),DASH_Q)).slice(0,15) : studs.slice(0,6));   /* Round-60: live-filtered A→Z preview */
   const owingRows=debtorsRows(s,year), owingTotal=r1(owingRows.reduce((a,r)=>a+(r.d&&r.d.total||0),0));
   return `
-  ${greetBannerHTML(me())}${statusBannerHTML(s)}${subscriptionRenewalAlertHTML(s)}${termFrameAlertHTML(me())}${pictureAlertHTML(me())}${newTeacherAlertHTML()}${adminMissingCtSigAlertHTML(s)}   <!-- Round-145: self-registered teachers report for review here -->
+  ${greetBannerHTML(me())}${statusBannerHTML(s)}${subscriptionRenewalAlertHTML(s)}${termFrameAlertHTML(me())}${pictureAlertHTML(me())}${newTeacherAlertHTML()}${newStudentAlertHTML(s)}${adminMissingCtSigAlertHTML(s)}   <!-- Round-145: self-registered teachers report for review here -->
   ${dashSearchBarHTML()}   <!-- Round-60: dashboard search bar at the very top -->
   <div class="grid g4">
     <div class="stat click" data-tip="⚧️ Explore by gender &amp; stream — boys' and girls' insights with a graph 📊" onclick="A.admTab('gender')"><span class="si">🎓</span><div class="sl">Students</div><div class="sv">${studs.length}</div><div class="s-gsplit"><span class="gsb" data-tip="Boys">👦 ${studs.filter(x=>x.gender==='M').length}</span><span class="gsg" data-tip="Girls">👧 ${studs.filter(x=>x.gender==='F').length}</span></div></div>   <!-- Round-200: total students + boys/girls split · Round-209b: tap → Admissions ▸ Gender Insights tab -->
@@ -11975,7 +12058,7 @@ function dashTeacher(){
     <div class="flex mt1" style="gap:8px;align-items:center;flex-wrap:wrap"><button class="btn gold" data-tip="Package this term's scores &amp; records as ONE file for the School Administrator" onclick="A.syncToAdmin()">📤 Sync to Admin</button>
       <button class="btn" data-tip="Import the 🧾 receipt file your Administrator sent back — confirms they received your package" onclick="A.importReceiptPick()">📥 Import admin receipt</button>
       <input type="file" id="rc-file" accept=".json,application/json" style="display:none" onchange="A.importReceipt(this)">
-      <button class="btn ghost sm" data-tip="Read the central database (the school's latest published data)" onclick="A.syncNow(true)">☁️ Pull latest data</button>
+      <button class="btn ghost sm" data-tip="Read the central database (the school's latest published data)" onclick="A.syncNowWithConfirm()">☁️ Pull latest data</button>
       <span class="small mut">⏱ Last synced: <b>${lastSyncISO()? new Date(lastSyncISO()).toLocaleString() : 'never yet on this device'}</b>${lastSyncErr()? ' · <span style="color:var(--bad)">last error: '+esc(lastSyncErr())+'</span>':''}</span></div>
     ${''/* Round-166 (owner's order): the 🔑 School cloud line RETIRED from every school-scoped portal — school devices ride the central record only; the engine + 👑 super key-room stay (dormant) */}
     ${pkgStatusLine(u)? `<div class="notice info mini mt2">📦 ${pkgStatusLine(u)}</div>`:''}</div>`;
@@ -15961,7 +16044,20 @@ function renderSubjects(){
       <div class="cls-counts">${STREAMS_ORDER.map(st=>`<span class="badge info">${esc(st)} · <b>${s.classes.filter(c=>classIsActive(c)&&c.stream===st).length}</b>/${s.classes.filter(c=>c.stream===st).length}</span>`).join('')}<span class="badge gold">${s.classes.filter(classIsActive).length} running · ${s.classes.length} total</span></div>
       <button class="btn" onclick="A.addClassModal()">＋ Add new class</button>
     </div>
-    <div class="dd-list">${clsAccordion}</div></div>`;
+    <div class="dd-list">${clsAccordion}</div>
+    ${schoolSetupComplete(s) ? `<div class="card mt2" style="background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1.5px solid #86efac;border-radius:12px;padding:14px 16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        <div>
+          <div style="font-weight:700;color:#166534;font-size:1rem">✅ Classes &amp; Subjects Setup Complete!</div>
+          <div class="small mut">Generate the teacher client file to share with your teachers for registration and scoring.</div>
+        </div>
+        <button class="btn gold" style="font-weight:700;white-space:nowrap" onclick="A.dlClient('${s.id}','teacher')">📄 Generate Teacher Client File</button>
+      </div>
+    </div>` : `<div class="card mt2" style="background:#fffbeb;border:1.5px solid #fcd34d;border-radius:12px;padding:14px 16px">
+      <div style="font-weight:700;color:#92400e;font-size:1rem">⚠️ Setup Incomplete</div>
+      <div class="small mut">To generate the teacher client file: ① Enable classes in each stream above, ② Assign subjects to each stream under 📚 Subjects. Once both are done, the Generate button will appear here.</div>
+    </div>`}
+  </div>`;
 }
 A.subjStream=function(st){ SUBJ_OPEN=(SUBJ_OPEN===st?'':st); render(); };
 A.clsStream=function(st){ CLS_OPEN=(CLS_OPEN===st?'':st); render(); };
@@ -17359,7 +17455,15 @@ A.saveScores = function(clsId, pre){
   });
 
   saveDB();
-  toast(`Saved ${n} score rows for ${SC.sub} (${SC.term})`, 'ok');
+  toast(`Saved ${n} score rows for ${SC.sub} (${SC.term}) — syncing to School Administrator...`, 'ok');
+  // Sync scores to school administrator
+  try{
+    if(syncOnline()){
+      setTimeout(function(){
+        try{ A.syncNow(false).catch(function(){}); }catch(e){}
+      }, 1000);
+    }
+  }catch(e){}
   render();
 };
 
@@ -30613,6 +30717,19 @@ A.applyYearArchiveText=function(text, name){
    payload inside; the administrator just opens it → the school + joining code plant themselves → the
    admin-credentials step appears. No file-loading, no code-typing, no internet (first open can be offline). */
 let _clientHtmlStash=null;   /* {name, content, school} — delivery buttons */
+
+/* Check if school has classes and subjects configured for teacher client file */
+function schoolSetupComplete(s){
+  if(!s) return false;
+  const hasClasses = (s.classes||[]).some(c => classIsActive(c));
+  if(!hasClasses) return false;
+  const matrix = s.subjectStreams || {};
+  const activeStreams = [...new Set((s.classes||[]).filter(classIsActive).map(c => c.stream))];
+  return activeStreams.some(st => {
+    const subs = Object.keys(matrix).filter(k => (matrix[k]||[]).includes(st));
+    return subs.length > 0;
+  });
+}
 A.dlClientHtml=async function(schoolId, opt, kind){
   kind = (kind === 'teacher') ? 'teacher' : 'school';
   const s=DB.schools.find(x=>x.id===schoolId); if(!s) return toast('School not found','bad');
@@ -30976,7 +31093,18 @@ if('serviceWorker' in navigator){ try{
     touch();
     boot();
   }
-  else if(EMBEDDED_CLIENT){ if(s) { DB.session=null; if(typeof saveSessionBackup==='function') saveSessionBackup(null); saveDB(); } }
+  else if(EMBEDDED_CLIENT){
+    if(s) { DB.session=null; if(typeof saveSessionBackup==='function') saveSessionBackup(null); saveDB(); }
+    /* When opened as local file (WhatsApp, file://), show banner to open in browser */
+    if(typeof location!=='undefined' && location.protocol==='file:'){
+      try{
+        const _banner=document.createElement('div');
+        _banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:linear-gradient(135deg,#1e3a8a,#4f46e5);color:#fff;padding:12px 16px;text-align:center;font-family:system-ui,sans-serif;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,.3)';
+        _banner.innerHTML='🌐 <b>For best experience, open in your browser:</b><br><a href="https://heremsplus.netlify.app" style="color:#fbbf24;font-weight:700;font-size:16px;text-decoration:underline">https://heremsplus.netlify.app</a>';
+        (document.body||document.documentElement).appendChild(_banner);
+      }catch(e){}
+    }
+  }
   else {
     if(s) { DB.session=null; if(typeof saveSessionBackup==='function') saveSessionBackup(null); saveDB(); }
     const activeReg = loadRegState();

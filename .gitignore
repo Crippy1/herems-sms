@@ -1,0 +1,30 @@
+# Generated client files (created on demand inside the app)
+HEREMS-SCHOOL-*.html
+HEREMS-TEACHER-*.html
+
+# Build scripts
+build_clients.js
+
+# Deployment zips (GitHub + Netlify handles deployment)
+*.zip
+
+# Uploads & temp files
+uploads/
+*.tmp
+*.bak
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Recovery / docs
+README.txt
+RECOVERY_REPORT.md
+
+# Sensitive credentials (if present)
+.git/credentials
+.git-credentials
+.netrc
+
+# Node modules (Netlify installs these)
+node_modules/
